@@ -1,17 +1,35 @@
 import java.awt.*;
+
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Main {
    private JFrame mainFrame;
+   private JFrame bankFrame;
    private JLabel headerLabel;
    private JLabel subheaderLabel;
    private JLabel statusLabel;
    private JPanel controlPanel;
+   BufferedImage bankBackground = null;
 
    public Main(){
 	  // Prepare Guided User Interface
       prepareGUI();
+      // Get images
+      try 
+      {
+          bankBackground = ImageIO.read(new File("C:/Users/gabi_/git/Jack/1511241/src/images/blackjack.png")); // eventually C:\\ImageTest\\pic2.jpg
+      } 
+      catch (IOException e) 
+      {
+          e.printStackTrace();
+      }
    }
    public static void main(String[] args){
 	  // Main function
@@ -88,16 +106,39 @@ public class Main {
    private class ButtonClickListener implements ActionListener{
 	   // Listener function
 	   public void actionPerformed(ActionEvent e) {
-         String command = e.getActionCommand();  
+         String command = e.getActionCommand();
          
-         if( command.equals( "1 Player" ))  {
-            statusLabel.setText("Starting game for 1 player.");
-         } else if( command.equals( "2 Players" ) )  {
-            statusLabel.setText("Starting game for 2 players."); 
-         } else if( command.equals( "3 Players" ) ) {
-            statusLabel.setText("Starting game for 3 players.");
-         } else {
-        	 statusLabel.setText("Starting game for 4 players.");
+         if(command.equals("1 Player") || command.equals("2 Players") || command.equals("3 Players") || command.equals("4 Players"))
+         {
+
+             if( command.equals( "1 Player" ))  {
+               
+             } else if( command.equals( "2 Players" ) )  {
+               
+             } else if( command.equals( "3 Players" ) ) {
+               
+             } else {
+            	
+             }
+             
+             // Close Main Frame
+             mainFrame.dispose();
+             
+             // Create Bank Frame
+             bankFrame = new JFrame("Bank");
+             bankFrame.setSize(bankBackground.getWidth(), bankBackground.getHeight());
+             bankFrame.setLayout(new GridLayout(4, 1)); // Organize components
+             bankFrame.setContentPane(new GameImage(bankBackground));
+             
+             // Allow us to see the frame
+             bankFrame.setVisible(true);
+             
+             // Makes the frame pop up centered
+             bankFrame.setLocationRelativeTo(null);
+         }
+         else
+         {
+        	statusLabel.setText("Invalid Option"); 
          }
       }		
    }
