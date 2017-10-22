@@ -20,7 +20,7 @@ public class Main {
    private JPanel controlPanel;
    BufferedImage bankBackground = null;
    
-   static public String path = System.getProperty("user.dir");	// Project path
+   static public String img_path = System.getProperty("user.dir") + "/src/images/";	// Project path
 
    public Main(){
 	  // Prepare Guided User Interface
@@ -28,7 +28,7 @@ public class Main {
       // Get images
       try 
       {
-          bankBackground = ImageIO.read(new File(path + "/src/images/blackjack.png")); // eventually C:\\ImageTest\\pic2.jpg
+          bankBackground = ImageIO.read(new File(img_path + "blackjack.png")); // eventually C:\\ImageTest\\pic2.jpg
       } 
       catch (IOException e) 
       {
