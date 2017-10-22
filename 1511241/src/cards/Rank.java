@@ -1,4 +1,4 @@
-package Cards;
+package cards;
 
 public enum Rank {
     DEUCE(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8),
@@ -8,6 +8,27 @@ public enum Rank {
 
     Rank(int points) {
         this.points = points;
+    }
+    
+    public String toString() {
+    	if(this.points < 10)
+    		return String.valueOf(this.points);
+    	else if(this.points == 11)
+    		return "a";
+    	else {
+    		switch(this){
+    		case TEN:
+    			return "t";
+    		case JACK:
+    			return "j";
+    		case QUEEN:
+    			return "q";
+    		case KING:
+    			return "k";
+    		default:
+    			return "";
+    		}
+    	}
     }
 
     public int getRankPoints() {

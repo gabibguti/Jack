@@ -1,4 +1,4 @@
-package Cards;
+package cards;
 import java.util.*;
 
 public class Card {
@@ -24,7 +24,7 @@ public class Card {
     }
 
     public String toString() {
-        return rank + " of " + suit;
+        return rank.toString() + suit.toString().toLowerCase().charAt(0);
     }
 
     private static final List<Card> Deck = new ArrayList<Card>();
