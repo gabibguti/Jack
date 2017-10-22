@@ -1,7 +1,5 @@
 import java.awt.*;
 import java.util.*;
-import Cards.*;
-
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,6 +9,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import cards.*;
+
 public class Main {
    private JFrame mainFrame;
    private JFrame bankFrame;
@@ -19,6 +19,8 @@ public class Main {
    private JLabel statusLabel;
    private JPanel controlPanel;
    BufferedImage bankBackground = null;
+   
+   static public String path = System.getProperty("user.dir");	// Project path
 
    public Main(){
 	  // Prepare Guided User Interface
@@ -26,7 +28,7 @@ public class Main {
       // Get images
       try 
       {
-          bankBackground = ImageIO.read(new File("C:/Users/gabi_/git/Jack/1511241/src/images/blackjack.png")); // eventually C:\\ImageTest\\pic2.jpg
+          bankBackground = ImageIO.read(new File(path + "/src/images/blackjack.png")); // eventually C:\\ImageTest\\pic2.jpg
       } 
       catch (IOException e) 
       {
@@ -35,7 +37,7 @@ public class Main {
    }
    public static void main(String[] args){
 	  // Main function
-      Main Main = new Main();  
+      Main Main = new Main();
       Main.showEvent();
    }
    private void prepareGUI(){
