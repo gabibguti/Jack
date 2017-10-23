@@ -14,17 +14,22 @@ import cards.*;
 public class Main {
    private JFrame mainFrame;
    private JFrame bankFrame;
+   private JFrame playerFrame;
    private JLabel headerLabel;
    private JLabel subheaderLabel;
    private JLabel statusLabel;
-   private JPanel controlPanel;
+   private JPanel mainCP;
+   private JPanel playerCP;
+   private JButton [] options;
+   private String [] actions;
+   private int maxPlayers = 4;
    BufferedImage bankBackground = null;
    
    static public String img_path = System.getProperty("user.dir") + "/src/images/";	// Project path
 
    public Main(){
 	  // Prepare Guided User Interface
-      prepareGUI();
+      prepareMainFrame();
       // Get images
       try 
       {
@@ -40,7 +45,7 @@ public class Main {
       Main Main = new Main();
       Main.showEvent();
    }
-   private void prepareGUI(){
+   private void prepareMainFrame(){
 	  // Create Frame
       mainFrame = new JFrame("Blackjack");
       mainFrame.setSize(400,400);
@@ -58,14 +63,15 @@ public class Main {
             System.exit(0);
          }        
       });
+      
       // Create Buttons Panel
-      controlPanel = new JPanel();
-      controlPanel.setLayout(new FlowLayout());
+      mainCP = new JPanel();
+      mainCP.setLayout(new FlowLayout());
 
       // Add components to frame
       mainFrame.add(headerLabel);
       mainFrame.add(subheaderLabel);
-      mainFrame.add(controlPanel);
+      mainFrame.add(mainCP);
       mainFrame.add(statusLabel);
       
       // Allow us to see the frame
@@ -74,23 +80,78 @@ public class Main {
       // Makes the frame pop up centered
       mainFrame.setLocationRelativeTo(null);
    }
+   private void preparePlayerFrame(String playerNumber){
+	  int centerX, centerY, gap;
+	   
+	  centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
+	  centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
+	  gap = 4;
+	  
+	  // Create Frame
+      playerFrame = new JFrame("Player" + " " + playerNumber);
+      playerFrame.setSize(220, 300);
+      playerFrame.setLayout(new GridLayout(1, 1)); // Organize components
+      
+      // Create Panel
+      playerCP = new JPanel();
+      playerCP.setLayout(new FlowLayout());
+      
+      // Create button
+      JButton newCardButton = new JButton("New Card");
+      
+      // Add button to panel
+      playerCP.add(newCardButton);
+
+      // Add components to frame
+      playerFrame.add(playerCP);
+      
+      // Allow us to see the frame
+      playerFrame.setVisible(true);
+      
+      // Set players frame location
+      switch(Integer.parseInt(playerNumber)){
+      	case 1:
+    	  playerFrame.setLocation(centerX - bankFrame.getWidth()/2 - gap - playerFrame.getWidth(), centerY - bankFrame.getHeight()/2); // TODO: Adjust to better view
+    	  break;
+      	case 2:
+      	  playerFrame.setLocation(centerX - bankFrame.getWidth()/2 - gap - playerFrame.getWidth(), centerY + bankFrame.getHeight()/2 - playerFrame.getHeight()); // TODO: Adjust to better view
+      	  break;
+      	case 3:
+    	  playerFrame.setLocation(centerX + bankFrame.getWidth()/2 + gap, centerY - bankFrame.getHeight()/2); // TODO: Adjust to better view
+    	  break;
+      	case 4:
+    	  playerFrame.setLocation(centerX + bankFrame.getWidth()/2 + gap, centerY + bankFrame.getHeight()/2 - playerFrame.getHeight()); // TODO: Adjust to better view
+    	  break;
+      	default:
+      		playerFrame.setLocationRelativeTo(null);	  
+      }
+   }
    private void showEvent(){
+	  int player;
+	   
 	  // Set header label
       headerLabel.setText("Welcome to Blackjack"); 
       subheaderLabel.setText("Select the number of players:");
       
+      // Create Actions
+      actions = new String[maxPlayers];
+      for(player = 0; player < maxPlayers; player++)
+      {
+    	actions[player] = String.valueOf(player + 1);  // Set actions[0] = 1 and so on
+      }
+      
       // Create buttons
-      JButton [] options = new JButton[4];
-      options[0] = new JButton("1");
-      options[1] = new JButton("2");
-      options[2] = new JButton("3");
-      options[3] = new JButton("4");
+      options = new JButton[maxPlayers];
+      for(player = 0; player < maxPlayers; player++)
+      {
+    	options[player] = new JButton(String.valueOf(player + 1));
+      }
 
       // Set command actions to the buttons
-      options[0].setActionCommand("1 Player");
-      options[1].setActionCommand("2 Players");
-      options[2].setActionCommand("3 Players");
-      options[3].setActionCommand("4 Players");
+      for(player = 0; player < maxPlayers; player++)
+      {
+    	options[player].setActionCommand(actions[player]);
+      }
 
       // Add listeners to buttons 
       for(JButton b: options)
@@ -101,7 +162,7 @@ public class Main {
       // Add buttons to buttons panel
       for(JButton b: options)
       {
-    	  controlPanel.add(b);
+    	  mainCP.add(b);
       }
       
       // Allow us to see the frame
@@ -110,21 +171,11 @@ public class Main {
    private class ButtonClickListener implements ActionListener{
 	   // Listener function
 	   public void actionPerformed(ActionEvent e) {
+		 int player, numberOfPlayers = 0;
          String command = e.getActionCommand();
          
-         if(command.equals("1 Player") || command.equals("2 Players") || command.equals("3 Players") || command.equals("4 Players"))
+         if(Arrays.asList(actions).contains(command)) // Search for command in actions array
          {
-
-             if( command.equals( "1 Player" ))  {
-               
-             } else if( command.equals( "2 Players" ) )  {
-               
-             } else if( command.equals( "3 Players" ) ) {
-               
-             } else {
-            	
-             }
-             
              // Close Main Frame
              mainFrame.dispose();
              
@@ -134,11 +185,27 @@ public class Main {
              bankFrame.setLayout(new GridLayout(4, 1)); // Organize components
              bankFrame.setContentPane(new GameImage(bankBackground));
              
+             // Add Listener
+             bankFrame.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent windowEvent){
+                   System.exit(0);
+                }        
+             });
+             
+             
              // Allow us to see the frame
              bankFrame.setVisible(true);
              
              // Makes the frame pop up centered
              bankFrame.setLocationRelativeTo(null);
+        	 
+        	 numberOfPlayers = Integer.parseInt(command);
+
+        	 for(player = 0; player < numberOfPlayers; player++)
+        	 {
+        		// Create Player Frame
+        		preparePlayerFrame(String.valueOf(player + 1));
+        	 }
          }
          else
          {
