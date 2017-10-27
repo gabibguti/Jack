@@ -2,6 +2,8 @@ package frames;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.*;
@@ -16,6 +18,13 @@ public class BankFrame extends JFrame {
 		JButton bEndGame = new JButton("End Game");
 		JButton bNewRound = new JButton("New Round");
 		JButton bSave = new JButton("Save");
+		
+		// EndGame button action listener
+		bEndGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				System.exit(0);				
+			}
+		});
 		
 		setSize(bankBackground.getWidth(), bankBackground.getHeight());
 		setContentPane(new GameImage(bankBackground));
@@ -33,6 +42,7 @@ public class BankFrame extends JFrame {
 		pButtons.add(bNewRound);
 		pButtons.add(bSave);
 		
+		// Place buttons under image
 		setLayout(new BorderLayout());
 		add(pButtons, BorderLayout.SOUTH);
 		
