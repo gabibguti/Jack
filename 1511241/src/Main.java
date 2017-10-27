@@ -27,8 +27,10 @@ public class Main {
    private String [] actions;
    private int maxPlayers = 4;
    BufferedImage bankBackground = null;
+      
+   public ArrayList<Card> deck = Card.newDeck();
    
-   static public String img_path = System.getProperty("user.dir") + "/src/images/";	// Project path
+   static public String img_path = System.getProperty("user.dir") + "/src/images/";	// Images path
 
    public Main(){
 	  // Prepare Guided User Interface
@@ -36,7 +38,7 @@ public class Main {
       // Get images
       try 
       {
-          bankBackground = ImageIO.read(new File(img_path + "blackjackBKG.png")); // eventually C:\\ImageTest\\pic2.jpg
+          bankBackground = ImageIO.read(new File(img_path + "blackjackBKG.png"));
       } 
       catch (IOException e) 
       {
