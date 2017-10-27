@@ -7,6 +7,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.*;
+import java.io.File;
+import java.io.FileWriter;
+
 import components.GameImage;
 
 public class BankFrame extends JFrame {
@@ -24,6 +27,27 @@ public class BankFrame extends JFrame {
 			public void actionPerformed(ActionEvent actionEvent) {
 				System.exit(0);				
 			}
+		});
+		
+		// Save button action listener
+		bSave.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent actionEvent) {
+				String s = "testezão do sucesso";
+				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+			    int retrival = fc.showSaveDialog(null);
+			    if (retrival == JFileChooser.APPROVE_OPTION) {
+			        try {
+			            FileWriter fw = new FileWriter(fc.getSelectedFile() + ".txt");
+			            fw.write(s);	// TODO: Change s for file containing game info
+			            fw.close();
+			        } catch (Exception ex) {
+			            ex.printStackTrace();
+			        }
+			    }
+			}
+			
 		});
 		
 		setSize(bankBackground.getWidth(), bankBackground.getHeight());
