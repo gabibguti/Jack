@@ -10,6 +10,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import cards.*;
+import components.GameImage;
+
+import frames.*;
 
 public class Main {
    private JFrame mainFrame;
@@ -33,7 +36,7 @@ public class Main {
       // Get images
       try 
       {
-          bankBackground = ImageIO.read(new File(img_path + "blackjack.png")); // eventually C:\\ImageTest\\pic2.jpg
+          bankBackground = ImageIO.read(new File(img_path + "blackjackBKG.png")); // eventually C:\\ImageTest\\pic2.jpg
       } 
       catch (IOException e) 
       {
@@ -179,25 +182,7 @@ public class Main {
              // Close Main Frame
              mainFrame.dispose();
              
-             // Create Bank Frame
-             bankFrame = new JFrame("Bank");
-             bankFrame.setSize(bankBackground.getWidth(), bankBackground.getHeight());
-             bankFrame.setLayout(new GridLayout(4, 1)); // Organize components
-             bankFrame.setContentPane(new GameImage(bankBackground));
-             
-             // Add Listener
-             bankFrame.addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent windowEvent){
-                   System.exit(0);
-                }        
-             });
-             
-             
-             // Allow us to see the frame
-             bankFrame.setVisible(true);
-             
-             // Makes the frame pop up centered
-             bankFrame.setLocationRelativeTo(null);
+             bankFrame = new BankFrame("Bank", bankBackground);
         	 
         	 numberOfPlayers = Integer.parseInt(command);
 
