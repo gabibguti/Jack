@@ -33,7 +33,8 @@ public class Card {
         for (Suit suit : Suit.values())
             for (Rank rank : Rank.values())
                 Deck.add(new Card(rank, suit));
-
+        // Shuffles deck
+        Collections.shuffle(Deck);
     }
 
     public static ArrayList<Card> newDeck() {
