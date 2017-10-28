@@ -46,11 +46,17 @@ public class PlayerFrame extends JFrame {
 	    newCardButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent actionEvent) {
-				Card card = Main.deck.remove(0);	// Remove card from deck
-				cards.add(card);	// Add card to hand
-				cardsPanel.add(new GameImagePanel(card.getImage()));	// Add card image to player panel
-				PlayerFrame.this.add(cardsPanel); 	// Add cards panel
-				SwingUtilities.updateComponentTreeUI((JFrame) PlayerFrame.this);	// Update frame				
+				Card card;
+				try {	// TODO: Open window with message
+					card = Main.deck.remove(0);	// Remove card from deck
+					cards.add(card);	// Add card to hand
+					cardsPanel.add(new GameImagePanel(card.getImage()));	// Add card image to player panel
+					PlayerFrame.this.add(cardsPanel); 	// Add cards panel
+					SwingUtilities.updateComponentTreeUI((JFrame) PlayerFrame.this);	// Update frame	
+				}
+				catch(Exception e) {
+					System.out.println("End of deck :(");
+				}
 			}
 	    	
 	    });
