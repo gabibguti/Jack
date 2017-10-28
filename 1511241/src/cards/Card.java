@@ -1,5 +1,6 @@
 package cards;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -13,14 +14,16 @@ public class Card {
 
     private final Rank rank;
     private final Suit suit;
-    private GameImage image;
+    private BufferedImage image = null;
+    // TODO: Try to use Main.img_path
+    public String img_path = System.getProperty("user.dir") + "/src/images/";	// Images path
 
     private Card(Rank rank, Suit suit) {
         this.rank = rank;
         this.suit = suit;
         try 
         {
-            image = new GameImage(ImageIO.read(new File(Main.img_path + this.toString() + ".gif")));
+            image = ImageIO.read(new File(img_path + this.toString() + ".gif"));
         } 
         catch (IOException e) 
         {
@@ -34,6 +37,10 @@ public class Card {
 
     public Suit getSuit() {
         return this.suit;
+    }
+    
+    public BufferedImage getImage() {
+    	return this.image;
     }
     
     public int getPoints() {
