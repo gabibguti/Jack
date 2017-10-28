@@ -24,6 +24,7 @@ public class Main {
    private String [] actions;
    private int maxPlayers = 4;
    BufferedImage bankBackground = null;
+   BufferedImage card = null;
    
    static public String img_path = System.getProperty("user.dir") + "/src/images/";	// Project path
 
@@ -34,6 +35,7 @@ public class Main {
       try 
       {
           bankBackground = ImageIO.read(new File(img_path + "blackjack.png")); // eventually C:\\ImageTest\\pic2.jpg
+          card = ImageIO.read(new File(img_path + "2c.gif"));
       } 
       catch (IOException e) 
       {
@@ -81,8 +83,8 @@ public class Main {
       mainFrame.setLocationRelativeTo(null);
    }
    private void preparePlayerFrame(String playerNumber){
-	  int centerX, centerY, gap;
-	   
+	  int centerX, centerY, gap; 
+	  
 	  centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
 	  centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
 	  gap = 4;
@@ -90,20 +92,30 @@ public class Main {
 	  // Create Frame
       playerFrame = new JFrame("Player" + " " + playerNumber);
       playerFrame.setSize(220, 300);
-      playerFrame.setLayout(new GridLayout(1, 1)); // Organize components
+      playerFrame.setLayout(new GridLayout(2, 1)); // Organize components
       
       // Create Panel
       playerCP = new JPanel();
       playerCP.setLayout(new FlowLayout());
+      JPanel cardsCP = new JPanel();
       
       // Create button
       JButton newCardButton = new JButton("New Card");
       
-      // Add button to panel
+      // Add components to control panel
       playerCP.add(newCardButton);
+      cardsCP.add(new GameImagePanel(card));
+      cardsCP.add(new GameImagePanel(card));
+      
+      // Set command action to the button
+      newCardButton.setActionCommand("New Card Request");
 
+      // Add listeners to button
+      newCardButton.addActionListener(new ButtonClickListener());
+      
       // Add components to frame
       playerFrame.add(playerCP);
+      playerFrame.add(cardsCP);
       
       // Allow us to see the frame
       playerFrame.setVisible(true);
@@ -111,16 +123,16 @@ public class Main {
       // Set players frame location
       switch(Integer.parseInt(playerNumber)){
       	case 1:
-    	  playerFrame.setLocation(centerX - bankFrame.getWidth()/2 - gap - playerFrame.getWidth(), centerY - bankFrame.getHeight()/2); // TODO: Adjust to better view
+    	  playerFrame.setLocation(centerX - bankFrame.getWidth()/2 - gap - playerFrame.getWidth(), centerY - bankFrame.getHeight()/2); 
     	  break;
       	case 2:
-      	  playerFrame.setLocation(centerX - bankFrame.getWidth()/2 - gap - playerFrame.getWidth(), centerY + bankFrame.getHeight()/2 - playerFrame.getHeight()); // TODO: Adjust to better view
+      	  playerFrame.setLocation(centerX - bankFrame.getWidth()/2 - gap - playerFrame.getWidth(), centerY + bankFrame.getHeight()/2 - playerFrame.getHeight()); 
       	  break;
       	case 3:
-    	  playerFrame.setLocation(centerX + bankFrame.getWidth()/2 + gap, centerY - bankFrame.getHeight()/2); // TODO: Adjust to better view
+    	  playerFrame.setLocation(centerX + bankFrame.getWidth()/2 + gap, centerY - bankFrame.getHeight()/2); 
     	  break;
       	case 4:
-    	  playerFrame.setLocation(centerX + bankFrame.getWidth()/2 + gap, centerY + bankFrame.getHeight()/2 - playerFrame.getHeight()); // TODO: Adjust to better view
+    	  playerFrame.setLocation(centerX + bankFrame.getWidth()/2 + gap, centerY + bankFrame.getHeight()/2 - playerFrame.getHeight());
     	  break;
       	default:
       		playerFrame.setLocationRelativeTo(null);	  
@@ -174,6 +186,7 @@ public class Main {
 		 int player, numberOfPlayers = 0;
          String command = e.getActionCommand();
          
+         // Select number of players on Main Frame
          if(Arrays.asList(actions).contains(command)) // Search for command in actions array
          {
              // Close Main Frame
@@ -183,7 +196,7 @@ public class Main {
              bankFrame = new JFrame("Bank");
              bankFrame.setSize(bankBackground.getWidth(), bankBackground.getHeight());
              bankFrame.setLayout(new GridLayout(4, 1)); // Organize components
-             bankFrame.setContentPane(new GameImage(bankBackground));
+             bankFrame.setContentPane(new GameImage(bankBackground, "original"));
              
              // Add Listener
              bankFrame.addWindowListener(new WindowAdapter() {
@@ -206,6 +219,33 @@ public class Main {
         		// Create Player Frame
         		preparePlayerFrame(String.valueOf(player + 1));
         	 }
+         }
+         // Card Actions in Players Frame
+         else if (command.equals("New Card Request"))
+         {
+        	 // Verify which player requested a new card
+        	 Frame[] f = Frame.getFrames();
+        	 Frame active = null;
+        	 Component [] comps;
+        	 for (int i = 0; i < f.length; i++) {
+        	   if (f[i].isActive()) {
+        	     active = f[i]; 
+        	     break;
+        	   }
+        	 }
+        	 comps = active.getComponents();
+        	 for (Component comp : comps) {
+        		 System.out.println(comp);
+    	        	if (comp instanceof Container) {
+    	        		JPanel g = (JPanel) comp;
+    	        		g.add(new GameImagePanel(card));
+    	        	 }
+        	 }
+//        	 JFrame frame = (JFrame) active;
+//        	 frame.getContentPane().add(new GameImage(card, "card"));
+        	 
+//        	 active.add(new GameImage(card, "card"));
+        	 SwingUtilities.updateComponentTreeUI(active);
          }
          else
          {
