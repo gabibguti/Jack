@@ -11,8 +11,20 @@ import java.io.File;
 import java.io.FileWriter;
 
 import components.GameImage;
+import etc.Chip;
 
 public class BankFrame extends JFrame {
+	private Chip[] chips = new Chip[6];
+	
+	{
+		chips[0] = new Chip(1);
+		chips[1] = new Chip(5);
+		chips[2] = new Chip(10);
+		chips[3] = new Chip(20);
+		chips[4] = new Chip(50);
+		chips[5] = new Chip(100);
+	}
+	
 	public BankFrame(String name, BufferedImage bankBackground) {
 		super(name);
 		
