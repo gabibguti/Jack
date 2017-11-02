@@ -4,15 +4,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.*;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Arrays;
 
 import components.GameImage;
 import components.GameImagePanel;
 import etc.Chip;
+
 
 public class BankFrame extends JFrame {
 	private Chip[] chips = new Chip[6];
@@ -85,20 +89,66 @@ public class BankFrame extends JFrame {
 
 		// Draw chip images
 		JPanel pChips = new JPanel();
-		pChips.setLayout(new GridLayout(1, 6));
-		pChips.setOpaque(false);
+		pChips.setLayout(new GridBagLayout());
+		pChips.setOpaque(false);											// Make transparent
+		GridBagConstraints chips_constraints = new GridBagConstraints();	// Defining new constraints
+		chips_constraints.fill = GridBagConstraints.HORIZONTAL;				// Insert images horizontally
+		chips_constraints.gridy = 0;										// Insert in the first row
+		chips_constraints.insets = new Insets(520, 15, 0, 15);				// Padding inside panel layout
 		for(int i = 0; i < chips.length; i++) {
+			chips_constraints.gridx = i;									// Insert in the ith column
 			Icon icon = new ImageIcon(chips[i].getImage());
-			JLabel lb = new JLabel(icon);
-			pChips.add(lb);
+			JLabel lb = new JLabel(icon);									// Create Label with image
+			lb.addMouseListener(new ChipClickListener(chips[i].getValue()));
+			pChips.add(lb, chips_constraints);								// Add to panel
 		}
 		
-		add(pChips, BorderLayout.SOUTH);
-		add(pButtons, BorderLayout.NORTH);
+		add(pChips);	// Add chips to bank frame
+		add(pButtons, BorderLayout.PAGE_END);	// Add game buttons to bank frame
+		
         // Allow us to see the frame
         setVisible(true);
         
         // Makes the frame pop up centered
         setLocationRelativeTo(null);
+	}
+	
+	private class ChipClickListener implements MouseListener {
+
+		int value;
+		public ChipClickListener(int value) {
+			this.value = value;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.out.println(value);
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 }
