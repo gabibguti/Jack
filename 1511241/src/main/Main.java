@@ -13,7 +13,7 @@ import javax.swing.*;
 
 import cards.*;
 import components.GameImage;
-
+import components.GameImagePanel;
 import frames.*;
 
 public class Main {
@@ -61,9 +61,9 @@ public class Main {
       mainFrame.setLayout(new GridLayout(4, 1)); // Organize components
 
       // Create Labels
-      headerLabel = new JLabel("",JLabel.CENTER );
+      headerLabel = new JLabel("", JLabel.CENTER );
       subheaderLabel = new JLabel("", JLabel.CENTER);
-      statusLabel = new JLabel("",JLabel.CENTER);        
+      statusLabel = new JLabel("", JLabel.CENTER);        
       statusLabel.setSize(350,100);
       
       // Add Listener
@@ -140,10 +140,7 @@ public class Main {
          String command = e.getActionCommand();
          
          if(Arrays.asList(actions).contains(command)) // Search for command in actions array
-         {
-             // Close Main Frame
-             mainFrame.dispose();
-             
+         {             
              bankFrame = new BankFrame("Bank", bankBackground);
         	 
         	 numberOfPlayers = Integer.parseInt(command);
@@ -153,6 +150,10 @@ public class Main {
         		// Create Player Frame
         		playerFrame = new PlayerFrame(String.valueOf(player + 1), bankFrame);
         	 }
+        	 
+             // Close Main Frame
+        	 mainFrame.setVisible(false);
+        	 mainFrame.dispose();
          }
          else
          {

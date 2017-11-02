@@ -28,7 +28,22 @@ public class BankFrame extends JFrame {
 				System.exit(0);				
 			}
 		});
-		
+
+		// NewRound action listener
+		bNewRound.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent actionEvent) {
+				Frame[] frames = Frame.getFrames();
+			    for (Frame frame : frames)
+			    {
+			    	if(frame.getClass() == frames.PlayerFrame.class)
+			    	{
+				    	frame.setVisible(true);
+			    	}
+			    }
+			}
+		});
+			
 		// Save button action listener
 		bSave.addActionListener(new ActionListener() {
 			
