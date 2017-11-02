@@ -8,12 +8,13 @@ import javax.imageio.ImageIO;
 public class Chip {
 	private final int value;
 	private BufferedImage image = null;
-
+	final public String img_path = System.getProperty("user.dir") + "/src/images/ficha ";	// Images path
+	
 	public Chip(int value) {
         this.value = value;
         try 
         {
-            image = ImageIO.read(new File("../images/ficha " + String.valueOf(this.value) + "$.png"));
+            image = ImageIO.read(new File(img_path + String.valueOf(this.value) + "$.png"));
         } 
         catch (IOException e) 
         {

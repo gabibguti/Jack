@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import components.GameImage;
+import components.GameImagePanel;
 import etc.Chip;
 
 public class BankFrame extends JFrame {
@@ -80,8 +81,20 @@ public class BankFrame extends JFrame {
 		
 		// Place buttons under image
 		setLayout(new BorderLayout());
-		add(pButtons, BorderLayout.SOUTH);
 		
+
+		// Draw chip images
+		JPanel pChips = new JPanel();
+		pChips.setLayout(new GridLayout(1, 6));
+		pChips.setOpaque(false);
+		for(int i = 0; i < chips.length; i++) {
+			Icon icon = new ImageIcon(chips[i].getImage());
+			JLabel lb = new JLabel(icon);
+			pChips.add(lb);
+		}
+		
+		add(pChips, BorderLayout.SOUTH);
+		add(pButtons, BorderLayout.NORTH);
         // Allow us to see the frame
         setVisible(true);
         
