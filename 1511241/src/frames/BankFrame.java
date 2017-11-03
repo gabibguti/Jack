@@ -11,7 +11,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.*;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Arrays;
 
 import components.GameImage;
 import components.GameImagePanel;

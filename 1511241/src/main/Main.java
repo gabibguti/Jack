@@ -4,14 +4,12 @@ import java.util.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import cards.*;
-import components.GameImage;
 
 import frames.*;
 
@@ -23,7 +21,6 @@ public class Main {
    private JLabel subheaderLabel;
    private JLabel statusLabel;
    private JPanel mainCP;
-   private JPanel playerCP;
    private JButton [] options;
    private String [] actions;
    private int maxPlayers = 4;
