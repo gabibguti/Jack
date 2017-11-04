@@ -19,7 +19,6 @@ import frames.*;
 
 public class Main {
 	private JFrame mainFrame;
-	private BankFrame bankFrame;
 	private PlayerFrame playerFrame;
 	private JLabel headerLabel;
 	private JLabel subheaderLabel;
@@ -133,14 +132,14 @@ public class Main {
 			String command = e.getActionCommand();
 
 			if (Arrays.asList(actions).contains(command)) { // Search for command in actions array
-				bankFrame = new BankFrame("Bank", bankBackground);
-				Provider.framesList.add(bankFrame);
+				BankFrame.createBank("Bank", bankBackground);
+				Provider.framesList.add(BankFrame.bank);
 
 				numberOfPlayers = Integer.parseInt(command);
 
 				for (player = 0; player < numberOfPlayers; player++) {
 					// Create Player Frame
-					playerFrame = new PlayerFrame(String.valueOf(player + 1), bankFrame);
+					playerFrame = new PlayerFrame(String.valueOf(player + 1), BankFrame.bank);
 					Provider.framesList.add(playerFrame);
 				}
 

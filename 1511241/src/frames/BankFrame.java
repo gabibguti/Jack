@@ -18,6 +18,10 @@ import main.Provider;
 
 public class BankFrame extends JFrame {
 	private Chip[] chips = new Chip[6];
+	static public BankFrame bank;
+	private JButton bEndGame;
+	private JButton bNewRound;
+	private JButton bSave;
 	
 	{
 		chips[0] = new Chip(1);
@@ -33,9 +37,11 @@ public class BankFrame extends JFrame {
 		
 		setLayout(new BorderLayout()); // Organize components
 		
-		JButton bEndGame = new JButton("End Game");
-		JButton bNewRound = new JButton("New Round");
-		JButton bSave = new JButton("Save");
+		bEndGame = new JButton("End Game");
+		bNewRound = new JButton("New Round");
+		bSave = new JButton("Save");
+		
+		bNewRound.setEnabled(false);
 		
 		// EndGame button action listener
 		bEndGame.addActionListener(new ActionListener() {
@@ -47,6 +53,7 @@ public class BankFrame extends JFrame {
 		// NewRound action listener
 		bNewRound.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
+				BankFrame.newRoundSetEnabled(false);
 				for(Frame frame: Provider.framesList)
 				{
 					frame.setVisible(true);
@@ -58,7 +65,7 @@ public class BankFrame extends JFrame {
 		bSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent actionEvent) {
-				String s = "testez√£o do sucesso";
+				String s = "testez„o do sucesso";
 				final JFileChooser fc = new JFileChooser();
 				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 			    int retrival = fc.showSaveDialog(null);
@@ -121,6 +128,10 @@ public class BankFrame extends JFrame {
         setLocationRelativeTo(null);
 	}
 	
+	public static void createBank(String name, BufferedImage bankBackground) {
+		bank = new BankFrame(name, bankBackground);
+	}
+	
 	private class ChipClickListener implements MouseListener {
 
 		int value;
@@ -160,7 +171,7 @@ public class BankFrame extends JFrame {
 
 	}
 	
-	static void newRoundSetEnabled(boolean bool)
-	{
+	static void newRoundSetEnabled(boolean bool) {
+		bank.bNewRound.setEnabled(bool);
 	}
 }
