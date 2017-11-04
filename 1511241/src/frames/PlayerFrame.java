@@ -38,6 +38,9 @@ public class PlayerFrame extends JFrame {
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 		            Provider.framesList.remove(PlayerFrame.this);
+		            PlayerFrame.activePlayers--;
+		            if(PlayerFrame.activePlayers == 0)
+						BankFrame.newRoundSetEnabled(true);
 		            PlayerFrame.this.dispose();
 	        }
 	    });
@@ -89,6 +92,8 @@ public class PlayerFrame extends JFrame {
 					playerScore.setText("Score: " + totalScore.getScore());
 					ReloadLayout();
 					activePlayers--;
+					if(activePlayers == 0)
+						BankFrame.newRoundSetEnabled(true);
 				}
 			}
 		});
@@ -114,12 +119,7 @@ public class PlayerFrame extends JFrame {
 				hitButton.setEnabled(true);
 				activePlayers--;
 				if(activePlayers == 0)
-				{
-					// FIXME: PEDRO VAI RESOLVER
-					// TODO: DAR DISABLE NO NEW ROUND
-					// TODO: SINGLETON (DONTCARE), ALL THE SINGLE LADIES
-					// TODO: KEEP SUMMER SAFE
-				}
+					BankFrame.newRoundSetEnabled(true);
 			}
 		});
 
