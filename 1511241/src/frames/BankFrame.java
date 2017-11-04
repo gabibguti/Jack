@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import components.GameImage;
+import etc.Chip;
 import main.Provider;
 
 public class BankFrame extends JFrame {
@@ -118,6 +119,45 @@ public class BankFrame extends JFrame {
         
         // Makes the frame pop up centered
         setLocationRelativeTo(null);
+	}
+	
+	private class ChipClickListener implements MouseListener {
+
+		int value;
+		public ChipClickListener(int value) {
+			this.value = value;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.out.println(value);
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 	
 	static void newRoundSetEnabled(boolean bool)
