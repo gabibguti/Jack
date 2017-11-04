@@ -1,6 +1,9 @@
 package frames;
 
 import javax.swing.*;
+
+import cards.Card;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +14,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.*;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
 
 import components.GameImage;
 import etc.Chip;
@@ -22,6 +26,7 @@ public class BankFrame extends JFrame {
 	private JButton bEndGame;
 	private JButton bNewRound;
 	private JButton bSave;
+	ArrayList<Card> cards = new ArrayList<>();
 	
 	{
 		chips[0] = new Chip(1);
@@ -173,5 +178,10 @@ public class BankFrame extends JFrame {
 	
 	static void newRoundSetEnabled(boolean bool) {
 		bank.bNewRound.setEnabled(bool);
+	}
+	
+	static void newRoundSetEnabled(boolean bool, int numPlayers) {
+		bank.bNewRound.setEnabled(bool);
+		PlayerFrame.activePlayers = numPlayers;
 	}
 }

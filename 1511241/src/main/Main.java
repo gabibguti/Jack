@@ -142,6 +142,7 @@ public class Main {
 					playerFrame = new PlayerFrame(String.valueOf(player + 1), BankFrame.bank);
 					Provider.framesList.add(playerFrame);
 				}
+				PlayerFrame.numPlayers = numberOfPlayers;
 
 				// Close Main Frame
 				mainFrame.setVisible(false);
