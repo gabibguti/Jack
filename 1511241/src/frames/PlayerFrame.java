@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 import cards.Card;
-import components.GameImage;
 import components.GameImagePanel;
+
 import main.*;
 
 public class PlayerFrame extends JFrame {

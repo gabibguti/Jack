@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.*;
@@ -14,6 +16,17 @@ import components.GameImage;
 import main.Provider;
 
 public class BankFrame extends JFrame {
+	private Chip[] chips = new Chip[6];
+	
+	{
+		chips[0] = new Chip(1);
+		chips[1] = new Chip(5);
+		chips[2] = new Chip(10);
+		chips[3] = new Chip(20);
+		chips[4] = new Chip(50);
+		chips[5] = new Chip(100);
+	}
+	
 	public BankFrame(String name, BufferedImage bankBackground) {
 		super(name);
 		
@@ -44,7 +57,7 @@ public class BankFrame extends JFrame {
 		bSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent actionEvent) {
-				String s = "testez„o do sucesso";
+				String s = "testez√£o do sucesso";
 				final JFileChooser fc = new JFileChooser();
 				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 			    int retrival = fc.showSaveDialog(null);
@@ -79,7 +92,26 @@ public class BankFrame extends JFrame {
 		
 		// Place buttons under image
 		setLayout(new BorderLayout());
-		add(pButtons, BorderLayout.SOUTH);
+		
+
+		// Draw chip images
+		JPanel pChips = new JPanel();
+		pChips.setLayout(new GridBagLayout());
+		pChips.setOpaque(false);											// Make transparent
+		GridBagConstraints chips_constraints = new GridBagConstraints();	// Defining new constraints
+		chips_constraints.fill = GridBagConstraints.HORIZONTAL;				// Insert images horizontally
+		chips_constraints.gridy = 0;										// Insert in the first row
+		chips_constraints.insets = new Insets(520, 15, 0, 15);				// Padding inside panel layout
+		for(int i = 0; i < chips.length; i++) {
+			chips_constraints.gridx = i;									// Insert in the ith column
+			Icon icon = new ImageIcon(chips[i].getImage());
+			JLabel lb = new JLabel(icon);									// Create Label with image
+			lb.addMouseListener(new ChipClickListener(chips[i].getValue()));
+			pChips.add(lb, chips_constraints);								// Add to panel
+		}
+		
+		add(pChips);	// Add chips to bank frame
+		add(pButtons, BorderLayout.PAGE_END);	// Add game buttons to bank frame
 		
         // Allow us to see the frame
         setVisible(true);
