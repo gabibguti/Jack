@@ -14,8 +14,8 @@ public class Card {
     public String img_path = System.getProperty("user.dir") + "/src/images/";	// Images path
 
     private Card(Rank rank, Suit suit) {
-        this.rank = rank;
-        this.suit = suit;
+        this.rank = rank; // Set card value
+        this.suit = suit; // Set card suit
         try 
         {
             image = ImageIO.read(new File(img_path + this.toString() + ".gif"));

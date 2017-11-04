@@ -13,9 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import components.GameImage;
-import components.GameImagePanel;
-import etc.Chip;
-
+import main.Provider;
 
 public class BankFrame extends JFrame {
 	private Chip[] chips = new Chip[6];
@@ -44,12 +42,22 @@ public class BankFrame extends JFrame {
 				System.exit(0);				
 			}
 		});
-		
+
+		// NewRound action listener
+		bNewRound.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				for(Frame frame: Provider.framesList)
+				{
+					frame.setVisible(true);
+				}
+			}
+		});
+			
 		// Save button action listener
 		bSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent actionEvent) {
-				String s = "testez„o do sucesso";
+				String s = "testez√£o do sucesso";
 				final JFileChooser fc = new JFileChooser();
 				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 			    int retrival = fc.showSaveDialog(null);
@@ -112,42 +120,7 @@ public class BankFrame extends JFrame {
         setLocationRelativeTo(null);
 	}
 	
-	private class ChipClickListener implements MouseListener {
-
-		int value;
-		public ChipClickListener(int value) {
-			this.value = value;
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			System.out.println(value);
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
+	static void newRoundSetEnabled(boolean bool)
+	{
 	}
 }
