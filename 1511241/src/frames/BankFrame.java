@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import components.GameImage;
+import main.Provider;
 
 public class BankFrame extends JFrame {
 	public BankFrame(String name, BufferedImage bankBackground) {
@@ -31,16 +32,11 @@ public class BankFrame extends JFrame {
 
 		// NewRound action listener
 		bNewRound.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent actionEvent) {
-				Frame[] frames = Frame.getFrames();
-			    for (Frame frame : frames)
-			    {
-			    	if(frame.getClass() == frames.PlayerFrame.class)
-			    	{
-				    	frame.setVisible(true);
-			    	}
-			    }
+				for(Frame frame: Provider.framesList)
+				{
+					frame.setVisible(true);
+				}
 			}
 		});
 			
@@ -90,5 +86,9 @@ public class BankFrame extends JFrame {
         
         // Makes the frame pop up centered
         setLocationRelativeTo(null);
+	}
+	
+	static void newRoundSetEnabled(boolean bool)
+	{
 	}
 }
