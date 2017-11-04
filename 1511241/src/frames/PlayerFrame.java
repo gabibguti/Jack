@@ -21,6 +21,7 @@ public class PlayerFrame extends JFrame {
 	int centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
 	int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
 	int gap = 4;
+	static int activePlayers = 0;
 	ArrayList<Card> cards = new ArrayList<>();
 	JPanel buttonsPanel;
 	JPanel cardsPanel;
@@ -32,6 +33,16 @@ public class PlayerFrame extends JFrame {
 	public PlayerFrame(String playerNumber, Container cont) {
 		super("Player " + playerNumber);
 
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new java.awt.event.WindowAdapter() { // Remove player on close
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		            Provider.framesList.remove(PlayerFrame.this);
+		            PlayerFrame.this.dispose();
+	        }
+	    });
+		
+		activePlayers++; // Add active player
 		setSize(220, 300);
 		layout = new GroupLayout(getContentPane()); // Organize layout by groups
 		getContentPane().setLayout(layout);
@@ -55,37 +66,68 @@ public class PlayerFrame extends JFrame {
 				
 		// Create button
 		JButton hitButton = new JButton("Hit");
+		JButton standButton = new JButton("Stand");
 
 		// hitButton listener
 		hitButton.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent actionEvent) {
 				p.RequestNewCard(cards, cardsPanel, PlayerFrame.this); // Hit
 				ReloadLayout();
 				totalScore.UpdateScore(cards); // Update score
 				playerScore.setText("Score: " + totalScore.getScore());
-				if(totalScore.getScore() > 21) // Treat when player gets bursted
-				{
-					JOptionPane.showMessageDialog(null, "Bursted."); // Warn bursted player
+				if(totalScore.getScore() > 21) { // Treat when player gets bursted
+					JOptionPane.showMessageDialog(null, "Geez Rick. I got bursted."); // Warn bursted player
 					PlayerFrame.this.setVisible(false); // "Close" player frame
 					// Reset players frame
 					cardsPanel.removeAll();
 					// Reinitialize cards panel
-					// TODO: Review because is taking cards from actual deck and not new deck
-					p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
-					p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);		
+					// TODO: Review because is taking cards from actual deck and not new deck	
 					cards.clear();
+					p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
+					p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);	
 					totalScore.UpdateScore(cards);
 					playerScore.setText("Score: " + totalScore.getScore());
 					ReloadLayout();
+					activePlayers--;
 				}
 			}
-
 		});
 
+		// standButton listener
+		standButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				hitButton.setEnabled(false);
+				if(totalScore.getScore() > 17) { 
+					JOptionPane.showMessageDialog(null, "Wubba lubba dub dub! I WON MORTY!"); // Warn bursted player
+				}
+				PlayerFrame.this.setVisible(false); // "Close" player frame
+				// Reset players frame
+				cardsPanel.removeAll();
+				// Reinitialize cards panel
+				// TODO: Review because is taking cards from actual deck and not new deck	
+				cards.clear();
+				p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
+				p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);	
+				totalScore.UpdateScore(cards);
+				playerScore.setText("Score: " + totalScore.getScore());
+				ReloadLayout();
+				hitButton.setEnabled(true);
+				activePlayers--;
+				if(activePlayers == 0)
+				{
+					// FIXME: PEDRO VAI RESOLVER
+					// TODO: DAR DISABLE NO NEW ROUND
+					// TODO: SINGLETON (DONTCARE), ALL THE SINGLE LADIES
+					// TODO: KEEP SUMMER SAFE
+				}
+			}
+		});
+
+		
 		// Add button to buttons panel
 		buttonsPanel.add(hitButton);
-
+		buttonsPanel.add(standButton);
+		
 		// Initial cards
 		p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
 		p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);		
@@ -106,35 +148,23 @@ public class PlayerFrame extends JFrame {
 		// Frame location
 		switch (Integer.parseInt(playerNumber)) {
 		case 1:
-			setLocation(centerX - cont.getWidth() / 2 - gap - getWidth(), centerY - cont.getHeight() / 2); // TODO:
-																											// Adjust to
-																											// better
-																											// view
+			setLocation(centerX - cont.getWidth() / 2 - gap - getWidth(), centerY - cont.getHeight() / 2);
 			break;
 		case 2:
-			setLocation(centerX - cont.getWidth() / 2 - gap - getWidth(), centerY + cont.getHeight() / 2 - getHeight()); // TODO:
-																															// Adjust
-																															// to
-																															// better
-																															// view
+			setLocation(centerX - cont.getWidth() / 2 - gap - getWidth(), centerY + cont.getHeight() / 2 - getHeight());
 			break;
 		case 3:
-			setLocation(centerX + cont.getWidth() / 2 + gap, centerY - cont.getHeight() / 2); // TODO: Adjust to better
-																								// view
+			setLocation(centerX + cont.getWidth() / 2 + gap, centerY - cont.getHeight() / 2);
 			break;
 		case 4:
-			setLocation(centerX + cont.getWidth() / 2 + gap, centerY + cont.getHeight() / 2 - getHeight()); // TODO:
-																											// Adjust to
-																											// better
-																											// view
+			setLocation(centerX + cont.getWidth() / 2 + gap, centerY + cont.getHeight() / 2 - getHeight());
 			break;
 		default:
 			setLocationRelativeTo(null);
 		}
 	}
 	
-	public void ReloadLayout ()
-	{
+	public void ReloadLayout () {
 		layout.setHorizontalGroup( // All panels in horizontal group
 		    layout.createSequentialGroup()
 		        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -152,5 +182,6 @@ public class PlayerFrame extends JFrame {
 		        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 	        		.addComponent(infoPanel))
 	    );
+		
 	}
 }
