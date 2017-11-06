@@ -137,8 +137,11 @@ public class BankFrame extends JFrame {
 		setLayout(new BorderLayout());
 		
 		// Initial cards
-		cards.add(Main.deck.remove(0));
-		cards.add(Main.deck.remove(0));
+		score.UpdateScore(cards);
+		while(score.getScore() < 17) {						// Draw cards until score >= 17
+			cards.add(Main.deck.remove(0));
+			score.UpdateScore(cards);
+		}
 		
 
 		// Draw components images
