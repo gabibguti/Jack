@@ -67,8 +67,9 @@ public class BankFrame extends JFrame {
 				
 				while(BankFrame.bank.cards.isEmpty() == false) {	// Remove all cards from the bank
 					BankFrame.bank.cards.remove(0);
+					BankFrame.bank.pComponents.remove(0);	
 				}
-				BankFrame.bank.pComponents.remove(0);				
+//				BankFrame.bank.pComponents.remove(0);				
 				
 				score.UpdateScore(cards);
 				while(score.getScore() < 17) {						// Draw cards until score >= 17
