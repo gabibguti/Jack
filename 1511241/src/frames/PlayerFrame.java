@@ -4,7 +4,10 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -48,7 +51,7 @@ public class PlayerFrame extends JFrame {
 	    });
 		
 		activePlayers++; // Add active player
-		setSize(220, 300);
+		setSize(400, 350);
 		layout = new GroupLayout(getContentPane()); // Organize layout by groups
 		getContentPane().setLayout(layout);
         layout.setAutoCreateGaps(true);
@@ -59,12 +62,9 @@ public class PlayerFrame extends JFrame {
 		cardsPanel = new JPanel();
 		infoPanel = new JPanel();
 		buttonsPanel.setLayout(new FlowLayout());
-		cardsPanel.setLayout(new GridLayout(1,1));
+		cardsPanel.setLayout(new GridBagLayout());
 		infoPanel.setLayout(new FlowLayout());
-		buttonsPanel.setSize(this.getWidth(), 20);
-		cardsPanel.setSize(this.getWidth(), 200);
-		infoPanel.setSize(this.getWidth(), 20);
-
+		
 		// Create player score label
 		JLabel playerScore = new JLabel("");
 		playerScore.setSize(this.getWidth(), 15);
