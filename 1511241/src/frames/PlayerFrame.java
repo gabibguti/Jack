@@ -21,7 +21,8 @@ public class PlayerFrame extends JFrame {
 	int centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
 	int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
 	int gap = 4;
-	static int activePlayers = 0;
+	public static int activePlayers = 0;
+	public static int numPlayers = 0;
 	ArrayList<Card> cards = new ArrayList<>();
 	JPanel buttonsPanel;
 	JPanel cardsPanel;
@@ -38,6 +39,10 @@ public class PlayerFrame extends JFrame {
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 		            Provider.framesList.remove(PlayerFrame.this);
+		            PlayerFrame.activePlayers--;
+		            PlayerFrame.numPlayers--;
+		            if(PlayerFrame.activePlayers == 0)
+						BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 		            PlayerFrame.this.dispose();
 	        }
 	    });
@@ -71,7 +76,7 @@ public class PlayerFrame extends JFrame {
 		// hitButton listener
 		hitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				p.RequestNewCard(cards, cardsPanel, PlayerFrame.this); // Hit
+				Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this); // Hit
 				ReloadLayout();
 				totalScore.UpdateScore(cards); // Update score
 				playerScore.setText("Score: " + totalScore.getScore());
@@ -83,12 +88,14 @@ public class PlayerFrame extends JFrame {
 					// Reinitialize cards panel
 					// TODO: Review because is taking cards from actual deck and not new deck	
 					cards.clear();
-					p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
-					p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);	
+					Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
+					Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);	
 					totalScore.UpdateScore(cards);
 					playerScore.setText("Score: " + totalScore.getScore());
 					ReloadLayout();
 					activePlayers--;
+					if(activePlayers == 0)
+						BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 				}
 			}
 		});
@@ -106,20 +113,15 @@ public class PlayerFrame extends JFrame {
 				// Reinitialize cards panel
 				// TODO: Review because is taking cards from actual deck and not new deck	
 				cards.clear();
-				p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
-				p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);	
+				Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
+				Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);	
 				totalScore.UpdateScore(cards);
 				playerScore.setText("Score: " + totalScore.getScore());
 				ReloadLayout();
 				hitButton.setEnabled(true);
 				activePlayers--;
 				if(activePlayers == 0)
-				{
-					// FIXME: PEDRO VAI RESOLVER
-					// TODO: DAR DISABLE NO NEW ROUND
-					// TODO: SINGLETON (DONTCARE), ALL THE SINGLE LADIES
-					// TODO: KEEP SUMMER SAFE
-				}
+					BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 			}
 		});
 
@@ -129,8 +131,8 @@ public class PlayerFrame extends JFrame {
 		buttonsPanel.add(standButton);
 		
 		// Initial cards
-		p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
-		p.RequestNewCard(cards, cardsPanel, PlayerFrame.this);		
+		Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
+		Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);		
 		
 		// Initial score
 		totalScore.UpdateScore(cards);

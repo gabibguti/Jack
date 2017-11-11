@@ -15,7 +15,7 @@ import frames.BankFrame;
 public class Provider {
 	public static ArrayList<Frame> framesList = new ArrayList<Frame>();
 	
-	   public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
+	   static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
 	   {
 			Card card;
 			try { // TODO: Open window with message
