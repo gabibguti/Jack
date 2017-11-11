@@ -162,6 +162,7 @@ public class BankFrame extends JFrame {
 			pComponents.add(lb, constraints);								// Add to panel
 			i++;
 		}
+		score.UpdateScore(cards);
 		//Chips
 		constraints.gridy = 1;												// Insert in the second row
 		for(i = 0; i < chips.length; i++) {
@@ -233,5 +234,9 @@ public class BankFrame extends JFrame {
 	static void newRoundSetEnabled(boolean bool, int numPlayers) {
 		bank.bNewRound.setEnabled(bool);
 		PlayerFrame.activePlayers = numPlayers;
+	}
+	
+	static int getBankScore() {
+		return BankFrame.bank.score.getScore();
 	}
 }
