@@ -73,7 +73,7 @@ public class BankFrame extends JFrame {
 				
 				score.UpdateScore(cards);
 				while(score.getScore() < 17) {						// Draw cards until score >= 17
-					BankFrame.bank.cards.add(Main.deck.remove(0));
+					BankFrame.bank.cards.add(Provider.RemoveCardFromDeck());
 					score.UpdateScore(BankFrame.bank.cards);
 				}
 				
@@ -140,7 +140,7 @@ public class BankFrame extends JFrame {
 		// Initial cards
 		score.UpdateScore(cards);
 		while(score.getScore() < 17) {						// Draw cards until score >= 17
-			cards.add(Main.deck.remove(0));
+			cards.add(Provider.RemoveCardFromDeck());
 			score.UpdateScore(cards);
 		}
 		
