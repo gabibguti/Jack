@@ -104,7 +104,7 @@ public class PlayerFrame extends JFrame {
 		standButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				hitButton.setEnabled(false);
-				if(totalScore.getScore() > 17) { 
+				if(totalScore.getScore() > BankFrame.getBankScore()) { 
 					JOptionPane.showMessageDialog(null, "Wubba lubba dub dub! I WON MORTY!"); // Warn bursted player
 				}
 				PlayerFrame.this.setVisible(false); // "Close" player frame
