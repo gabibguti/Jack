@@ -1,5 +1,6 @@
 package frames;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -51,19 +52,19 @@ public class PlayerFrame extends JFrame {
 	    });
 		
 		activePlayers++; // Add active player
-		setSize(400, 350);
-		layout = new GroupLayout(getContentPane()); // Organize layout by groups
-		getContentPane().setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true); 
+		setSize(600, 400);
+		setLayout(new BorderLayout());
 
 		// Create Panel
 		buttonsPanel = new JPanel();
 		cardsPanel = new JPanel();
 		infoPanel = new JPanel();
 		buttonsPanel.setLayout(new FlowLayout());
-		cardsPanel.setLayout(new GridBagLayout());
+		cardsPanel.setLayout(new BorderLayout());
 		infoPanel.setLayout(new FlowLayout());
+		buttonsPanel.setSize(600, 20);
+		cardsPanel.setSize(600, 360);
+		infoPanel.setSize(600, 20);
 		
 		// Create player score label
 		JLabel playerScore = new JLabel("");
@@ -77,7 +78,6 @@ public class PlayerFrame extends JFrame {
 		hitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this); // Hit
-				ReloadLayout();
 				totalScore.UpdateScore(cards); // Update score
 				playerScore.setText("Score: " + totalScore.getScore());
 				if(totalScore.getScore() > 21) { // Treat when player gets bursted
@@ -92,7 +92,6 @@ public class PlayerFrame extends JFrame {
 					Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);	
 					totalScore.UpdateScore(cards);
 					playerScore.setText("Score: " + totalScore.getScore());
-					ReloadLayout();
 					activePlayers--;
 					if(activePlayers == 0)
 						BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
@@ -117,7 +116,6 @@ public class PlayerFrame extends JFrame {
 				Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);	
 				totalScore.UpdateScore(cards);
 				playerScore.setText("Score: " + totalScore.getScore());
-				ReloadLayout();
 				hitButton.setEnabled(true);
 				activePlayers--;
 				if(activePlayers == 0)
@@ -142,7 +140,9 @@ public class PlayerFrame extends JFrame {
 		infoPanel.add(playerScore);
 
 		// Add components to frame
-		ReloadLayout();
+		this.add(buttonsPanel, BorderLayout.PAGE_START);
+		this.add(cardsPanel, BorderLayout.CENTER);
+		this.add(infoPanel, BorderLayout.PAGE_END);
 		
 		// Allow us to see the frame
 		setVisible(true);
@@ -164,26 +164,5 @@ public class PlayerFrame extends JFrame {
 		default:
 			setLocationRelativeTo(null);
 		}
-	}
-	
-	public void ReloadLayout () {
-		layout.setHorizontalGroup( // All panels in horizontal group
-		    layout.createSequentialGroup()
-		        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-		        	.addComponent(buttonsPanel)
-		        	.addComponent(cardsPanel)
-		        	.addComponent(infoPanel))
-		);
-			
-		layout.setVerticalGroup( // Separate panel in vertical group
-			layout.createSequentialGroup()
-		        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-		            .addComponent(buttonsPanel))
-		        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-		            .addComponent(cardsPanel))
-		        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	        		.addComponent(infoPanel))
-	    );
-		
 	}
 }

@@ -1,19 +1,25 @@
 package components;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
+import java.lang.reflect.Array;
+import java.security.KeyStore.Entry;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
-// Not being used
-
 public class GameImagePanel extends JPanel{
-	private Image img;
-    public GameImagePanel(Image image) {                                                                       
-        this.img = image; 
-    }                                                                                                          
-    @Override                                                                                                  
+	Map<Image, Point> imgs;
+	public GameImagePanel(Map<Image, Point> images) {
+		imgs = images;
+	}                                                                                                          	
+	@Override                                                                                                  
     protected void paintComponent(Graphics g) {                                                                
         super.paintComponent(g);
-    	g.drawImage(img, 0, 0, this);
+        for (java.util.Map.Entry<Image, Point> e : imgs.entrySet()) {
+        	Image img = e.getKey();
+        	Point imgPoint = e.getValue();
+        	g.drawImage(img, imgPoint.x, imgPoint.y, this);
+        }
     }
 }

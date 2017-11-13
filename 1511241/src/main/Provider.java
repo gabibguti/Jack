@@ -3,8 +3,12 @@ package main;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -19,29 +23,33 @@ import components.GameImagePanel;
 import frames.BankFrame;
 
 public class Provider {
-	private static GridBagConstraints cards_constraints = new GridBagConstraints(); // Cards Layout for Player Frame
-
-	{
-		cards_constraints.fill = GridBagConstraints.HORIZONTAL; // Set horizontal Layout
-		cards_constraints.gridy = 0; // Set to first line
-		cards_constraints.insets = new Insets(10, 10, 10, 10); // Add Layout insets padding
-	}
-
 	public static ArrayList<Frame> framesList = new ArrayList<Frame>();
-
-	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
+	
+	   static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
 	   {
+		   	Point imgPoint;
+			int x, y;
+			int width;
+			Map<Image, Point> cards_images = new HashMap<Image, Point>();
+
 			Card card;
-			try { 
-				card = Main.deck.remove(0);																// Remove card from deck
-				cards_constraints.gridx = hand.size();													// Set horizontal card position on Layout
-				hand.add(card);																			// Add card to hand
-				Icon icon = new ImageIcon(card.getImage());												// Create Icon with card image
-				JLabel card_label = new JLabel(icon);													// Create Label with Icon
-				controlPanel.add(card_label, cards_constraints);										// Add Label to Panel
-				frame.revalidate();		
+			width = controlPanel.getWidth();
+			try {
+				card = Main.deck.remove(0); // Remove card from deck
+				hand.add(card); // Add card to hand
+				x = width/(2 * hand.size()) - card.getImage().getWidth()/2;
+				y = controlPanel.getHeight()/2 - card.getImage().getHeight()/2;
+				controlPanel.removeAll(); // Clear control panel
+				for(Card hand_card: hand)
+				{
+					imgPoint = new Point(x, y);
+					cards_images.put(hand_card.getImage(), imgPoint);
+					x += width/hand.size();
+				}
+				controlPanel.add(new GameImagePanel(cards_images)); // Add card image to control panel
+				frame.revalidate(); // Update frame
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Deck ended. Cannot request any more cards.");	// Show error message when deck is runs out of cards
+				JOptionPane.showMessageDialog(null, "Deck ended. Cannot request any more cards.");
 			}	   
 	   }
 
