@@ -4,6 +4,8 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.Icon;
@@ -21,6 +23,12 @@ import frames.BankFrame;
 public class Provider {
 	private static GridBagConstraints cards_constraints = new GridBagConstraints(); // Cards Layout for Player Frame
 
+	public static WindowAdapter windowAdapter = new WindowAdapter() {
+		public void windowClosing(WindowEvent windowEvent) {
+			System.exit(0);
+		}
+	};
+	
 	{
 		cards_constraints.fill = GridBagConstraints.HORIZONTAL; // Set horizontal Layout
 		cards_constraints.gridy = 0; // Set to first line
@@ -55,4 +63,5 @@ public class Provider {
 			return null;
 		}
 	}
+	
 }

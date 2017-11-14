@@ -64,11 +64,7 @@ public class Main {
 		statusLabel.setSize(350, 100);
 
 		// Add Listener
-		mainFrame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent windowEvent) {
-				System.exit(0);
-			}
-		});
+		mainFrame.addWindowListener(Provider.windowAdapter);
 
 		// Create Buttons Panel
 		mainCP = new JPanel();
