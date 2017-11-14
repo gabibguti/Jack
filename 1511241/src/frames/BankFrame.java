@@ -24,14 +24,15 @@ import main.Provider;
 public class BankFrame extends JFrame {
 	private Chip[] chips = new Chip[6];
 	static public BankFrame bank;
-	private JButton bEndGame;
-	private JButton bNewRound;
-	private JButton bSave;
-	private JPanel pComponents;
-	private GridBagConstraints constraints;
-	ArrayList<Card> cards = new ArrayList<>();
-	private ArrayList<JLabel> cardsLabels = new ArrayList<>();
-	Score score = new Score();
+	public JButton bEndGame;
+	public JButton bNewRound;
+	public JButton bSave;
+	public JPanel pComponents;
+	public JPanel pButtons;
+	public GridBagConstraints constraints;
+	public ArrayList<Card> cards = new ArrayList<>();
+	public ArrayList<JLabel> cardsLabels = new ArrayList<>();
+	public Score score = new Score();
 	
 	{
 		chips[0] = new Chip(1);
@@ -54,81 +55,21 @@ public class BankFrame extends JFrame {
 		bNewRound.setEnabled(false);
 		
 		// EndGame button action listener
-		bEndGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				System.exit(0);				
-			}
-		});
+		bEndGame.addActionListener(Provider.endGameListener);
 
 		// NewRound action listener
-		bNewRound.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				BankFrame.newRoundSetEnabled(false);
-				
-				while(BankFrame.bank.cards.isEmpty() == false) {	// Remove all cards from the bank
-					BankFrame.bank.cards.remove(0);
-					BankFrame.bank.pComponents.remove(0);	
-				}
-//				BankFrame.bank.pComponents.remove(0);				
-				
-				score.UpdateScore(cards);
-				while(score.getScore() < 17) {						// Draw cards until score >= 17
-					BankFrame.bank.cards.add(Provider.RemoveCardFromDeck());
-					score.UpdateScore(BankFrame.bank.cards);
-				}
-				
-				// Insert new cards in the bank
-				int i = 0;
-				BankFrame.bank.constraints.gridy = 0;
-				for(Card c : BankFrame.bank.cards) {
-					BankFrame.bank.constraints.gridx = i+2;								// Insert in the (i+2)th column
-					Icon icon = new ImageIcon(c.getImage());
-					JLabel lb = new JLabel(icon);										// Create Label with image
-					BankFrame.bank.pComponents.add(lb, BankFrame.bank.constraints, i);	// Add to panel
-					i++;
-				}
-				BankFrame.bank.pComponents.revalidate();	// Update frame
-				BankFrame.bank.pComponents.repaint();
-				
-				for(Frame frame: Provider.framesList)
-				{
-					frame.setVisible(true);
-				}
-			}
-		});
+		bNewRound.addActionListener(Provider.newRoundListener);
 			
 		// Save button action listener
-		bSave.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent actionEvent) {
-				String s = "testezão do sucesso";
-				final JFileChooser fc = new JFileChooser();
-				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
-			    int retrival = fc.showSaveDialog(null);
-			    if (retrival == JFileChooser.APPROVE_OPTION) {
-			        try {
-			            FileWriter fw = new FileWriter(fc.getSelectedFile() + ".txt");
-			            fw.write(s);	// TODO: Change s for file containing game info
-			            fw.close();
-			        } catch (Exception ex) {
-			            ex.printStackTrace();
-			        }
-			    }
-			}
-			
-		});
+		bSave.addActionListener(Provider.saveListener);
 		
 		setSize(bankBackground.getWidth(), bankBackground.getHeight());
 		setContentPane(new GameImage(bankBackground));
 		
 		// Add Listener
-        addWindowListener(new WindowAdapter() {
-           public void windowClosing(WindowEvent windowEvent){
-              System.exit(0);
-           }        
-        });
+        addWindowListener(Provider.windowAdapter);
         
-        JPanel pButtons = new JPanel();
+        pButtons = new JPanel();
         // Add buttons
 		pButtons.add(bEndGame);
 		pButtons.add(bNewRound);
@@ -184,10 +125,6 @@ public class BankFrame extends JFrame {
         setLocationRelativeTo(null);
 	}
 	
-	public static void createBank(String name, BufferedImage bankBackground) {
-		bank = new BankFrame(name, bankBackground);
-	}
-	
 	private class ChipClickListener implements MouseListener {
 
 		int value;
@@ -225,18 +162,5 @@ public class BankFrame extends JFrame {
 
 		}
 
-	}
-	
-	static void newRoundSetEnabled(boolean bool) {
-		bank.bNewRound.setEnabled(bool);
-	}
-	
-	static void newRoundSetEnabled(boolean bool, int numPlayers) {
-		bank.bNewRound.setEnabled(bool);
-		PlayerFrame.activePlayers = numPlayers;
-	}
-	
-	static int getBankScore() {
-		return BankFrame.bank.score.getScore();
 	}
 }
