@@ -38,17 +38,7 @@ public class PlayerFrame extends JFrame {
 		super("Player " + playerNumber);
 
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.addWindowListener(new java.awt.event.WindowAdapter() { // Remove player on close
-		    @Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		            Provider.framesList.remove(PlayerFrame.this);
-		            PlayerFrame.activePlayers--;
-		            PlayerFrame.numPlayers--;
-		            if(PlayerFrame.activePlayers == 0)
-						BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
-		            PlayerFrame.this.dispose();
-	        }
-	    });
+		this.addWindowListener(Provider.playerFrameClosing);
 		
 		activePlayers++; // Add active player
 		setSize(400, 350);

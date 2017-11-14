@@ -4,6 +4,7 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import javax.swing.SwingUtilities;
 import cards.Card;
 import components.GameImagePanel;
 import frames.BankFrame;
+import frames.PlayerFrame;
 
 public class Provider {
 	private static GridBagConstraints cards_constraints = new GridBagConstraints(); // Cards Layout for Player Frame
@@ -26,6 +28,18 @@ public class Provider {
 	public static WindowAdapter windowAdapter = new WindowAdapter() {
 		public void windowClosing(WindowEvent windowEvent) {
 			System.exit(0);
+		}
+	};
+	
+	public static WindowAdapter playerFrameClosing = new WindowAdapter() {
+		@Override
+		public void windowClosing(WindowEvent windowEvent) {
+			Provider.framesList.remove(windowEvent.getSource());
+			PlayerFrame.activePlayers--;
+			PlayerFrame.numPlayers--;
+			if (PlayerFrame.activePlayers == 0)
+				BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+			((Window) windowEvent.getSource()).dispose();
 		}
 	};
 	

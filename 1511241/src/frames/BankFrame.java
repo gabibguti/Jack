@@ -122,11 +122,7 @@ public class BankFrame extends JFrame {
 		setContentPane(new GameImage(bankBackground));
 		
 		// Add Listener
-        addWindowListener(new WindowAdapter() {
-           public void windowClosing(WindowEvent windowEvent){
-              System.exit(0);
-           }        
-        });
+        addWindowListener(Provider.windowAdapter);
         
         JPanel pButtons = new JPanel();
         // Add buttons
@@ -231,7 +227,7 @@ public class BankFrame extends JFrame {
 		bank.bNewRound.setEnabled(bool);
 	}
 	
-	static void newRoundSetEnabled(boolean bool, int numPlayers) {
+	public static void newRoundSetEnabled(boolean bool, int numPlayers) {
 		bank.bNewRound.setEnabled(bool);
 		PlayerFrame.activePlayers = numPlayers;
 	}
