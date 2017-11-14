@@ -5,12 +5,15 @@ import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,8 +26,17 @@ import frames.BankFrame;
 import frames.PlayerFrame;
 
 public class Provider {
+	
+	public static ArrayList<Frame> framesList = new ArrayList<Frame>();
+	
 	private static GridBagConstraints cards_constraints = new GridBagConstraints(); // Cards Layout for Player Frame
 
+	{
+		cards_constraints.fill = GridBagConstraints.HORIZONTAL; // Set horizontal Layout
+		cards_constraints.gridy = 0; // Set to first line
+		cards_constraints.insets = new Insets(10, 10, 10, 10); // Add Layout insets padding
+	}
+	
 	public static WindowAdapter windowAdapter = new WindowAdapter() {
 		public void windowClosing(WindowEvent windowEvent) {
 			System.exit(0);
@@ -43,13 +55,33 @@ public class Provider {
 		}
 	};
 	
-	{
-		cards_constraints.fill = GridBagConstraints.HORIZONTAL; // Set horizontal Layout
-		cards_constraints.gridy = 0; // Set to first line
-		cards_constraints.insets = new Insets(10, 10, 10, 10); // Add Layout insets padding
-	}
-
-	public static ArrayList<Frame> framesList = new ArrayList<Frame>();
+	public static ActionListener hitButtonListener = new ActionListener() {
+		public void actionPerformed(ActionEvent actionEvent) {
+			JButton b = (JButton) actionEvent.getSource();
+			PlayerFrame p = (PlayerFrame) b.getParent().getParent().getParent().getParent().getParent();
+			Provider.RequestNewCard(p.cards, p.cardsPanel, p); // Hit
+			p.ReloadLayout();
+			p.totalScore.UpdateScore(p.cards); // Update score
+			p.playerScore.setText("Score: " + p.totalScore.getScore());
+			if(p.totalScore.getScore() > 21) { // Treat when player gets bursted
+				JOptionPane.showMessageDialog(null, "Geez Rick. I got bursted."); // Warn bursted player
+				p.setVisible(false); // "Close" player frame
+				// Reset players frame
+				p.cardsPanel.removeAll();
+				// Reinitialize cards panel
+				// TODO: Review because is taking cards from actual deck and not new deck	
+				p.cards.clear();
+				Provider.RequestNewCard(p.cards, p.cardsPanel, p);
+				Provider.RequestNewCard(p.cards, p.cardsPanel, p);	
+				p.totalScore.UpdateScore(p.cards);
+				p.playerScore.setText("Score: " + p.totalScore.getScore());
+				p.ReloadLayout();
+				PlayerFrame.activePlayers--;
+				if(PlayerFrame.activePlayers == 0)
+					BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+			}
+		}
+	};
 
 	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
 	   {
