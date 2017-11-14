@@ -232,7 +232,7 @@ public class BankFrame extends JFrame {
 		PlayerFrame.activePlayers = numPlayers;
 	}
 	
-	static int getBankScore() {
+	public static int getBankScore() {
 		return BankFrame.bank.score.getScore();
 	}
 }

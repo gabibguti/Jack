@@ -82,6 +82,32 @@ public class Provider {
 			}
 		}
 	};
+	
+	public static ActionListener standButtonListener = new ActionListener() {
+		public void actionPerformed(ActionEvent actionEvent) {
+			JButton b = (JButton) actionEvent.getSource();
+			PlayerFrame p = (PlayerFrame) b.getParent().getParent().getParent().getParent().getParent();
+//			p.hitButton.setEnabled(false); 		//TODO: Solve this line	hitButton = null)
+			if(p.totalScore.getScore() > BankFrame.getBankScore()) { 
+				JOptionPane.showMessageDialog(null, "Wubba lubba dub dub! I WON MORTY!"); // Warn bursted player
+			}
+			p.setVisible(false); // "Close" player frame
+			// Reset players frame
+			p.cardsPanel.removeAll();
+			// Reinitialize cards panel
+			// TODO: Review because is taking cards from actual deck and not new deck	
+			p.cards.clear();
+			Provider.RequestNewCard(p.cards, p.cardsPanel, p);
+			Provider.RequestNewCard(p.cards, p.cardsPanel, p);	
+			p.totalScore.UpdateScore(p.cards);
+			p.playerScore.setText("Score: " + p.totalScore.getScore());
+			p.ReloadLayout();
+//			p.hitButton.setEnabled(true);		TODO: Solve this line (hitButton = null)
+			PlayerFrame.activePlayers--;
+			if(PlayerFrame.activePlayers == 0)
+				BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+		}
+	};
 
 	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
 	   {

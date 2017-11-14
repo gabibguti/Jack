@@ -2,20 +2,13 @@ package frames;
 
 import java.awt.Container;
 import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.*;
 
 import cards.Card;
-import components.GameImagePanel;
 
 import main.*;
 
@@ -31,6 +24,8 @@ public class PlayerFrame extends JFrame {
 	public JPanel cardsPanel;
 	public JPanel infoPanel;
 	public JLabel playerScore;
+	public JButton hitButton;
+	public JButton standButton;
 	public Score totalScore = new Score();
 	public GroupLayout layout;
 
@@ -67,30 +62,7 @@ public class PlayerFrame extends JFrame {
 		hitButton.addActionListener(Provider.hitButtonListener);
 
 		// standButton listener
-		standButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				hitButton.setEnabled(false);
-				if(totalScore.getScore() > BankFrame.getBankScore()) { 
-					JOptionPane.showMessageDialog(null, "Wubba lubba dub dub! I WON MORTY!"); // Warn bursted player
-				}
-				PlayerFrame.this.setVisible(false); // "Close" player frame
-				// Reset players frame
-				cardsPanel.removeAll();
-				// Reinitialize cards panel
-				// TODO: Review because is taking cards from actual deck and not new deck	
-				cards.clear();
-				Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
-				Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);	
-				totalScore.UpdateScore(cards);
-				playerScore.setText("Score: " + totalScore.getScore());
-				ReloadLayout();
-				hitButton.setEnabled(true);
-				activePlayers--;
-				if(activePlayers == 0)
-					BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
-			}
-		});
-
+		standButton.addActionListener(Provider.standButtonListener);
 		
 		// Add button to buttons panel
 		buttonsPanel.add(hitButton);
