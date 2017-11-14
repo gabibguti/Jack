@@ -9,11 +9,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -148,6 +151,25 @@ public class Provider {
 			{
 				frame.setVisible(true);
 			}
+		}
+	};
+	
+	public static ActionListener saveListener = new ActionListener() {
+		
+		public void actionPerformed(ActionEvent actionEvent) {
+			String s = "testezão do sucesso";
+			final JFileChooser fc = new JFileChooser();
+			fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		    int retrival = fc.showSaveDialog(null);
+		    if (retrival == JFileChooser.APPROVE_OPTION) {
+		        try {
+		            FileWriter fw = new FileWriter(fc.getSelectedFile() + ".txt");
+		            fw.write(s);	// TODO: Change s for file containing game info
+		            fw.close();
+		        } catch (Exception ex) {
+		            ex.printStackTrace();
+		        }
+		    }
 		}
 	};
 
