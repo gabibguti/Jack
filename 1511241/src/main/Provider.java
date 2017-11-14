@@ -114,6 +114,42 @@ public class Provider {
 			System.exit(0);				
 		}
 	};
+	
+	public static ActionListener newRoundListener = new ActionListener() {
+		public void actionPerformed(ActionEvent actionEvent) {
+			BankFrame.newRoundSetEnabled(false);
+			
+			while(BankFrame.bank.cards.isEmpty() == false) {	// Remove all cards from the bank
+				BankFrame.bank.cards.remove(0);
+				BankFrame.bank.pComponents.remove(0);	
+			}
+//			BankFrame.bank.pComponents.remove(0);				
+			
+			BankFrame.bank.score.UpdateScore(BankFrame.bank.cards);
+			while(BankFrame.bank.score.getScore() < 17) {						// Draw cards until score >= 17
+				BankFrame.bank.cards.add(Provider.RemoveCardFromDeck());
+				BankFrame.bank.score.UpdateScore(BankFrame.bank.cards);
+			}
+			
+			// Insert new cards in the bank
+			int i = 0;
+			BankFrame.bank.constraints.gridy = 0;
+			for(Card c : BankFrame.bank.cards) {
+				BankFrame.bank.constraints.gridx = i+2;								// Insert in the (i+2)th column
+				Icon icon = new ImageIcon(c.getImage());
+				JLabel lb = new JLabel(icon);										// Create Label with image
+				BankFrame.bank.pComponents.add(lb, BankFrame.bank.constraints, i);	// Add to panel
+				i++;
+			}
+			BankFrame.bank.pComponents.revalidate();	// Update frame
+			BankFrame.bank.pComponents.repaint();
+			
+			for(Frame frame: Provider.framesList)
+			{
+				frame.setVisible(true);
+			}
+		}
+	};
 
 	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
 	   {

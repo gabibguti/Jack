@@ -30,9 +30,9 @@ public class BankFrame extends JFrame {
 	public JPanel pComponents;
 	public JPanel pButtons;
 	public GridBagConstraints constraints;
-	ArrayList<Card> cards = new ArrayList<>();
+	public ArrayList<Card> cards = new ArrayList<>();
 	public ArrayList<JLabel> cardsLabels = new ArrayList<>();
-	Score score = new Score();
+	public Score score = new Score();
 	
 	{
 		chips[0] = new Chip(1);
@@ -58,41 +58,7 @@ public class BankFrame extends JFrame {
 		bEndGame.addActionListener(Provider.endGameListener);
 
 		// NewRound action listener
-		bNewRound.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				BankFrame.newRoundSetEnabled(false);
-				
-				while(BankFrame.bank.cards.isEmpty() == false) {	// Remove all cards from the bank
-					BankFrame.bank.cards.remove(0);
-					BankFrame.bank.pComponents.remove(0);	
-				}
-//				BankFrame.bank.pComponents.remove(0);				
-				
-				score.UpdateScore(cards);
-				while(score.getScore() < 17) {						// Draw cards until score >= 17
-					BankFrame.bank.cards.add(Provider.RemoveCardFromDeck());
-					score.UpdateScore(BankFrame.bank.cards);
-				}
-				
-				// Insert new cards in the bank
-				int i = 0;
-				BankFrame.bank.constraints.gridy = 0;
-				for(Card c : BankFrame.bank.cards) {
-					BankFrame.bank.constraints.gridx = i+2;								// Insert in the (i+2)th column
-					Icon icon = new ImageIcon(c.getImage());
-					JLabel lb = new JLabel(icon);										// Create Label with image
-					BankFrame.bank.pComponents.add(lb, BankFrame.bank.constraints, i);	// Add to panel
-					i++;
-				}
-				BankFrame.bank.pComponents.revalidate();	// Update frame
-				BankFrame.bank.pComponents.repaint();
-				
-				for(Frame frame: Provider.framesList)
-				{
-					frame.setVisible(true);
-				}
-			}
-		});
+		bNewRound.addActionListener(Provider.newRoundListener);
 			
 		// Save button action listener
 		bSave.addActionListener(new ActionListener() {
@@ -220,7 +186,7 @@ public class BankFrame extends JFrame {
 
 	}
 	
-	static void newRoundSetEnabled(boolean bool) {
+	public static void newRoundSetEnabled(boolean bool) {
 		bank.bNewRound.setEnabled(bool);
 	}
 	
