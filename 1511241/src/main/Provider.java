@@ -108,6 +108,12 @@ public class Provider {
 				BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 		}
 	};
+	
+	public static ActionListener endGameListener = new ActionListener() {
+		public void actionPerformed(ActionEvent actionEvent) {
+			System.exit(0);				
+		}
+	};
 
 	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
 	   {

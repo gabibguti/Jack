@@ -24,13 +24,14 @@ import main.Provider;
 public class BankFrame extends JFrame {
 	private Chip[] chips = new Chip[6];
 	static public BankFrame bank;
-	private JButton bEndGame;
-	private JButton bNewRound;
-	private JButton bSave;
-	private JPanel pComponents;
-	private GridBagConstraints constraints;
+	public JButton bEndGame;
+	public JButton bNewRound;
+	public JButton bSave;
+	public JPanel pComponents;
+	public JPanel pButtons;
+	public GridBagConstraints constraints;
 	ArrayList<Card> cards = new ArrayList<>();
-	private ArrayList<JLabel> cardsLabels = new ArrayList<>();
+	public ArrayList<JLabel> cardsLabels = new ArrayList<>();
 	Score score = new Score();
 	
 	{
@@ -54,11 +55,7 @@ public class BankFrame extends JFrame {
 		bNewRound.setEnabled(false);
 		
 		// EndGame button action listener
-		bEndGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				System.exit(0);				
-			}
-		});
+		bEndGame.addActionListener(Provider.endGameListener);
 
 		// NewRound action listener
 		bNewRound.addActionListener(new ActionListener() {
@@ -124,7 +121,7 @@ public class BankFrame extends JFrame {
 		// Add Listener
         addWindowListener(Provider.windowAdapter);
         
-        JPanel pButtons = new JPanel();
+        pButtons = new JPanel();
         // Add buttons
 		pButtons.add(bEndGame);
 		pButtons.add(bNewRound);
