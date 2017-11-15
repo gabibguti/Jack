@@ -23,15 +23,15 @@ public class PlayerFrame extends JFrame {
 	int gap = 4;
 	public static int activePlayers = 0;
 	public static int numPlayers = 0;
-	public ArrayList<Card> cards = new ArrayList<>();
-	public JPanel buttonsPanel;
-	public JPanel cardsPanel;
-	public JPanel infoPanel;
-	public JLabel playerScore;
-	public JButton hitButton;
-	public JButton standButton;
-	public Score totalScore = new Score();
-	public GroupLayout layout;
+	private ArrayList<Card> cards = new ArrayList<>();
+	private JPanel buttonsPanel;
+	private JPanel cardsPanel;
+	private JPanel infoPanel;
+	private JLabel playerScore;
+	private JButton hitButton;
+	private JButton standButton;
+	private Score totalScore = new Score();
+	private GroupLayout playerFrameLayout;
 
 	public PlayerFrame(String playerNumber, Container cont) {
 		super("Player " + playerNumber);
@@ -44,53 +44,53 @@ public class PlayerFrame extends JFrame {
 		setLayout(new BorderLayout());
 
 		// Create Panel
-		buttonsPanel = new JPanel();
-		cardsPanel = new JPanel();
-		infoPanel = new JPanel();
-		buttonsPanel.setLayout(new FlowLayout());
-		cardsPanel.setLayout(new BorderLayout());
-		infoPanel.setLayout(new FlowLayout());
-		buttonsPanel.setSize(500, 20);
-		cardsPanel.setSize(500, 310);
-		infoPanel.setSize(500, 20);
+		setButtonsPanel(new JPanel());
+		setCardsPanel(new JPanel());
+		setInfoPanel(new JPanel());
+		getButtonsPanel().setLayout(new FlowLayout());
+		getCardsPanel().setLayout(new BorderLayout());
+		getInfoPanel().setLayout(new FlowLayout());
+		getButtonsPanel().setSize(500, 20);
+		getCardsPanel().setSize(500, 310);
+		getInfoPanel().setSize(500, 20);
 		
 		// Create player score label
-		playerScore = new JLabel("");
-		playerScore.setSize(this.getWidth(), 15);
+		setPlayerScore(new JLabel(""));
+		getPlayerScore().setSize(this.getWidth(), 15);
 				
 		// Create button
-		hitButton = new JButton("Hit");
-		standButton = new JButton("Stand");
+		setHitButton(new JButton("Hit"));
+		setStandButton(new JButton("Stand"));
 
 		// hitButton listener
-		hitButton.addActionListener(Provider.hitButtonListener);
+		getHitButton().addActionListener(Provider.hitButtonListener);
 
 		// standButton listener
-		standButton.addActionListener(Provider.standButtonListener);
+		getStandButton().addActionListener(Provider.standButtonListener);
 		
 		// Add button to buttons panel
-		buttonsPanel.add(hitButton);
-		buttonsPanel.add(standButton);
+		getButtonsPanel().add(getHitButton());
+		getButtonsPanel().add(getStandButton());
 		
 		// Initial cards
-		Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);
-		Provider.RequestNewCard(cards, cardsPanel, PlayerFrame.this);		
+		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);
+		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);		
 		
 		// Initial score
-		totalScore.UpdateScore(cards);
-		if(totalScore.getScore() < 10)
-			playerScore.setText("Score: " + totalScore.getScore() + " (TINY RICK!!!)");
+		getTotalScore().UpdateScore(getCards());
+		if(getTotalScore().getScore() < 10)
+			getPlayerScore().setText("Score: " + getTotalScore().getScore() + " (TINY RICK!!!)");
 		else
-			playerScore.setText("Score: " + totalScore.getScore());
+			getPlayerScore().setText("Score: " + getTotalScore().getScore());
 
 		
 		// Add player score label to info panel
-		infoPanel.add(playerScore);
+		getInfoPanel().add(getPlayerScore());
 
 		// Add components to frame
-		this.add(buttonsPanel, BorderLayout.PAGE_START);
-		this.add(cardsPanel, BorderLayout.CENTER);
-		this.add(infoPanel, BorderLayout.PAGE_END);
+		this.add(getButtonsPanel(), BorderLayout.PAGE_START);
+		this.add(getCardsPanel(), BorderLayout.CENTER);
+		this.add(getInfoPanel(), BorderLayout.PAGE_END);
 		
 		// Allow us to see the frame
 		setVisible(true);
@@ -112,5 +112,131 @@ public class PlayerFrame extends JFrame {
 		default:
 			setLocationRelativeTo(null);
 		}
+	}
+
+	/**
+	 * @return the cards
+	 */
+	public ArrayList<Card> getCards() {
+		return cards;
+	}
+
+	/**
+	 * @param cards the cards to set
+	 */
+	public void setCards(ArrayList<Card> cards) {
+		this.cards = cards;
+	}
+
+	/**
+	 * @return the buttonsPanel
+	 */
+	public JPanel getButtonsPanel() {
+		return buttonsPanel;
+	}
+
+	/**
+	 * @param buttonsPanel the buttonsPanel to set
+	 */
+	public void setButtonsPanel(JPanel buttonsPanel) {
+		this.buttonsPanel = buttonsPanel;
+	}
+
+	/**
+	 * @return the cardsPanel
+	 */
+	public JPanel getCardsPanel() {
+		return cardsPanel;
+	}
+
+	/**
+	 * @param cardsPanel the cardsPanel to set
+	 */
+	public void setCardsPanel(JPanel cardsPanel) {
+		this.cardsPanel = cardsPanel;
+	}
+
+	/**
+	 * @return the infoPanel
+	 */
+	public JPanel getInfoPanel() {
+		return infoPanel;
+	}
+
+	/**
+	 * @param infoPanel the infoPanel to set
+	 */
+	public void setInfoPanel(JPanel infoPanel) {
+		this.infoPanel = infoPanel;
+	}
+
+	/**
+	 * @return the playerScore
+	 */
+	public JLabel getPlayerScore() {
+		return playerScore;
+	}
+
+	/**
+	 * @param playerScore the playerScore to set
+	 */
+	public void setPlayerScore(JLabel playerScore) {
+		this.playerScore = playerScore;
+	}
+
+	/**
+	 * @return the hitButton
+	 */
+	public JButton getHitButton() {
+		return hitButton;
+	}
+
+	/**
+	 * @param hitButton the hitButton to set
+	 */
+	public void setHitButton(JButton hitButton) {
+		this.hitButton = hitButton;
+	}
+
+	/**
+	 * @return the standButton
+	 */
+	public JButton getStandButton() {
+		return standButton;
+	}
+
+	/**
+	 * @param standButton the standButton to set
+	 */
+	public void setStandButton(JButton standButton) {
+		this.standButton = standButton;
+	}
+
+	/**
+	 * @return the totalScore
+	 */
+	public Score getTotalScore() {
+		return totalScore;
+	}
+
+	/**
+	 * @param totalScore the totalScore to set
+	 */
+	public void setTotalScore(Score totalScore) {
+		this.totalScore = totalScore;
+	}
+
+	/**
+	 * @return the playerFrameLayout
+	 */
+	public GroupLayout getPlayerFrameLayout() {
+		return playerFrameLayout;
+	}
+
+	/**
+	 * @param playerFrameLayout the playerFrameLayout to set
+	 */
+	public void setPlayerFrameLayout(GroupLayout playerFrameLayout) {
+		this.playerFrameLayout = playerFrameLayout;
 	}
 }

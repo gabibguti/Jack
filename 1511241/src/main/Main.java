@@ -21,7 +21,7 @@ public class Main {
 	private JLabel statusLabel;
 	private JPanel mainCP;
 	private JButton[] options;
-	public String[] actions;
+	private String[] actions;
 	private int maxPlayers = 4;
 	public static BufferedImage bankBackground = null;
 
@@ -84,9 +84,9 @@ public class Main {
 		subheaderLabel.setText("Select the number of players:");
 
 		// Create Actions
-		actions = new String[maxPlayers];
+		setActions(new String[maxPlayers]);
 		for (player = 0; player < maxPlayers; player++) {
-			actions[player] = String.valueOf(player + 1); // Set actions[0] = 1 and so on
+			getActions()[player] = String.valueOf(player + 1); // Set actions[0] = 1 and so on
 		}
 
 		// Create buttons
@@ -97,7 +97,7 @@ public class Main {
 
 		// Set command actions to the buttons
 		for (player = 0; player < maxPlayers; player++) {
-			options[player].setActionCommand(actions[player]);
+			options[player].setActionCommand(getActions()[player]);
 		}
 		
 		// Add listeners to buttons
@@ -112,6 +112,20 @@ public class Main {
 
 		// Allow us to see the frame
 		mainFrame.setVisible(true);
+	}
+
+	/**
+	 * @return the actions
+	 */
+	public String[] getActions() {
+		return actions;
+	}
+
+	/**
+	 * @param actions the actions to set
+	 */
+	public void setActions(String[] actions) {
+		this.actions = actions;
 	}
 
 	private class ButtonClickListener implements ActionListener {

@@ -75,9 +75,9 @@ public class Provider {
 				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 				
 				// Update bank frame
-				Provider.UpdateBankHand (BankFrame.bank.cards,
-										 BankFrame.bank.chips,
-										 BankFrame.bank.pComponents,
+				Provider.UpdateBankHand (BankFrame.bank.getCards(),
+										 BankFrame.bank.getChips(),
+										 BankFrame.bank.getpComponents(),
 										 BankFrame.bank,
 										 Main.bankBackground);
 				
@@ -91,16 +91,16 @@ public class Provider {
 		public void actionPerformed(ActionEvent actionEvent) {
 			JButton b = (JButton) actionEvent.getSource();
 			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
-			Provider.RequestNewCard(p.cards, p.cardsPanel, p); // Hit
+			Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
 
 			// Update score
-			p.totalScore.UpdateScore(p.cards); 
-			if(p.totalScore.getScore() < 10)
-				p.playerScore.setText("Score: " + p.totalScore.getScore() + " (TINY RICK!!!)");
+			p.getTotalScore().UpdateScore(p.getCards()); 
+			if(p.getTotalScore().getScore() < 10)
+				p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
 			else
-				p.playerScore.setText("Score: " + p.totalScore.getScore());
+				p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
 			
-			if(p.totalScore.getScore() > 21) { // Treat when player gets busted
+			if(p.getTotalScore().getScore() > 21) { // Treat when player gets busted
 				JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
 				p.setVisible(false); // "Close" player frame
 				
@@ -121,9 +121,9 @@ public class Provider {
 					Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 					
 					// Update bank frame
-					Provider.UpdateBankHand (BankFrame.bank.cards,
-											 BankFrame.bank.chips,
-											 BankFrame.bank.pComponents,
+					Provider.UpdateBankHand (BankFrame.bank.getCards(),
+											 BankFrame.bank.getChips(),
+											 BankFrame.bank.getpComponents(),
 											 BankFrame.bank,
 											 Main.bankBackground);
 					
@@ -137,17 +137,17 @@ public class Provider {
 		public void actionPerformed(ActionEvent actionEvent) {
 			JButton b = (JButton) actionEvent.getSource();
 			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor(); 
-			p.hitButton.setEnabled(false);
-			p.standButton.setEnabled(false);
+			p.getHitButton().setEnabled(false);
+			p.getStandButton().setEnabled(false);
 //			p.setVisible(false); // "Close" player frame
 			PlayerFrame.activePlayers--;
 			if(PlayerFrame.activePlayers == 0) {
 				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 				
 				// Update bank frame
-				Provider.UpdateBankHand (BankFrame.bank.cards,
-										 BankFrame.bank.chips,
-										 BankFrame.bank.pComponents,
+				Provider.UpdateBankHand (BankFrame.bank.getCards(),
+										 BankFrame.bank.getChips(),
+										 BankFrame.bank.getpComponents(),
 										 BankFrame.bank,
 										 Main.bankBackground);
 				
@@ -158,17 +158,17 @@ public class Provider {
 	};
 	
 	public static void notifyWinnersAndLosers() {
-		if(BankFrame.bank.score.getScore() > 21)
+		if(BankFrame.bank.getScore().getScore() > 21)
 			JOptionPane.showMessageDialog(null, "Bank busted. Every remaining player wins!"); // Warn bank busted
 		else {
 			for(JFrame p : Provider.framesList) {
 				if(p.getClass() == PlayerFrame.class) {
-					if(((PlayerFrame) p).totalScore.getScore() <= 21){
-						if(((PlayerFrame) p).totalScore.getScore() == 21)
+					if(((PlayerFrame) p).getTotalScore().getScore() <= 21){
+						if(((PlayerFrame) p).getTotalScore().getScore() == 21)
 							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
-						if(((PlayerFrame) p).totalScore.getScore() > Provider.getBankScore())
+						if(((PlayerFrame) p).getTotalScore().getScore() > Provider.getBankScore())
 							JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!"); // Warn winner
-						else if(((PlayerFrame) p).totalScore.getScore() == Provider.getBankScore())
+						else if(((PlayerFrame) p).getTotalScore().getScore() == Provider.getBankScore())
 							JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!"); // Warn tie
 						else
 							JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
@@ -189,52 +189,52 @@ public class Provider {
 		public void actionPerformed(ActionEvent actionEvent) {
 			Provider.newRoundSetEnabled(false);
 
-			while(BankFrame.bank.cards.isEmpty() == false) {	// Remove all cards from the bank
-				BankFrame.bank.cards.remove(0);
+			while(BankFrame.bank.getCards().isEmpty() == false) {	// Remove all cards from the bank
+				BankFrame.bank.getCards().remove(0);
 			}
 			
-			BankFrame.bank.score.UpdateScore(BankFrame.bank.cards);
+			BankFrame.bank.getScore().UpdateScore(BankFrame.bank.getCards());
 			
 			// Add first card and flipped card
-			BankFrame.bank.cards.add(Provider.RemoveCardFromDeck());
-			BankFrame.bank.cards.add(Card.flippedCard);
+			BankFrame.bank.getCards().add(Provider.RemoveCardFromDeck());
+			BankFrame.bank.getCards().add(Card.flippedCard);
 			
 			// Draw BankFrame
-			BankFrame.bank.chips_position = Provider.UpdateBankHand (BankFrame.bank.cards,
-																	 BankFrame.bank.chips,
-																	 BankFrame.bank.pComponents,
+			BankFrame.bank.setChips_position(Provider.UpdateBankHand (BankFrame.bank.getCards(),
+																	 BankFrame.bank.getChips(),
+																	 BankFrame.bank.getpComponents(),
 																	 BankFrame.bank,
-																	 Main.bankBackground);
+																	 Main.bankBackground));
 			
 			// Remove flipped card
-			BankFrame.bank.cards.remove(1);
+			BankFrame.bank.getCards().remove(1);
 			
 			// Update score
-			BankFrame.bank.score.UpdateScore(BankFrame.bank.cards);
+			BankFrame.bank.getScore().UpdateScore(BankFrame.bank.getCards());
 			
-			while(BankFrame.bank.score.getScore() < 17) {						// Draw cards until score >= 17
-				BankFrame.bank.cards.add(Provider.RemoveCardFromDeck());
-				BankFrame.bank.score.UpdateScore(BankFrame.bank.cards);
+			while(BankFrame.bank.getScore().getScore() < 17) {						// Draw cards until score >= 17
+				BankFrame.bank.getCards().add(Provider.RemoveCardFromDeck());
+				BankFrame.bank.getScore().UpdateScore(BankFrame.bank.getCards());
 			}
 			
 			for(Frame frame : Provider.framesList) {
 				if(frame.getClass() == PlayerFrame.class) {
 					// Reset players frame
-					((PlayerFrame) frame).cardsPanel.removeAll();
+					((PlayerFrame) frame).getCardsPanel().removeAll();
 					
 					// Reinitialize cards panel
-					((PlayerFrame) frame).cards.clear();
-					Provider.RequestNewCard(((PlayerFrame) frame).cards, ((PlayerFrame) frame).cardsPanel, ((PlayerFrame) frame));
-					Provider.RequestNewCard(((PlayerFrame) frame).cards, ((PlayerFrame) frame).cardsPanel, ((PlayerFrame) frame));	
-					((PlayerFrame) frame).totalScore.UpdateScore(((PlayerFrame) frame).cards);
-					if(((PlayerFrame) frame).totalScore.getScore() < 10)
-						((PlayerFrame) frame).playerScore.setText("Score: " + ((PlayerFrame) frame).totalScore.getScore() + " (TINY RICK!!!)");
+					((PlayerFrame) frame).getCards().clear();
+					Provider.RequestNewCard(((PlayerFrame) frame).getCards(), ((PlayerFrame) frame).getCardsPanel(), ((PlayerFrame) frame));
+					Provider.RequestNewCard(((PlayerFrame) frame).getCards(), ((PlayerFrame) frame).getCardsPanel(), ((PlayerFrame) frame));	
+					((PlayerFrame) frame).getTotalScore().UpdateScore(((PlayerFrame) frame).getCards());
+					if(((PlayerFrame) frame).getTotalScore().getScore() < 10)
+						((PlayerFrame) frame).getPlayerScore().setText("Score: " + ((PlayerFrame) frame).getTotalScore().getScore() + " (TINY RICK!!!)");
 					else
-						((PlayerFrame) frame).playerScore.setText("Score: " + ((PlayerFrame) frame).totalScore.getScore());
+						((PlayerFrame) frame).getPlayerScore().setText("Score: " + ((PlayerFrame) frame).getTotalScore().getScore());
 					
 					// Enabling buttons
-					((PlayerFrame) frame).hitButton.setEnabled(true);
-					((PlayerFrame) frame).standButton.setEnabled(true);
+					((PlayerFrame) frame).getHitButton().setEnabled(true);
+					((PlayerFrame) frame).getStandButton().setEnabled(true);
 				}
 				
 				frame.setVisible(true);
@@ -246,7 +246,7 @@ public class Provider {
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
 	    	Point me = e.getPoint();
-	    	for(java.util.Map.Entry<Integer, Rectangle> entry : BankFrame.bank.chips_position.entrySet())
+	    	for(java.util.Map.Entry<Integer, Rectangle> entry : BankFrame.bank.getChips_position().entrySet())
 	    	{
 	    		Integer chip = entry.getKey();
 	        	Rectangle bounds = entry.getValue();
@@ -278,16 +278,16 @@ public class Provider {
 	};
 
 	public static void newRoundSetEnabled(boolean bool) {
-		BankFrame.bank.bNewRound.setEnabled(bool);
+		BankFrame.bank.getbNewRound().setEnabled(bool);
 	}
 	
 	public static void newRoundSetEnabled(boolean bool, int numPlayers) {
-		BankFrame.bank.bNewRound.setEnabled(bool);
+		BankFrame.bank.getbNewRound().setEnabled(bool);
 		PlayerFrame.activePlayers = numPlayers;
 	}
 	
 	public static int getBankScore() {
-		return BankFrame.bank.score.getScore();
+		return BankFrame.bank.getScore().getScore();
 	}
 	
 	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
