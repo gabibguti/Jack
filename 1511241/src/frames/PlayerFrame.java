@@ -59,8 +59,8 @@ public class PlayerFrame extends JFrame {
 		playerScore.setSize(this.getWidth(), 15);
 				
 		// Create button
-		JButton hitButton = new JButton("Hit");
-		JButton standButton = new JButton("Stand");
+		hitButton = new JButton("Hit");
+		standButton = new JButton("Stand");
 
 		// hitButton listener
 		hitButton.addActionListener(Provider.hitButtonListener);

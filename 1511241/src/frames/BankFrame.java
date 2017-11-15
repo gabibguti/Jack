@@ -78,6 +78,20 @@ public class BankFrame extends JFrame {
 		// Place buttons under image
 		setLayout(new BorderLayout());
 		
+		// Add first card and flipped card
+		cards.add(Provider.RemoveCardFromDeck());
+		cards.add(Card.flippedCard);
+		
+		// Draw BankFrame
+		chips_position = Provider.UpdateBankHand (cards,
+												  chips,
+												  pComponents,
+												  BankFrame.this,
+												  bankBackground);
+		
+		// Remove flipped card
+		cards.remove(1);
+		
 		// Initial cards
 		score.UpdateScore(cards);
 		while(score.getScore() < 17) {						// Draw cards until score >= 17
@@ -85,8 +99,6 @@ public class BankFrame extends JFrame {
 			score.UpdateScore(cards);
 		}
 		
-		// Initializing bank
-		chips_position = Provider.UpdateBankHand (cards, chips, pComponents, BankFrame.this, bankBackground);
 		setChipsClickListener();
 		
 		add(pComponents);	// Add chips and cards to bank frame
