@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,7 +30,6 @@ public class PlayerFrame extends JFrame {
 	private JButton hitButton;
 	private JButton standButton;
 	private Score totalScore = new Score();
-	private GroupLayout playerFrameLayout;
 
 	public PlayerFrame(String playerNumber, Container cont) {
 		super("Player " + playerNumber);
@@ -119,13 +117,6 @@ public class PlayerFrame extends JFrame {
 	 */
 	public ArrayList<Card> getCards() {
 		return cards;
-	}
-
-	/**
-	 * @param cards the cards to set
-	 */
-	public void setCards(ArrayList<Card> cards) {
-		this.cards = cards;
 	}
 
 	/**
@@ -217,26 +208,5 @@ public class PlayerFrame extends JFrame {
 	 */
 	public Score getTotalScore() {
 		return totalScore;
-	}
-
-	/**
-	 * @param totalScore the totalScore to set
-	 */
-	public void setTotalScore(Score totalScore) {
-		this.totalScore = totalScore;
-	}
-
-	/**
-	 * @return the playerFrameLayout
-	 */
-	public GroupLayout getPlayerFrameLayout() {
-		return playerFrameLayout;
-	}
-
-	/**
-	 * @param playerFrameLayout the playerFrameLayout to set
-	 */
-	public void setPlayerFrameLayout(GroupLayout playerFrameLayout) {
-		this.playerFrameLayout = playerFrameLayout;
 	}
 }

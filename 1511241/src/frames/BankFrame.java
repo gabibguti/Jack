@@ -126,13 +126,6 @@ public class BankFrame extends JFrame {
 	}
 
 	/**
-	 * @param chips the chips to set
-	 */
-	public void setChips(Chip[] chips) {
-		this.chips = chips;
-	}
-
-	/**
 	 * @return the bEndGame
 	 */
 	public JButton getbEndGame() {
@@ -210,13 +203,6 @@ public class BankFrame extends JFrame {
 	}
 
 	/**
-	 * @param cards the cards to set
-	 */
-	public void setCards(ArrayList<Card> cards) {
-		this.cards = cards;
-	}
-
-	/**
 	 * @return the chips_position
 	 */
 	public Map<Integer, Rectangle> getChips_position() {
@@ -237,10 +223,4 @@ public class BankFrame extends JFrame {
 		return score;
 	}
 
-	/**
-	 * @param score the score to set
-	 */
-	public void setScore(Score score) {
-		this.score = score;
-	}
 }
