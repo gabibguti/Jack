@@ -7,6 +7,7 @@ import cards.Card;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -15,6 +16,8 @@ import java.awt.image.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import components.GameImage;
 import etc.Chip;
@@ -28,9 +31,10 @@ public class BankFrame extends JFrame {
 	private JButton bNewRound;
 	private JButton bSave;
 	private JPanel pComponents;
-	private GridBagConstraints constraints;
+//	private GridBagConstraints constraints;
 	ArrayList<Card> cards = new ArrayList<>();
-	private ArrayList<JLabel> cardsLabels = new ArrayList<>();
+	Map<Integer, Rectangle> chips_position = new HashMap<Integer, Rectangle>();
+
 	Score score = new Score();
 	
 	{
@@ -46,6 +50,14 @@ public class BankFrame extends JFrame {
 		super(name);
 		
 		setLayout(new BorderLayout()); // Organize components
+		setSize(bankBackground.getWidth(), bankBackground.getHeight());
+		setContentPane(new GameImage(bankBackground));
+
+		pComponents = new JPanel();
+		pComponents.setLayout(new BorderLayout());
+//		pComponents.setLayout(new GridBagLayout());
+		pComponents.setOpaque(false);										// Make transparent
+		pComponents.setSize(this.getWidth(), this.getHeight() - 50);
 		
 		bEndGame = new JButton("End Game");
 		bNewRound = new JButton("New Round");
@@ -67,7 +79,7 @@ public class BankFrame extends JFrame {
 				
 				while(BankFrame.bank.cards.isEmpty() == false) {	// Remove all cards from the bank
 					BankFrame.bank.cards.remove(0);
-					BankFrame.bank.pComponents.remove(0);	
+//					BankFrame.bank.pComponents.remove(0);	
 				}
 //				BankFrame.bank.pComponents.remove(0);				
 				
@@ -77,18 +89,8 @@ public class BankFrame extends JFrame {
 					score.UpdateScore(BankFrame.bank.cards);
 				}
 				
-				// Insert new cards in the bank
-				int i = 0;
-				BankFrame.bank.constraints.gridy = 0;
-				for(Card c : BankFrame.bank.cards) {
-					BankFrame.bank.constraints.gridx = i+2;								// Insert in the (i+2)th column
-					Icon icon = new ImageIcon(c.getImage());
-					JLabel lb = new JLabel(icon);										// Create Label with image
-					BankFrame.bank.pComponents.add(lb, BankFrame.bank.constraints, i);	// Add to panel
-					i++;
-				}
-				BankFrame.bank.pComponents.revalidate();	// Update frame
-				BankFrame.bank.pComponents.repaint();
+				chips_position = Provider.UpdateBankHand (cards, chips, pComponents, BankFrame.this, bankBackground);
+				setChipsClickListener(chips_position);
 				
 				for(Frame frame: Provider.framesList)
 				{
@@ -117,10 +119,7 @@ public class BankFrame extends JFrame {
 			}
 			
 		});
-		
-		setSize(bankBackground.getWidth(), bankBackground.getHeight());
-		setContentPane(new GameImage(bankBackground));
-		
+				
 		// Add Listener
         addWindowListener(new WindowAdapter() {
            public void windowClosing(WindowEvent windowEvent){
@@ -144,36 +143,12 @@ public class BankFrame extends JFrame {
 			score.UpdateScore(cards);
 		}
 		
-
-		// Draw components images
-		pComponents = new JPanel();
-		pComponents.setLayout(new GridBagLayout());
-		pComponents.setOpaque(false);										// Make transparent
-		constraints = new GridBagConstraints();								// Defining new constraints
-		constraints.fill = GridBagConstraints.HORIZONTAL;					// Insert images horizontally
-		constraints.gridy = 0;												// Insert in the first row
-		constraints.insets= new Insets(220, 0, 0, 15);						// Padding inside panel layout
-		// Cards
-		int i = 0;
-		for(Card c : cards) {
-			constraints.gridx = i+2;										// Insert in the ith column
-			Icon icon = new ImageIcon(c.getImage());
-			JLabel lb = new JLabel(icon);									// Create Label with image
-			pComponents.add(lb, constraints);								// Add to panel
-			i++;
-		}
-		score.UpdateScore(cards);
-		//Chips
-		constraints.gridy = 1;												// Insert in the second row
-		for(i = 0; i < chips.length; i++) {
-			constraints.gridx = i;											// Insert in the ith column
-			Icon icon = new ImageIcon(chips[i].getImage());
-			JLabel lb = new JLabel(icon);									// Create Label with image
-			lb.addMouseListener(new ChipClickListener(chips[i].getValue()));
-			pComponents.add(lb, constraints);								// Add to panel
-		}
+		chips_position = Provider.UpdateBankHand (cards, chips, pComponents, BankFrame.this, bankBackground);
+		setChipsClickListener(chips_position);
 		
 		add(pComponents);	// Add chips and cards to bank frame
+		
+		pComponents.setOpaque(true);
 		
 		add(pButtons, BorderLayout.PAGE_END);	// Add game buttons to bank frame
 		
@@ -187,44 +162,25 @@ public class BankFrame extends JFrame {
 	public static void createBank(String name, BufferedImage bankBackground) {
 		bank = new BankFrame(name, bankBackground);
 	}
-	
-	private class ChipClickListener implements MouseListener {
 
-		int value;
-		public ChipClickListener(int value) {
-			this.value = value;
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			System.out.println(value);
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
+	private void setChipsClickListener (Map<Integer, Rectangle> chips_position) {
+		addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	Point me = e.getPoint();
+		    	for(java.util.Map.Entry<Integer, Rectangle> entry : chips_position.entrySet())
+		    	{
+		    		Integer chip = entry.getKey();
+		        	Rectangle bounds = entry.getValue();
+	            	if(bounds.contains(me))
+	            	{
+	            		System.out.println("Uh! Mo-Morty! Ah wa what are you doin' here?");
+	            		System.out.println("I-I wanted the chip " + chip + " Rick");
+	            	}
+		    		
+		    	}
+	        }
+		});
 	}
 	
 	static void newRoundSetEnabled(boolean bool) {
