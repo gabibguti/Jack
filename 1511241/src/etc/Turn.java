@@ -1,8 +1,6 @@
 package etc;
 
 import java.awt.Frame;
-import java.awt.Image;
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +26,6 @@ public class Turn {
 	   int nextPlayer = 1;
 	   if(totalPlayers == 1)
 		   return nextPlayer;
-	   System.out.println(playerTurn);
 	   for (java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) {
         	Integer player = e.getKey();
         	Integer turn = e.getValue();
@@ -38,8 +35,6 @@ public class Turn {
         		nextPlayer = player;
         	playerTurn.replace(player, turn - 1);
        }
-	   System.out.println(playerTurn);
-//       updatePlayerFrameTurn();
        return nextPlayer;
 	}
 
@@ -72,14 +67,12 @@ public class Turn {
 		}
 		removedTurn = playerTurn.get(playerNumber);
 		playerTurn.remove(playerNumber);
-		System.out.println(removedTurn);
 	    for (java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) {
 	     	Integer player = e.getKey();
 	    	Integer turn = e.getValue();
 	    	if(turn > removedTurn)
 	    		playerTurn.replace(player, turn - 1);
 	    }
-//	    updatePlayerFrameTurn();
 	}
 	
 	static public void updatePlayerFrameTurn() { // Enable actions for current player playing
