@@ -1,10 +1,12 @@
 package components;
 
                                                                                                                
-import java.awt.*;                                                                                             
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.JComponent;                                                                                          
                                                                                                                
-import javax.swing.*;                                                                                          
-                                                                                                               
+@SuppressWarnings("serial")
 public class GameImage extends JComponent {                                                                       
 	private Image img;                                                                              
     public GameImage(Image image) {                                                                       

@@ -2,7 +2,10 @@ package cards;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.imageio.ImageIO;
 
 public class Card {
@@ -12,6 +15,7 @@ public class Card {
     private BufferedImage image = null;
     // TODO: Try to use Main.img_path
     public String img_path = System.getProperty("user.dir") + "/src/images/";	// Images path
+    static public Card flippedCard = new Card();
 
     private Card(Rank rank, Suit suit) {
         this.rank = rank; // Set card value
@@ -26,6 +30,19 @@ public class Card {
         }
     }
 
+    private Card() { // Constructor to flipped card
+    	this.rank = null;
+    	this.suit = null;
+    	try 
+        {
+            image = ImageIO.read(new File(img_path + "deck1.gif"));
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
     public Rank getRank() {
         return this.rank;
     }
@@ -46,19 +63,18 @@ public class Card {
         return rank.toString() + suit.toString().toLowerCase().charAt(0);
     }
 
-    private static final List<Card> Deck = new ArrayList<Card>();
+    public static List<Card> Deck;
 
     static {
+        Card.newDeck();
+    }
+
+    public static void newDeck() {
+        Deck = new ArrayList<Card>();
         for (Suit suit : Suit.values())
             for (Rank rank : Rank.values())
                 Deck.add(new Card(rank, suit));
         // Shuffles deck
         Collections.shuffle(Deck);
     }
-
-    public static ArrayList<Card> newDeck() {
-
-        return new ArrayList<Card>(Deck);
-    }
-
 }
