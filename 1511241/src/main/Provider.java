@@ -83,7 +83,10 @@ public class Provider {
 			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
 			Provider.RequestNewCard(p.cards, p.cardsPanel, p); // Hit
 			p.totalScore.UpdateScore(p.cards); // Update score
-			p.playerScore.setText("Score: " + p.totalScore.getScore());
+			if(p.totalScore.getScore() < 10)
+				p.playerScore.setText("Score: " + p.totalScore.getScore() + " (TINY RICK!!!)");
+			else
+				p.playerScore.setText("Score: " + p.totalScore.getScore());
 			if(p.totalScore.getScore() > 21) { // Treat when player gets bursted
 				JOptionPane.showMessageDialog(null, "Geez Rick. I got bursted."); // Warn bursted player
 				p.setVisible(false); // "Close" player frame
