@@ -2,7 +2,7 @@ package frames;
 
 import java.util.ArrayList;
 
-import cards.*;
+import cards.Card;
 
 public class Score {
 	private int score;

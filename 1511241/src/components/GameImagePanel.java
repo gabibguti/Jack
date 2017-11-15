@@ -1,13 +1,13 @@
 package components;
+
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.lang.reflect.Array;
-import java.security.KeyStore.Entry;
 import java.util.Map;
 
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class GameImagePanel extends JPanel{
 	Map<Image, Point> imgs;
 	Image backg;
