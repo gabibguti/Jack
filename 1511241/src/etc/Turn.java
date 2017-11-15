@@ -28,15 +28,17 @@ public class Turn {
 	   int nextPlayer = 1;
 	   if(totalPlayers == 1)
 		   return nextPlayer;
+	   System.out.println(playerTurn);
 	   for (java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) {
         	Integer player = e.getKey();
         	Integer turn = e.getValue();
         	if(turn == 1)
-        		turn = totalPlayers + 1;
+        		turn = playerTurn.size() + 1;
         	else if(turn == 2)
         		nextPlayer = player;
         	playerTurn.replace(player, turn - 1);
        }
+	   System.out.println(playerTurn);
        updatePlayerFrameTurn();
        return nextPlayer;
 	}
@@ -70,11 +72,12 @@ public class Turn {
 		}
 		removedTurn = playerTurn.get(playerNumber);
 		playerTurn.remove(playerNumber);
+		System.out.println(removedTurn);
 	    for (java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) {
 	     	Integer player = e.getKey();
 	    	Integer turn = e.getValue();
 	    	if(turn > removedTurn)
-	    		playerTurn.replace(player, turn, turn - 1);
+	    		playerTurn.replace(player, turn - 1);
 	    }
 	    updatePlayerFrameTurn();
 	}
