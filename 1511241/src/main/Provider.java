@@ -73,7 +73,7 @@ public class Provider {
 		public void windowClosing(WindowEvent windowEvent) {
 			Provider.framesList.remove(windowEvent.getSource()); // Remove PlayerFrame from framesList
 			PlayerFrame p = (PlayerFrame) windowEvent.getSource();
-			Turn.removePlayer(p.playerNumber);
+			Turn.removePlayer(p.getPlayerNumber());
 			PlayerFrame.activePlayers--;
 			PlayerFrame.numPlayers--;
 			if (PlayerFrame.activePlayers == 0) {

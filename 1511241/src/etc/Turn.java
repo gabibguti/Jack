@@ -88,7 +88,7 @@ public class Turn {
 		for(Frame frame: Provider.framesList) {
 			if(frame.getClass() == PlayerFrame.class) {
 				PlayerFrame p = (PlayerFrame) frame;
-				if(p.playerNumber == playerNumber)
+				if(p.getPlayerNumber() == playerNumber)
 				{
 					for(Object child: p.getButtonsPanel().getComponents())
 					{
@@ -104,7 +104,7 @@ public class Turn {
 		for(Frame frame: Provider.framesList) {
 			if(frame.getClass() == PlayerFrame.class) {
 				PlayerFrame p = (PlayerFrame) frame;
-				if(p.playerNumber == playerNumber)
+				if(p.getPlayerNumber() == playerNumber)
 				{
 					for(Object child: p.getButtonsPanel().getComponents())
 					{

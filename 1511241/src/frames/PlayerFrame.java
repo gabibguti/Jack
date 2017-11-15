@@ -20,10 +20,8 @@ public class PlayerFrame extends JFrame {
 	int centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
 	int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
 	int gap = 4;
-	public int bet = 0;
-	public int playerNumber;
-	public static int activePlayers = 0;
-	public static int numPlayers = 0;
+	private int bet = 0;
+	private int playerNumber;
 	private ArrayList<Card> cards = new ArrayList<>();
 	private JPanel buttonsPanel;
 	private JPanel cardsPanel;
@@ -33,10 +31,13 @@ public class PlayerFrame extends JFrame {
 	private JButton hitButton;
 	private JButton standButton;
 	private Score totalScore = new Score();
+	
+	public static int activePlayers = 0;
+	public static int numPlayers = 0;
 
 	public PlayerFrame(String playerNumber, Container cont) {
 		super("Player " + playerNumber);
-		this.playerNumber = Integer.parseInt(playerNumber);
+		this.setPlayerNumber(Integer.parseInt(playerNumber));
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(Provider.playerFrameClosing);
 		
@@ -57,7 +58,7 @@ public class PlayerFrame extends JFrame {
 		
 		// Create player score label
 		setPlayerScore(new JLabel(""));
-		playerBet = new JLabel("$ " + bet);
+		playerBet = new JLabel("$ " + getBet());
 		getPlayerScore().setSize(40, 15);
 		playerBet.setSize(40, 15);
 				
@@ -116,6 +117,34 @@ public class PlayerFrame extends JFrame {
 		default:
 			setLocationRelativeTo(null);
 		}
+	}
+
+	/**
+	 * @return the bet
+	 */
+	public int getBet() {
+		return bet;
+	}
+
+	/**
+	 * @param bet the bet to set
+	 */
+	public void setBet(int bet) {
+		this.bet = bet;
+	}
+
+	/**
+	 * @return the playerNumber
+	 */
+	public int getPlayerNumber() {
+		return playerNumber;
+	}
+
+	/**
+	 * @param playerNumber the playerNumber to set
+	 */
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
 	}
 
 	/**
