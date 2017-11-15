@@ -298,7 +298,8 @@ public class Provider {
 			card = Main.deck.remove(0); // Remove card from deck
 			return card;
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Deck ended. Cannot request any more cards."); // Show error message when deck is runs out of cards
+			JOptionPane.showMessageDialog(null, "Deck ended. Starting new deck..."); // Show message when deck runs out of cards and new deck is started
+			Main.restartDeck();
 			return null;
 		}
 	}

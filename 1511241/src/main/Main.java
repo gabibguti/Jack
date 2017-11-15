@@ -125,4 +125,9 @@ public class Main {
 			Provider.numPlayersButtonAction(e);
 		}
 	}
+	
+	static public void restartDeck () {
+		if(deck.size() == 0) // Check if deck is over
+			deck = Card.newDeck(); // Restart deck
+	}
 }
