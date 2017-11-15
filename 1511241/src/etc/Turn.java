@@ -16,7 +16,7 @@ public class Turn {
 	static int totalPlayers;
 	public static Map<Integer, Integer> playerTurn = new HashMap<Integer, Integer>();
 	
-	public static void firstTurn(int numberOfPlayers) {
+	public static void firstTurn(int numberOfPlayers) { // Start first turn starting with player 1
 		int player;
 		totalPlayers = numberOfPlayers;
 		for(player = 1; player < numberOfPlayers + 1; player++)
@@ -24,24 +24,24 @@ public class Turn {
 		updatePlayerFrameTurn();
 	}
 
-	public static int nextPlayerTurn() {
+	public static int nextPlayerTurn() { // Call next player to play
 	   int nextPlayer = 1;
 	   if(totalPlayers == 1)
 		   return nextPlayer;
-       for (java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) {
+	   for (java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) {
         	Integer player = e.getKey();
         	Integer turn = e.getValue();
         	if(turn == 1)
         		turn = totalPlayers + 1;
         	else if(turn == 2)
         		nextPlayer = player;
-        	playerTurn.replace(player, turn, turn - 1);
+        	playerTurn.replace(player, turn - 1);
        }
        updatePlayerFrameTurn();
        return nextPlayer;
 	}
 
-	public static int currentPlayerTurn() {
+	public static int currentPlayerTurn() { // Gets current player playing
 		   int currentPlayer = 1;
 		   if(totalPlayers == 1)
 			   return currentPlayer;
@@ -54,7 +54,7 @@ public class Turn {
 	       return currentPlayer;
 	}
 
-	public static void removePlayer(int playerNumber) {
+	public static void removePlayer(int playerNumber) { // Remove player from turns and update frames
 		int removedTurn;
 		if(playerNumber < 1 || playerNumber > 4) {
 			JOptionPane.showMessageDialog(null, "Invalid player number."); // Invalid player
@@ -79,7 +79,7 @@ public class Turn {
 	    updatePlayerFrameTurn();
 	}
 	
-	static void updatePlayerFrameTurn() {
+	static void updatePlayerFrameTurn() { // Enable actions for current player playing
 		int currentPlayer = currentPlayerTurn();
 		for(java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) { // Disable all players
 	     	Integer player = e.getKey();
@@ -88,7 +88,7 @@ public class Turn {
 		enablePlayer(currentPlayer); // Enable current player
 	}
 	
-	static public void disablePlayer(int playerNumber) {
+	static public void disablePlayer(int playerNumber) { // Disable player actions
 		for(Frame frame: Provider.framesList) {
 			if(frame.getClass() == PlayerFrame.class) {
 				PlayerFrame p = (PlayerFrame) frame;
@@ -104,7 +104,7 @@ public class Turn {
 		}
 	}
 
-	static public void enablePlayer(int playerNumber) {
+	static public void enablePlayer(int playerNumber) { // Enable player actions
 		for(Frame frame: Provider.framesList) {
 			if(frame.getClass() == PlayerFrame.class) {
 				PlayerFrame p = (PlayerFrame) frame;

@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import cards.Card;
 import components.GameImagePanel;
 import etc.Chip;
+import etc.Turn;
 import frames.BankFrame;
 import frames.PlayerFrame;
 
@@ -54,9 +55,11 @@ public class Provider {
 		Provider.framesList.add(BankFrame.bank); // Add Bank to framesList
 		
 		numberOfPlayers = Integer.parseInt(command);
-
-		for (player = 0; player < numberOfPlayers; player++) 
+		
+		for (player = 0; player < numberOfPlayers; player++)
 			Provider.framesList.add(new PlayerFrame(String.valueOf(player + 1), BankFrame.bank)); // Create Player Frame and add to framesList
+		
+		Turn.firstTurn(numberOfPlayers);
 		
 		PlayerFrame.numPlayers = numberOfPlayers;
 
@@ -74,6 +77,8 @@ public class Provider {
 			if (PlayerFrame.activePlayers == 0)
 				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 			((Window) windowEvent.getSource()).dispose();
+			PlayerFrame p = (PlayerFrame) windowEvent.getSource();
+			Turn.removePlayer(p.playerNumber);
 		}
 	};
 	
@@ -104,6 +109,8 @@ public class Provider {
 				PlayerFrame.activePlayers--;
 				if(PlayerFrame.activePlayers == 0)
 					Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+				// Update player turn
+				Turn.nextPlayerTurn();
 			}
 		}
 	};
@@ -118,7 +125,7 @@ public class Provider {
 			if(p.totalScore.getScore() > Provider.getBankScore())
 				JOptionPane.showMessageDialog(null, "Wubba lubba dub dub! I WON MORTY!"); // Warn winner
 			else if(p.totalScore.getScore() == Provider.getBankScore())
-				JOptionPane.showMessageDialog(null, "Next round SHOW ME WHAT YOU GOT!"); // Warn tie
+				JOptionPane.showMessageDialog(null, "Next round: SHOW ME WHAT YOU GOT!"); // Warn tie
 			else
 				JOptionPane.showMessageDialog(null, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
 			// TODO: #SHAKEITOFF JOptionPane.showMessageDialog(null, "Don't think about it.");
@@ -138,6 +145,8 @@ public class Provider {
 			PlayerFrame.activePlayers--;
 			if(PlayerFrame.activePlayers == 0)
 				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+			// Update player turn
+			Turn.nextPlayerTurn();
 		}
 	};
 	
@@ -186,6 +195,8 @@ public class Provider {
             	{
             		System.out.println("Uh! Mo-Morty! Ah wa what are you doin' here?");
             		System.out.println("I-I wanted the chip " + chip + " Rick");
+            		// TODO: Implement player turn first, to know which player is trying to bet
+//            		PlayerFrame.bet(chip);
             	}
 	    		
 	    	}
@@ -306,5 +317,4 @@ public class Provider {
 			return null;
 		}
 	}
-
 }

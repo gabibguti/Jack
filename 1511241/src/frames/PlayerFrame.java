@@ -21,6 +21,8 @@ public class PlayerFrame extends JFrame {
 	int centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
 	int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
 	int gap = 4;
+	public int bet = 0;
+	public int playerNumber;
 	public static int activePlayers = 0;
 	public static int numPlayers = 0;
 	public ArrayList<Card> cards = new ArrayList<>();
@@ -28,6 +30,7 @@ public class PlayerFrame extends JFrame {
 	public JPanel cardsPanel;
 	public JPanel infoPanel;
 	public JLabel playerScore;
+	public static JLabel playerBet;
 	public JButton hitButton;
 	public JButton standButton;
 	public Score totalScore = new Score();
@@ -35,7 +38,7 @@ public class PlayerFrame extends JFrame {
 
 	public PlayerFrame(String playerNumber, Container cont) {
 		super("Player " + playerNumber);
-
+		this.playerNumber = Integer.parseInt(playerNumber);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(Provider.playerFrameClosing);
 		
@@ -49,14 +52,16 @@ public class PlayerFrame extends JFrame {
 		infoPanel = new JPanel();
 		buttonsPanel.setLayout(new FlowLayout());
 		cardsPanel.setLayout(new BorderLayout());
-		infoPanel.setLayout(new FlowLayout());
+		infoPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
 		buttonsPanel.setSize(500, 20);
 		cardsPanel.setSize(500, 310);
 		infoPanel.setSize(500, 20);
 		
 		// Create player score label
 		playerScore = new JLabel("");
-		playerScore.setSize(this.getWidth(), 15);
+		playerBet = new JLabel("$ " + bet);
+		playerScore.setSize(40, 15);
+		playerBet.setSize(40, 15);
 				
 		// Create button
 		JButton hitButton = new JButton("Hit");
@@ -86,6 +91,7 @@ public class PlayerFrame extends JFrame {
 		
 		// Add player score label to info panel
 		infoPanel.add(playerScore);
+		infoPanel.add(playerBet);
 
 		// Add components to frame
 		this.add(buttonsPanel, BorderLayout.PAGE_START);
@@ -113,4 +119,15 @@ public class PlayerFrame extends JFrame {
 			setLocationRelativeTo(null);
 		}
 	}
+	
+	public void bet(int value) {
+		bet += value; // Add value to player's bet amount
+		playerBet.setText("$ " + bet);
+	}
+	
+	public void resetBet() {
+		bet = 0; // Add value to player's bet amount
+		playerBet.setText("$ " + bet);
+	}
+
 }
