@@ -58,9 +58,9 @@ public class PlayerFrame extends JFrame {
 		
 		// Create player score label
 		setPlayerScore(new JLabel(""));
-		playerBet = new JLabel("$ " + getBet());
+		setPlayerBet(new JLabel("$ " + getBet()));
 		getPlayerScore().setSize(40, 15);
-		playerBet.setSize(40, 15);
+		getPlayerBet().setSize(40, 15);
 				
 		// Create button
 		setHitButton(new JButton("Hit"));
@@ -90,7 +90,7 @@ public class PlayerFrame extends JFrame {
 		
 		// Add player score label to info panel
 		getInfoPanel().add(getPlayerScore());
-		getInfoPanel().add(playerBet);
+		getInfoPanel().add(getPlayerBet());
 
 		// Add components to frame
 		this.add(getButtonsPanel(), BorderLayout.PAGE_START);
@@ -243,6 +243,20 @@ public class PlayerFrame extends JFrame {
 	 */
 	public Score getTotalScore() {
 		return totalScore;
+	}
+
+	/**
+	 * @return the playerBet
+	 */
+	public JLabel getPlayerBet() {
+		return playerBet;
+	}
+
+	/**
+	 * @param playerBet the playerBet to set
+	 */
+	public void setPlayerBet(JLabel playerBet) {
+		this.playerBet = playerBet;
 	}
 	
 //	public void bet(int value) {
