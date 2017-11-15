@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import cards.Card;
 import components.GameImagePanel;
 import etc.Chip;
+import etc.Turn;
 import frames.BankFrame;
 import frames.PlayerFrame;
 
@@ -54,9 +55,11 @@ public class Provider {
 		Provider.framesList.add(BankFrame.bank); // Add Bank to framesList
 		
 		numberOfPlayers = Integer.parseInt(command);
-
-		for (player = 0; player < numberOfPlayers; player++) 
+		
+		for (player = 0; player < numberOfPlayers; player++)
 			Provider.framesList.add(new PlayerFrame(String.valueOf(player + 1), BankFrame.bank)); // Create Player Frame and add to framesList
+		
+		Turn.firstTurn(numberOfPlayers);
 		
 		PlayerFrame.numPlayers = numberOfPlayers;
 
@@ -69,6 +72,8 @@ public class Provider {
 		@Override
 		public void windowClosing(WindowEvent windowEvent) {
 			Provider.framesList.remove(windowEvent.getSource()); // Remove PlayerFrame from framesList
+			PlayerFrame p = (PlayerFrame) windowEvent.getSource();
+			Turn.removePlayer(p.playerNumber);
 			PlayerFrame.activePlayers--;
 			PlayerFrame.numPlayers--;
 			if (PlayerFrame.activePlayers == 0) {
@@ -82,6 +87,9 @@ public class Provider {
 										 Main.bankBackground);
 				
 				Provider.notifyWinnersAndLosers();
+			}
+			else {
+				Turn.updatePlayerFrameTurn();
 			}
 			((Window) windowEvent.getSource()).dispose();
 		}
@@ -102,19 +110,10 @@ public class Provider {
 			
 			if(p.getTotalScore().getScore() > 21) { // Treat when player gets busted
 				JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
-				p.setVisible(false); // "Close" player frame
+				p.setVisible(false); // "Close" player frame	
 				
-//				// Reset player frame
-//				p.cardsPanel.removeAll();
-//				// Reinitialize cards panel	
-//				p.cards.clear();
-//				Provider.RequestNewCard(p.cards, p.cardsPanel, p);
-//				Provider.RequestNewCard(p.cards, p.cardsPanel, p);	
-//				p.totalScore.UpdateScore(p.cards);
-//				if(p.totalScore.getScore() < 10)
-//					p.playerScore.setText("Score: " + p.totalScore.getScore() + " (TINY RICK!!!)");
-//				else
-//					p.playerScore.setText("Score: " + p.totalScore.getScore());
+				// Update player turn
+				Turn.nextPlayerTurn();
 				
 				PlayerFrame.activePlayers--;
 				if(PlayerFrame.activePlayers == 0) {
@@ -129,6 +128,10 @@ public class Provider {
 					
 					Provider.notifyWinnersAndLosers();
 				}
+				else {
+					Turn.updatePlayerFrameTurn();
+				}
+
 			}
 		}
 	};
@@ -139,9 +142,12 @@ public class Provider {
 			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor(); 
 			p.getHitButton().setEnabled(false);
 			p.getStandButton().setEnabled(false);
-//			p.setVisible(false); // "Close" player frame
+			
+			// Update player turn
+			Turn.nextPlayerTurn();
+			
 			PlayerFrame.activePlayers--;
-			if(PlayerFrame.activePlayers == 0) {
+			if(PlayerFrame.activePlayers == 0) { // Last player stands
 				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 				
 				// Update bank frame
@@ -154,12 +160,16 @@ public class Provider {
 				// Notify winners and losers
 				Provider.notifyWinnersAndLosers();
 			}
+			else {
+				Turn.updatePlayerFrameTurn();
+			}
 		}
 	};
 	
 	public static void notifyWinnersAndLosers() {
 		if(BankFrame.bank.getScore().getScore() > 21)
 			JOptionPane.showMessageDialog(null, "Bank busted. Every remaining player wins!"); // Warn bank busted
+			// TODO: Make everyone win with score <= 21
 		else {
 			for(JFrame p : Provider.framesList) {
 				if(p.getClass() == PlayerFrame.class) {
@@ -232,9 +242,10 @@ public class Provider {
 					else
 						((PlayerFrame) frame).getPlayerScore().setText("Score: " + ((PlayerFrame) frame).getTotalScore().getScore());
 					
-					// Enabling buttons
-					((PlayerFrame) frame).getHitButton().setEnabled(true);
-					((PlayerFrame) frame).getStandButton().setEnabled(true);
+					Turn.updatePlayerFrameTurn();
+//					// Enabling buttons
+//					((PlayerFrame) frame).getHitButton().setEnabled(true);
+//					((PlayerFrame) frame).getStandButton().setEnabled(true);
 				}
 				
 				frame.setVisible(true);
@@ -254,6 +265,8 @@ public class Provider {
             	{
             		System.out.println("Uh! Mo-Morty! Ah wa what are you doin' here?");
             		System.out.println("I-I wanted the chip " + chip + " Rick");
+            		// TODO: Implement player turn first, to know which player is trying to bet
+//            		PlayerFrame.bet(chip);
             	}
 	    	}
         }
@@ -373,5 +386,4 @@ public class Provider {
 			return Card.Deck.remove(0);
 		}
 	}
-
 }
