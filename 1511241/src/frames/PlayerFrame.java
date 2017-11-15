@@ -40,7 +40,7 @@ public class PlayerFrame extends JFrame {
 		this.addWindowListener(Provider.playerFrameClosing);
 		
 		activePlayers++; // Add active player
-		setSize(600, 350);
+		setSize(500, 350);
 		setLayout(new BorderLayout());
 
 		// Create Panel
@@ -50,9 +50,9 @@ public class PlayerFrame extends JFrame {
 		buttonsPanel.setLayout(new FlowLayout());
 		cardsPanel.setLayout(new BorderLayout());
 		infoPanel.setLayout(new FlowLayout());
-		buttonsPanel.setSize(600, 20);
-		cardsPanel.setSize(600, 310);
-		infoPanel.setSize(600, 20);
+		buttonsPanel.setSize(500, 20);
+		cardsPanel.setSize(500, 310);
+		infoPanel.setSize(500, 20);
 		
 		// Create player score label
 		playerScore = new JLabel("");
