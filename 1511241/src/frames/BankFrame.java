@@ -125,10 +125,6 @@ public class BankFrame extends JFrame {
         setLocationRelativeTo(null);
 	}
 	
-	public static void createBank(String name, BufferedImage bankBackground) {
-		bank = new BankFrame(name, bankBackground);
-	}
-	
 	private class ChipClickListener implements MouseListener {
 
 		int value;

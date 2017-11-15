@@ -9,9 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -40,11 +42,39 @@ public class Provider {
 		cards_constraints.insets = new Insets(10, 10, 10, 10); // Add Layout insets padding
 	}
 	
+	public static void createBank(String name, BufferedImage bankBackground) {
+		BankFrame.bank = new BankFrame(name, bankBackground);
+	}
+	
 	public static WindowAdapter windowAdapter = new WindowAdapter() {
 		public void windowClosing(WindowEvent windowEvent) {
 			System.exit(0);
 		}
 	};
+	
+	public static void numPlayersButtonAction(ActionEvent e) {
+		int player, numberOfPlayers = 0;
+		JButton b = (JButton) e.getSource();
+		JFrame mainFrame = (JFrame) b.getParent().getParent().getParent().getParent().getParent();
+		String command = e.getActionCommand();
+
+		//Create Bank
+		Provider.createBank("Bank", Main.bankBackground);
+		Provider.framesList.add(BankFrame.bank);
+		
+		numberOfPlayers = Integer.parseInt(command);
+
+		for (player = 0; player < numberOfPlayers; player++) {
+			// Create Player Frame
+			Provider.framesList.add(new PlayerFrame(String.valueOf(player + 1), BankFrame.bank));
+		}
+		PlayerFrame.numPlayers = numberOfPlayers;
+
+		// Close Main Frame
+		mainFrame.setVisible(false);
+		mainFrame.dispose();
+			
+	}
 	
 	public static WindowAdapter playerFrameClosing = new WindowAdapter() {
 		@Override

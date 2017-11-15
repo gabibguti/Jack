@@ -18,7 +18,7 @@ import components.GameImagePanel;
 import frames.*;
 
 public class Main {
-	private JFrame mainFrame;
+	public static JFrame mainFrame;
 	private PlayerFrame playerFrame;
 	private JLabel headerLabel;
 	private JLabel subheaderLabel;
@@ -26,9 +26,9 @@ public class Main {
 	private JPanel mainCP;
 	private JPanel playerCP;
 	private JButton[] options;
-	private String[] actions;
+	public String[] actions;
 	private int maxPlayers = 4;
-	BufferedImage bankBackground = null;
+	public static BufferedImage bankBackground = null;
 
 	static public ArrayList<Card> deck = Card.newDeck();
 
@@ -106,7 +106,7 @@ public class Main {
 		for (player = 0; player < maxPlayers; player++) {
 			options[player].setActionCommand(actions[player]);
 		}
-
+		
 		// Add listeners to buttons
 		for (JButton b : options) {
 			b.addActionListener(new ButtonClickListener());
@@ -124,30 +124,7 @@ public class Main {
 	private class ButtonClickListener implements ActionListener {
 		// Listener function
 		public void actionPerformed(ActionEvent e) {
-			int player, numberOfPlayers = 0;
-			String command = e.getActionCommand();
-
-			if (Arrays.asList(actions).contains(command)) { // Search for command in actions array
-				BankFrame.createBank("Bank", bankBackground);
-				Provider.framesList.add(BankFrame.bank);
-
-				numberOfPlayers = Integer.parseInt(command);
-
-				for (player = 0; player < numberOfPlayers; player++) {
-					// Create Player Frame
-					playerFrame = new PlayerFrame(String.valueOf(player + 1), BankFrame.bank);
-					Provider.framesList.add(playerFrame);
-				}
-				PlayerFrame.numPlayers = numberOfPlayers;
-
-				// Close Main Frame
-				mainFrame.setVisible(false);
-				mainFrame.dispose();
-				
-			}
-			else {
-				statusLabel.setText("Invalid Option");
-			}
+			Provider.numPlayersButtonAction(e);
 		}
 	}
 }
