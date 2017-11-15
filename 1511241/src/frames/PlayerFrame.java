@@ -258,15 +258,4 @@ public class PlayerFrame extends JFrame {
 	public void setPlayerBet(JLabel playerBet) {
 		this.playerBet = playerBet;
 	}
-	
-//	public void bet(int value) {
-//		bet += value; // Add value to player's bet amount
-//		playerBet.setText("$ " + bet);
-//	}
-//	
-//	public void resetBet() {
-//		bet = 0; // Add value to player's bet amount
-//		playerBet.setText("$ " + bet);
-//	}
-
 }

@@ -229,23 +229,28 @@ public class Provider {
 			
 			for(Frame frame : Provider.framesList) {
 				if(frame.getClass() == PlayerFrame.class) {
+    				PlayerFrame p = (PlayerFrame) frame;
+    				
 					// Reset players frame
-					((PlayerFrame) frame).getCardsPanel().removeAll();
+					p.getCardsPanel().removeAll();
 					
-					// Reinitialize cards panel
-					((PlayerFrame) frame).getCards().clear();
-					Provider.RequestNewCard(((PlayerFrame) frame).getCards(), ((PlayerFrame) frame).getCardsPanel(), ((PlayerFrame) frame));
-					Provider.RequestNewCard(((PlayerFrame) frame).getCards(), ((PlayerFrame) frame).getCardsPanel(), ((PlayerFrame) frame));	
-					((PlayerFrame) frame).getTotalScore().UpdateScore(((PlayerFrame) frame).getCards());
-					if(((PlayerFrame) frame).getTotalScore().getScore() < 10)
-						((PlayerFrame) frame).getPlayerScore().setText("Score: " + ((PlayerFrame) frame).getTotalScore().getScore() + " (TINY RICK!!!)");
+					// Get new cards
+					p.getCards().clear();
+					Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);
+					Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);	
+					
+					// Update score
+					p.getTotalScore().UpdateScore(p.getCards());
+					if(p.getTotalScore().getScore() < 10)
+						p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
 					else
-						((PlayerFrame) frame).getPlayerScore().setText("Score: " + ((PlayerFrame) frame).getTotalScore().getScore());
+						p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
+            		
+					// Reset bet
+					p.setBet(0);
+					p.getPlayerBet().setText("$ " + p.getBet());					
 					
 					Turn.updatePlayerFrameTurn();
-//					// Enabling buttons
-//					((PlayerFrame) frame).getHitButton().setEnabled(true);
-//					((PlayerFrame) frame).getStandButton().setEnabled(true);
 				}
 				
 				frame.setVisible(true);
@@ -265,8 +270,17 @@ public class Provider {
             	{
             		System.out.println("Uh! Mo-Morty! Ah wa what are you doin' here?");
             		System.out.println("I-I wanted the chip " + chip + " Rick");
-            		// TODO: Implement player turn first, to know which player is trying to bet
-//            		PlayerFrame.bet(chip);
+            		// Update player bet with clicked chip value
+            		int playerBetting = Turn.currentPlayerTurn();
+            		for(Frame frame: Provider.framesList) {
+            			if(frame.getClass() == PlayerFrame.class) {
+            				PlayerFrame p = (PlayerFrame) frame;
+            				if(p.getPlayerNumber() == playerBetting) {
+            					p.setBet(p.getBet() + chip);
+            					p.getPlayerBet().setText("$ " + p.getBet());
+            				}
+            			}
+            		}
             	}
 	    	}
         }
