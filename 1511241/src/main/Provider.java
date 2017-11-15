@@ -53,7 +53,7 @@ public class Provider {
 			PlayerFrame.activePlayers--;
 			PlayerFrame.numPlayers--;
 			if (PlayerFrame.activePlayers == 0)
-				BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 			((Window) windowEvent.getSource()).dispose();
 		}
 	};
@@ -81,7 +81,7 @@ public class Provider {
 				p.ReloadLayout();
 				PlayerFrame.activePlayers--;
 				if(PlayerFrame.activePlayers == 0)
-					BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+					Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 			}
 		}
 	};
@@ -91,7 +91,7 @@ public class Provider {
 			JButton b = (JButton) actionEvent.getSource();
 			PlayerFrame p = (PlayerFrame) b.getParent().getParent().getParent().getParent().getParent();
 //			p.hitButton.setEnabled(false); 		//TODO: Solve this line	hitButton = null)
-			if(p.totalScore.getScore() > BankFrame.getBankScore()) { 
+			if(p.totalScore.getScore() > Provider.getBankScore()) { 
 				JOptionPane.showMessageDialog(null, "Wubba lubba dub dub! I WON MORTY!"); // Warn bursted player
 			}
 			p.setVisible(false); // "Close" player frame
@@ -108,7 +108,7 @@ public class Provider {
 //			p.hitButton.setEnabled(true);		TODO: Solve this line (hitButton = null)
 			PlayerFrame.activePlayers--;
 			if(PlayerFrame.activePlayers == 0)
-				BankFrame.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 		}
 	};
 	
@@ -120,7 +120,7 @@ public class Provider {
 	
 	public static ActionListener newRoundListener = new ActionListener() {
 		public void actionPerformed(ActionEvent actionEvent) {
-			BankFrame.newRoundSetEnabled(false);
+			Provider.newRoundSetEnabled(false);
 			
 			while(BankFrame.bank.cards.isEmpty() == false) {	// Remove all cards from the bank
 				BankFrame.bank.cards.remove(0);
@@ -173,6 +173,19 @@ public class Provider {
 		}
 	};
 
+	public static void newRoundSetEnabled(boolean bool) {
+		BankFrame.bank.bNewRound.setEnabled(bool);
+	}
+	
+	public static void newRoundSetEnabled(boolean bool, int numPlayers) {
+		BankFrame.bank.bNewRound.setEnabled(bool);
+		PlayerFrame.activePlayers = numPlayers;
+	}
+	
+	public static int getBankScore() {
+		return BankFrame.bank.score.getScore();
+	}
+	
 	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
 	   {
 			Card card;

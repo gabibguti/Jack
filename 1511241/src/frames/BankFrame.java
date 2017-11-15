@@ -167,17 +167,4 @@ public class BankFrame extends JFrame {
 		}
 
 	}
-	
-	public static void newRoundSetEnabled(boolean bool) {
-		bank.bNewRound.setEnabled(bool);
-	}
-	
-	public static void newRoundSetEnabled(boolean bool, int numPlayers) {
-		bank.bNewRound.setEnabled(bool);
-		PlayerFrame.activePlayers = numPlayers;
-	}
-	
-	public static int getBankScore() {
-		return BankFrame.bank.score.getScore();
-	}
 }
