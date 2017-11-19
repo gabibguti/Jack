@@ -21,6 +21,8 @@ public class PlayerFrame extends JFrame {
 	int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
 	int gap = 4;
 	private int bet = 0;
+	private int money;
+	private int initialAmount = 500;
 	private int playerNumber;
 	private ArrayList<Card> cards = new ArrayList<>();
 	private JPanel buttonsPanel;
@@ -28,6 +30,7 @@ public class PlayerFrame extends JFrame {
 	private JPanel infoPanel;
 	private JLabel playerScore;
 	private JLabel playerBet;
+	private JLabel playerMoney;
 	private JButton hitButton;
 	private JButton standButton;
 	private Score totalScore = new Score();
@@ -45,6 +48,9 @@ public class PlayerFrame extends JFrame {
 		setSize(500, 350);
 		setLayout(new BorderLayout());
 
+		// Set initial amount of money
+		setMoney(initialAmount);
+		
 		// Create Panel
 		setButtonsPanel(new JPanel());
 		setCardsPanel(new JPanel());
@@ -58,9 +64,11 @@ public class PlayerFrame extends JFrame {
 		
 		// Create player score label
 		setPlayerScore(new JLabel(""));
-		setPlayerBet(new JLabel("$ " + getBet()));
+		setPlayerBet(new JLabel("Bet $" + getBet()));
 		getPlayerScore().setSize(40, 15);
 		getPlayerBet().setSize(40, 15);
+		setPlayerMoney(new JLabel(""));
+		getPlayerMoney().setText("Money $" + getMoney());
 				
 		// Create button
 		setHitButton(new JButton("Hit"));
@@ -91,6 +99,7 @@ public class PlayerFrame extends JFrame {
 		// Add player score label to info panel
 		getInfoPanel().add(getPlayerScore());
 		getInfoPanel().add(getPlayerBet());
+		getInfoPanel().add(getPlayerMoney());
 
 		// Add components to frame
 		this.add(getButtonsPanel(), BorderLayout.PAGE_START);
@@ -257,5 +266,33 @@ public class PlayerFrame extends JFrame {
 	 */
 	public void setPlayerBet(JLabel playerBet) {
 		this.playerBet = playerBet;
+	}
+
+	/**
+	 * @return the playerMoney
+	 */
+	public JLabel getPlayerMoney() {
+		return playerMoney;
+	}
+
+	/**
+	 * @param playerMoney the playerMoney to set
+	 */
+	public void setPlayerMoney(JLabel playerMoney) {
+		this.playerMoney = playerMoney;
+	}
+
+	/**
+	 * @return the money
+	 */
+	public int getMoney() {
+		return money;
+	}
+
+	/**
+	 * @param money the money to set
+	 */
+	public void setMoney(int money) {
+		this.money = money;
 	}
 }
