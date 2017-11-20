@@ -34,6 +34,7 @@ public class PlayerFrame extends JFrame {
 	private JButton hitButton;
 	private JButton standButton;
 	private JButton doubleButton;
+	private JButton surrenderButton;
 	private Score totalScore = new Score();
 	
 	public static int activePlayers = 0;
@@ -75,6 +76,7 @@ public class PlayerFrame extends JFrame {
 		setHitButton(new JButton("Hit"));
 		setStandButton(new JButton("Stand"));
 		setDoubleButton(new JButton("Double"));
+		setSurrenderButton(new JButton("Surrender"));
 
 		// hitButton listener
 		getHitButton().addActionListener(Provider.hitButtonListener);
@@ -85,10 +87,14 @@ public class PlayerFrame extends JFrame {
 		// doubleButton listener
 		getDoubleButton().addActionListener(Provider.doubleButtonListener);
 		
+		// surrenderButton listener
+//		getSurrenderButton().addActionListener(Provider.surrenderButtonListener);
+		
 		// Add button to buttons panel
 		getButtonsPanel().add(getHitButton());
 		getButtonsPanel().add(getStandButton());
 		getButtonsPanel().add(getDoubleButton());
+		getButtonsPanel().add(getSurrenderButton());
 		
 		// Initial cards
 		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);
@@ -314,5 +320,19 @@ public class PlayerFrame extends JFrame {
 	 */
 	public void setDoubleButton(JButton doubleButton) {
 		this.doubleButton = doubleButton;
+	}
+
+	/**
+	 * @return the surrenderButton
+	 */
+	public JButton getSurrenderButton() {
+		return surrenderButton;
+	}
+
+	/**
+	 * @param surrenderButton the surrenderButton to set
+	 */
+	public void setSurrenderButton(JButton surrenderButton) {
+		this.surrenderButton = surrenderButton;
 	}
 }
