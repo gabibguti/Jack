@@ -33,6 +33,7 @@ public class PlayerFrame extends JFrame {
 	private JLabel playerMoney;
 	private JButton hitButton;
 	private JButton standButton;
+	private JButton doubleButton;
 	private Score totalScore = new Score();
 	
 	public static int activePlayers = 0;
@@ -62,7 +63,7 @@ public class PlayerFrame extends JFrame {
 		getCardsPanel().setSize(500, 310);
 		getInfoPanel().setSize(500, 20);
 		
-		// Create player score label
+		// Create player labels
 		setPlayerScore(new JLabel(""));
 		setPlayerBet(new JLabel("Bet $" + getBet()));
 		getPlayerScore().setSize(40, 15);
@@ -73,6 +74,7 @@ public class PlayerFrame extends JFrame {
 		// Create button
 		setHitButton(new JButton("Hit"));
 		setStandButton(new JButton("Stand"));
+		setDoubleButton(new JButton("Double"));
 
 		// hitButton listener
 		getHitButton().addActionListener(Provider.hitButtonListener);
@@ -80,9 +82,13 @@ public class PlayerFrame extends JFrame {
 		// standButton listener
 		getStandButton().addActionListener(Provider.standButtonListener);
 		
+		// doubleButton listener
+		//getDoubleButton().addActionListener(Provider.doubleButtonListener);
+		
 		// Add button to buttons panel
 		getButtonsPanel().add(getHitButton());
 		getButtonsPanel().add(getStandButton());
+		getButtonsPanel().add(getDoubleButton());
 		
 		// Initial cards
 		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);
@@ -294,5 +300,19 @@ public class PlayerFrame extends JFrame {
 	 */
 	public void setMoney(int money) {
 		this.money = money;
+	}
+
+	/**
+	 * @return the doubleButton
+	 */
+	public JButton getDoubleButton() {
+		return doubleButton;
+	}
+
+	/**
+	 * @param doubleButton the doubleButton to set
+	 */
+	public void setDoubleButton(JButton doubleButton) {
+		this.doubleButton = doubleButton;
 	}
 }
