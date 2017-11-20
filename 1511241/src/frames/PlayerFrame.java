@@ -83,7 +83,7 @@ public class PlayerFrame extends JFrame {
 		getStandButton().addActionListener(Provider.standButtonListener);
 		
 		// doubleButton listener
-		//getDoubleButton().addActionListener(Provider.doubleButtonListener);
+		getDoubleButton().addActionListener(Provider.doubleButtonListener);
 		
 		// Add button to buttons panel
 		getButtonsPanel().add(getHitButton());
