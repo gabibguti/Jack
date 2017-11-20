@@ -103,6 +103,7 @@ public class Provider {
 			JButton b = (JButton) actionEvent.getSource();
 			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
 			p.getDoubleButton().setEnabled(false); // Can't double anymore
+			p.getSurrenderButton().setEnabled(false); // Can't surrender anymore
 			
 			Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
 
