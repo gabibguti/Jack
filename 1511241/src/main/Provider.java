@@ -170,9 +170,28 @@ public class Provider {
 	};
 	
 	public static void notifyWinnersAndLosers() {
-		if(BankFrame.bank.getScore().getScore() > 21)
+		if(BankFrame.bank.getScore().getScore() > 21) {
 			JOptionPane.showMessageDialog(null, "Bank busted. Every remaining player wins!"); // Warn bank busted
 			// TODO: Make everyone win with score <= 21
+			for(JFrame frame : Provider.framesList) {
+				if(frame.getClass() == PlayerFrame.class) {
+					PlayerFrame p = (PlayerFrame) frame;
+					if(p.getTotalScore().getScore() <= 21) {
+						if(p.getTotalScore().getScore() == 21) {
+							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
+							p.setMoney(p.getMoney() + p.getBet()*(5/2)); // Return money reward
+							p.getPlayerMoney().setText("Money $" + p.getMoney());
+						}
+						else {
+							JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!"); // Warn winner
+							 p.setMoney(p.getMoney() + p.getBet()*2); // Return money reward
+							 p.getPlayerMoney().setText("Money $" + p.getMoney());
+						}
+					}
+				}
+			}
+
+		}
 		else {
 			for(JFrame frame : Provider.framesList) {
 				if(frame.getClass() == PlayerFrame.class) {
@@ -180,12 +199,12 @@ public class Provider {
 					if(p.getTotalScore().getScore() <= 21) {
 						if(p.getTotalScore().getScore() == 21) {
 							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
-							p.setMoney(p.getBet()*(5/2)); // Return money reward
+							p.setMoney(p.getMoney() + p.getBet()*(5/2)); // Return money reward
 							p.getPlayerMoney().setText("Money $" + p.getMoney());
 						}
 						else if(p.getTotalScore().getScore() > Provider.getBankScore()) {
 							JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!"); // Warn winner
-							 p.setMoney(p.getBet()*2); // Return money reward
+							 p.setMoney(p.getMoney() + p.getBet()*2); // Return money reward
 							 p.getPlayerMoney().setText("Money $" + p.getMoney());
 						}
 						else {
@@ -294,10 +313,13 @@ public class Provider {
             			if(frame.getClass() == PlayerFrame.class) {
             				PlayerFrame p = (PlayerFrame) frame;
             				if(p.getPlayerNumber() == playerBetting) {
-            					p.setBet(p.getBet() + chip);
-            					p.getPlayerBet().setText("Bet $ " + p.getBet());
-            					p.setMoney(p.getMoney() - chip); // Update money left for player
-            					p.getPlayerMoney().setText("Money $" + p.getMoney());
+            					if(p.getMoney() - chip >= 0) // Check if player still has money to bet
+            					{
+	            					p.setBet(p.getBet() + chip);
+	            					p.getPlayerBet().setText("Bet $ " + p.getBet());
+	            					p.setMoney(p.getMoney() - chip); // Update money left for player
+	            					p.getPlayerMoney().setText("Money $" + p.getMoney());
+            					}
             				}
             			}
             		}
