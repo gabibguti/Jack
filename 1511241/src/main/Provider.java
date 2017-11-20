@@ -145,9 +145,11 @@ public class Provider {
 		public void actionPerformed(ActionEvent actionEvent) {
 			JButton b = (JButton) actionEvent.getSource();
 			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor(); 
+			// Disable all player actions
 			p.getHitButton().setEnabled(false);
 			p.getStandButton().setEnabled(false);
 			p.getDoubleButton().setEnabled(false);
+			p.getSurrenderButton().setEnabled(false);
 			
 			// Update player turn
 			Turn.nextPlayerTurn();
@@ -174,11 +176,13 @@ public class Provider {
 	
 	public static ActionListener doubleButtonListener = new ActionListener() { // Player doubles down
 		public void actionPerformed(ActionEvent actionEvent) {
-			// Disable other actions for player
+			// Disable all player actions
 			JButton b = (JButton) actionEvent.getSource();
 			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
 			p.getHitButton().setEnabled(false);
 			p.getStandButton().setEnabled(false);
+			p.getDoubleButton().setEnabled(false);
+			p.getSurrenderButton().setEnabled(false);
 			
 			// Double bet
 			p.setMoney(p.getMoney() - p.getBet());
@@ -222,13 +226,55 @@ public class Provider {
 			}
 		}
 	};
+
+	public static ActionListener surrenderButtonListener = new ActionListener() { // Player surrenders
+		public void actionPerformed(ActionEvent actionEvent) {
+			// Disable all player actions
+			JButton b = (JButton) actionEvent.getSource();
+			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
+			p.getHitButton().setEnabled(false);
+			p.getStandButton().setEnabled(false);
+			p.getDoubleButton().setEnabled(false);
+			p.getSurrenderButton().setEnabled(false);
+			
+			// Receives half bet back
+			p.setMoney(p.getMoney() + p.getBet()/2);
+			p.getPlayerMoney().setText("Money $" + p.getMoney());
+			p.setBet(p.getBet()/2);
+			p.getPlayerBet().setText("Bet $ " + p.getBet());
+						
+			p.setVisible(false); // "Close" player frame
+			
+			// Update player turn
+			Turn.nextPlayerTurn();
+			
+			PlayerFrame.activePlayers--;
+			if(PlayerFrame.activePlayers == 0) { // Last player stands
+				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+				
+				// Update bank frame
+				Provider.UpdateBankHand (BankFrame.bank.getCards(),
+										 BankFrame.bank.getChips(),
+										 BankFrame.bank.getpComponents(),
+										 BankFrame.bank,
+										 Main.bankBackground);
+				
+				// Notify winners and losers
+				Provider.notifyWinnersAndLosers();
+			}
+			else {
+				Turn.updatePlayerFrameTurn();
+			}
+		}
+	};
+
 	
 	public static void notifyWinnersAndLosers() {
 		if(BankFrame.bank.getScore().getScore() > 21) {
 			JOptionPane.showMessageDialog(null, "Bank busted. Every remaining player wins!"); // Warn bank busted
 			// TODO: Make everyone win with score <= 21
 			for(JFrame frame : Provider.framesList) {
-				if(frame.getClass() == PlayerFrame.class) {
+				if(frame.getClass() == PlayerFrame.class && frame.isVisible() == true) {
 					PlayerFrame p = (PlayerFrame) frame;
 					if(p.getTotalScore().getScore() <= 21) {
 						if(p.getTotalScore().getScore() == 21) {
@@ -248,7 +294,7 @@ public class Provider {
 		}
 		else {
 			for(JFrame frame : Provider.framesList) {
-				if(frame.getClass() == PlayerFrame.class) {
+				if(frame.getClass() == PlayerFrame.class  && frame.isVisible() == true) {
 					PlayerFrame p = (PlayerFrame) frame;
 					if(p.getTotalScore().getScore() <= 21) {
 						if(p.getTotalScore().getScore() == 21) {
