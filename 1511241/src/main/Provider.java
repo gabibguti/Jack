@@ -68,30 +68,33 @@ public class Provider {
 		mainFrame.dispose();
 	}
 	
+	public static void closePlayer(PlayerFrame p) {
+		Provider.framesList.remove(p); // Remove PlayerFrame from framesList
+		Turn.removePlayer(p.getPlayerNumber());
+		PlayerFrame.activePlayers--;
+		PlayerFrame.numPlayers--;
+		if (PlayerFrame.activePlayers == 0) {
+			Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+			
+			// Update bank frame
+			Provider.UpdateBankHand (BankFrame.bank.getCards(),
+									 BankFrame.bank.getChips(),
+									 BankFrame.bank.getpComponents(),
+									 BankFrame.bank,
+									 Main.bankBackground);
+			
+			Provider.notifyWinnersAndLosers();
+		}
+		else {
+			Turn.updatePlayerFrameTurn();
+		}
+		p.dispose();
+	}
+	
 	public static WindowAdapter playerFrameClosing = new WindowAdapter() { // Remove Player from game on closing window
 		@Override
 		public void windowClosing(WindowEvent windowEvent) {
-			Provider.framesList.remove(windowEvent.getSource()); // Remove PlayerFrame from framesList
-			PlayerFrame p = (PlayerFrame) windowEvent.getSource();
-			Turn.removePlayer(p.getPlayerNumber());
-			PlayerFrame.activePlayers--;
-			PlayerFrame.numPlayers--;
-			if (PlayerFrame.activePlayers == 0) {
-				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
-				
-				// Update bank frame
-				Provider.UpdateBankHand (BankFrame.bank.getCards(),
-										 BankFrame.bank.getChips(),
-										 BankFrame.bank.getpComponents(),
-										 BankFrame.bank,
-										 Main.bankBackground);
-				
-				Provider.notifyWinnersAndLosers();
-			}
-			else {
-				Turn.updatePlayerFrameTurn();
-			}
-			((Window) windowEvent.getSource()).dispose();
+			Provider.closePlayer((PlayerFrame) windowEvent.getSource());
 		}
 	};
 	
@@ -185,11 +188,17 @@ public class Provider {
 							 p.setMoney(p.getBet()*2); // Return money reward
 							 p.getPlayerMoney().setText("Money $" + p.getMoney());
 						}
-						else if(p.getTotalScore().getScore() == Provider.getBankScore()) {
-							JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!"); // Warn tie
-						}
 						else {
-							JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
+							if(p.getMoney() == 0) { // Broken player
+								Provider.closePlayer(p);
+								JOptionPane.showMessageDialog(p, "Looks like you're out of money... Bye!"); // Warn broken player
+							}
+							else if(p.getTotalScore().getScore() == Provider.getBankScore()) {
+								JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!"); // Warn tie
+							}
+							else {
+								JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
+							}
 						}
 						// TODO: #SHAKEITOFF JOptionPane.showMessageDialog(null, "Don't think about it.");
 					}
