@@ -208,12 +208,14 @@ public class Provider {
 							 p.getPlayerMoney().setText("Money $" + p.getMoney());
 						}
 						else {
-							if(p.getMoney() == 0) { // Broken player
+							if(p.getTotalScore().getScore() == Provider.getBankScore()) {
+								JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!"); // Warn tie
+								 p.setMoney(p.getMoney() + p.getBet()); // Return money
+								 p.getPlayerMoney().setText("Money $" + p.getMoney());
+							}
+							else if(p.getMoney() == 0) { // Broken player
 								Provider.closePlayer(p);
 								JOptionPane.showMessageDialog(p, "Looks like you're out of money... Bye!"); // Warn broken player
-							}
-							else if(p.getTotalScore().getScore() == Provider.getBankScore()) {
-								JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!"); // Warn tie
 							}
 							else {
 								JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
