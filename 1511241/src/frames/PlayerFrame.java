@@ -41,6 +41,8 @@ public class PlayerFrame extends JFrame {
 	private Score totalScore = new Score();
 	public ObservableDemo observable;
 	
+//	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	
 	public static int activePlayers = 0;
 	public static int numPlayers = 0;
 
