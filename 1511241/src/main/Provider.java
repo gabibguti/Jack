@@ -71,24 +71,8 @@ public class Provider {
 	public static void closePlayer(PlayerFrame p) {
 		Provider.framesList.remove(p); // Remove PlayerFrame from framesList
 		Turn.removePlayer(p.getPlayerNumber());
-		PlayerFrame.activePlayers--;
 		PlayerFrame.numPlayers--;
-		System.out.println(PlayerFrame.activePlayers);
-		if (PlayerFrame.activePlayers == 0) {
-			Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
-			
-			// Update bank frame
-			Provider.UpdateBankHand (BankFrame.bank.getCards(),
-									 BankFrame.bank.getChips(),
-									 BankFrame.bank.getpComponents(),
-									 BankFrame.bank,
-									 Main.bankBackground);
-			
-			Provider.notifyWinnersAndLosers();
-		}
-		else {
-			Turn.updatePlayerFrameTurn();
-		}
+		Provider.updateActivePlayers();
 		p.dispose();
 	}
 	
@@ -122,23 +106,7 @@ public class Provider {
 				// Update player turn
 				Turn.nextPlayerTurn();
 				
-				PlayerFrame.activePlayers--;
-				if(PlayerFrame.activePlayers == 0) {
-					Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
-					
-					// Update bank frame
-					Provider.UpdateBankHand (BankFrame.bank.getCards(),
-											 BankFrame.bank.getChips(),
-											 BankFrame.bank.getpComponents(),
-											 BankFrame.bank,
-											 Main.bankBackground);
-					
-					Provider.notifyWinnersAndLosers();
-				}
-				else {
-					Turn.updatePlayerFrameTurn();
-				}
-
+				Provider.updateActivePlayers();
 			}
 		}
 	};
@@ -157,23 +125,7 @@ public class Provider {
 			// Update player turn
 			Turn.nextPlayerTurn();
 			
-			PlayerFrame.activePlayers--;
-			if(PlayerFrame.activePlayers == 0) { // Last player stands
-				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
-				
-				// Update bank frame
-				Provider.UpdateBankHand (BankFrame.bank.getCards(),
-										 BankFrame.bank.getChips(),
-										 BankFrame.bank.getpComponents(),
-										 BankFrame.bank,
-										 Main.bankBackground);
-				
-				// Notify winners and losers
-				Provider.notifyWinnersAndLosers();
-			}
-			else {
-				Turn.updatePlayerFrameTurn();
-			}
+			Provider.updateActivePlayers();
 		}
 	};
 	
@@ -210,23 +162,7 @@ public class Provider {
 					// Update player turn
 					Turn.nextPlayerTurn();
 					
-					PlayerFrame.activePlayers--;
-					if(PlayerFrame.activePlayers == 0) { // Last player stands
-						Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
-						
-						// Update bank frame
-						Provider.UpdateBankHand (BankFrame.bank.getCards(),
-												 BankFrame.bank.getChips(),
-												 BankFrame.bank.getpComponents(),
-												 BankFrame.bank,
-												 Main.bankBackground);
-						
-						// Notify winners and losers
-						Provider.notifyWinnersAndLosers();
-					}
-					else {
-						Turn.updatePlayerFrameTurn();
-					}
+					Provider.updateActivePlayers();
 				}
 			}
 		}
@@ -252,23 +188,7 @@ public class Provider {
 			// Update player turn
 			Turn.nextPlayerTurn();
 			
-			PlayerFrame.activePlayers--;
-			if(PlayerFrame.activePlayers == 0) { // Last player stands
-				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
-				
-				// Update bank frame
-				Provider.UpdateBankHand (BankFrame.bank.getCards(),
-										 BankFrame.bank.getChips(),
-										 BankFrame.bank.getpComponents(),
-										 BankFrame.bank,
-										 Main.bankBackground);
-				
-				// Notify winners and losers
-				Provider.notifyWinnersAndLosers();
-			}
-			else {
-				Turn.updatePlayerFrameTurn();
-			}
+			Provider.updateActivePlayers();
 		}
 	};
 
@@ -566,6 +486,25 @@ public class Provider {
 			JOptionPane.showMessageDialog(null, "Deck ended. Starting new deck..."); // Show message when deck runs out of cards and new deck is started
 			Card.newDeck();
 			return Card.Deck.remove(0);
+		}
+	}
+	
+	static public void updateActivePlayers() {
+		PlayerFrame.activePlayers--;
+		if (PlayerFrame.activePlayers == 0) {
+			Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+			
+			// Update bank frame
+			Provider.UpdateBankHand (BankFrame.bank.getCards(),
+									 BankFrame.bank.getChips(),
+									 BankFrame.bank.getpComponents(),
+									 BankFrame.bank,
+									 Main.bankBackground);
+			
+			Provider.notifyWinnersAndLosers();
+		}
+		else {
+			Turn.updatePlayerFrameTurn();
 		}
 	}
 }
