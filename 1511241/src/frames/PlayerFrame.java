@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import cards.Card;
+import etc.ObservableDemo;
+import etc.ObserverExample;
 import main.Provider;
 
 @SuppressWarnings("serial")
@@ -37,6 +39,7 @@ public class PlayerFrame extends JFrame {
 	private JButton surrenderButton;
 	private JButton betButton;
 	private Score totalScore = new Score();
+	public ObservableDemo observable;
 	
 	public static int activePlayers = 0;
 	public static int numPlayers = 0;
@@ -46,6 +49,11 @@ public class PlayerFrame extends JFrame {
 		this.setPlayerNumber(Integer.parseInt(playerNumber));
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(Provider.playerFrameClosing);
+		
+		// Add observer
+		observable = new ObservableDemo(0, getPlayerBet());
+	    ObserverExample observer = new ObserverExample();
+	    observable.addObserver(observer);
 		
 		activePlayers++; // Add active player
 		setSize(500, 350);
@@ -67,7 +75,8 @@ public class PlayerFrame extends JFrame {
 		
 		// Create player labels
 		setPlayerScore(new JLabel(""));
-		setPlayerBet(new JLabel("Bet $" + getBet()));
+		setPlayerBet(new JLabel(""));
+		observable.setBET(0, getPlayerBet());
 		getPlayerScore().setSize(40, 15);
 		getPlayerBet().setSize(40, 15);
 		setPlayerMoney(new JLabel(""));

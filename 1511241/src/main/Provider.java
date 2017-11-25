@@ -422,7 +422,8 @@ public class Provider {
             				if(p.getPlayerNumber() == playerBetting) {
             					if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
 	            					p.setBet(p.getBet() + chip);
-	            					p.getPlayerBet().setText("Bet $ " + p.getBet());
+//	            					p.getPlayerBet().setText("Bet $ " + p.getBet());
+	            					p.observable.setBET(p.observable.getBET() + chip, p.getPlayerBet());
 	            					p.setMoney(p.getMoney() - chip); // Update money left for player
 	            					p.getPlayerMoney().setText("Money $" + p.getMoney());
             					}
