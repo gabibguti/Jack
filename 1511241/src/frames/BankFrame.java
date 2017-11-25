@@ -99,7 +99,7 @@ public class BankFrame extends JFrame {
 			getScore().UpdateScore(getCards());
 		}
 		
-		setChipsClickListener();
+//		enableChipsClickListener();
 		
 		add(getpComponents());	// Add chips and cards to bank frame
 		
@@ -114,8 +114,16 @@ public class BankFrame extends JFrame {
         setLocationRelativeTo(null);
 	}
 	
-	public void setChipsClickListener () {
+	public void enableChipsClickListener () {
 		addMouseListener(Provider.chipsClicked);
+	}
+	
+	public void disableChipsClickListener () {
+		// FIXME: Don't need to remove all mouse listeners, only chipsClicked
+//		removeMouseListener(Provider.chipsClicked);
+		for(java.awt.event.MouseListener m: getMouseListeners()) {
+			removeMouseListener(m);
+		}
 	}
 
 	/**

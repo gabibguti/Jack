@@ -269,11 +269,26 @@ public class Provider {
 		}
 	};
 
+	public static ActionListener betButtonListener = new ActionListener() { // Player bets
+		public void actionPerformed(ActionEvent actionEvent) {
+			// Enable player actions after player bets
+			JButton b = (JButton) actionEvent.getSource();
+			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
+			if(p.getBet() != 0) {
+				p.getHitButton().setEnabled(true);
+				p.getStandButton().setEnabled(true);
+				p.getDoubleButton().setEnabled(true);
+				p.getSurrenderButton().setEnabled(true);
+				p.getBetButton().setEnabled(false); // Disable bet
+				
+				BankFrame.bank.disableChipsClickListener(); // Disable chips bet
+			}
+		}
+	};
 	
 	public static void notifyWinnersAndLosers() {
 		if(BankFrame.bank.getScore().getScore() > 21) {
 			JOptionPane.showMessageDialog(null, "Bank busted. Every remaining player wins!"); // Warn bank busted
-			// TODO: Make everyone win with score <= 21
 			for(JFrame frame : Provider.framesList) {
 				if(frame.getClass() == PlayerFrame.class && frame.isVisible() == true) {
 					PlayerFrame p = (PlayerFrame) frame;

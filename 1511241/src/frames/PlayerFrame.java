@@ -35,6 +35,7 @@ public class PlayerFrame extends JFrame {
 	private JButton standButton;
 	private JButton doubleButton;
 	private JButton surrenderButton;
+	private JButton betButton;
 	private Score totalScore = new Score();
 	
 	public static int activePlayers = 0;
@@ -77,7 +78,8 @@ public class PlayerFrame extends JFrame {
 		setStandButton(new JButton("Stand"));
 		setDoubleButton(new JButton("Double"));
 		setSurrenderButton(new JButton("Surrender"));
-
+		setBetButton(new JButton("Bet"));
+		
 		// hitButton listener
 		getHitButton().addActionListener(Provider.hitButtonListener);
 
@@ -90,11 +92,15 @@ public class PlayerFrame extends JFrame {
 		// surrenderButton listener
 		getSurrenderButton().addActionListener(Provider.surrenderButtonListener);
 		
+		// betButton listener
+		getBetButton().addActionListener(Provider.betButtonListener);
+		
 		// Add button to buttons panel
 		getButtonsPanel().add(getHitButton());
 		getButtonsPanel().add(getStandButton());
 		getButtonsPanel().add(getDoubleButton());
 		getButtonsPanel().add(getSurrenderButton());
+		getButtonsPanel().add(getBetButton());
 		
 		// Initial cards
 		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);
@@ -106,7 +112,6 @@ public class PlayerFrame extends JFrame {
 			getPlayerScore().setText("Score: " + getTotalScore().getScore() + " (TINY RICK!!!)");
 		else
 			getPlayerScore().setText("Score: " + getTotalScore().getScore());
-
 		
 		// Add player score label to info panel
 		getInfoPanel().add(getPlayerScore());
@@ -334,5 +339,19 @@ public class PlayerFrame extends JFrame {
 	 */
 	public void setSurrenderButton(JButton surrenderButton) {
 		this.surrenderButton = surrenderButton;
+	}
+
+	/**
+	 * @return the betButton
+	 */
+	public JButton getBetButton() {
+		return betButton;
+	}
+
+	/**
+	 * @param betButton the betButton to set
+	 */
+	public void setBetButton(JButton betButton) {
+		this.betButton = betButton;
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+import frames.BankFrame;
 import frames.PlayerFrame;
 import main.Provider;
 
@@ -101,16 +102,17 @@ public class Turn {
 	}
 
 	static public void enablePlayer(int playerNumber) { // Enable player actions
+		BankFrame.bank.enableChipsClickListener();
 		for(Frame frame: Provider.framesList) {
 			if(frame.getClass() == PlayerFrame.class) {
 				PlayerFrame p = (PlayerFrame) frame;
-				if(p.getPlayerNumber() == playerNumber)
-				{
-					for(Object child: p.getButtonsPanel().getComponents())
-					{
-					    JButton b = (JButton) child;
-					    b.setEnabled(true);
-					}
+				if(p.getPlayerNumber() == playerNumber) {
+//					for(Object child: p.getButtonsPanel().getComponents())
+//					{
+//					    JButton b = (JButton) child;
+//					    b.setEnabled(true);
+//					}
+					p.getBetButton().setEnabled(true);
 				}
 			}
 		}
