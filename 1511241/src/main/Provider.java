@@ -147,6 +147,7 @@ public class Provider {
 		public void actionPerformed(ActionEvent actionEvent) {
 			JButton b = (JButton) actionEvent.getSource();
 			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor(); 
+			
 			// Disable all player actions
 			p.getHitButton().setEnabled(false);
 			p.getStandButton().setEnabled(false);
@@ -191,7 +192,6 @@ public class Provider {
 				
 				// Double bet
 				p.setMoney(p.getMoney() - p.getBet());
-				p.getPlayerMoney().setText("Money $" + p.getMoney());
 				p.setBet(p.getBet()*2);
 				
 				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hits 1 time
@@ -234,6 +234,7 @@ public class Provider {
 
 	public static ActionListener surrenderButtonListener = new ActionListener() { // Player surrenders
 		public void actionPerformed(ActionEvent actionEvent) {
+			
 			// Disable all player actions
 			JButton b = (JButton) actionEvent.getSource();
 			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
@@ -244,7 +245,6 @@ public class Provider {
 			
 			// Receives half bet back
 			p.setMoney(p.getMoney() + p.getBet()/2);
-			p.getPlayerMoney().setText("Money $" + p.getMoney());
 			p.setBet(p.getBet()/2);
 						
 			p.setVisible(false); // "Close" player frame
@@ -302,12 +302,10 @@ public class Provider {
 						if(p.getTotalScore().getScore() == 21) {
 							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
 							p.setMoney(p.getMoney() + p.getBet()*5/2); // Return money reward
-							p.getPlayerMoney().setText("Money $" + p.getMoney());
 						}
 						else {
 							JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!"); // Warn winner
 							 p.setMoney(p.getMoney() + p.getBet()*2); // Return money reward
-							 p.getPlayerMoney().setText("Money $" + p.getMoney());
 						}
 					}
 				}
@@ -322,18 +320,15 @@ public class Provider {
 						if(p.getTotalScore().getScore() == 21) {
 							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
 							p.setMoney(p.getMoney() + p.getBet()*5/2); // Return money reward
-							p.getPlayerMoney().setText("Money $" + p.getMoney());
 						}
 						else if(p.getTotalScore().getScore() > Provider.getBankScore()) {
 							JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!"); // Warn winner
 							 p.setMoney(p.getMoney() + p.getBet()*2); // Return money reward
-							 p.getPlayerMoney().setText("Money $" + p.getMoney());
 						}
 						else {
 							if(p.getTotalScore().getScore() == Provider.getBankScore()) {
 								JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!"); // Warn tie
 								 p.setMoney(p.getMoney() + p.getBet()); // Return money
-								 p.getPlayerMoney().setText("Money $" + p.getMoney());
 							}
 							else {
 								JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
@@ -420,9 +415,6 @@ public class Provider {
 						p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
 					else
 						p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
-            		
-					// Reset bet
-					p.setBet(0);
 					
 					Turn.updatePlayerFrameTurn();
 					
@@ -432,7 +424,6 @@ public class Provider {
 				}
 			}
 			
-			// Gambiarra
 			BankFrame.bank.disableChipsClickListener();
 			BankFrame.bank.enableChipsClickListener();
 		}
@@ -455,7 +446,6 @@ public class Provider {
             					if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
 	            					p.setBet(p.getBet() + chip);
 	            					p.setMoney(p.getMoney() - chip); // Update money left for player
-	            					p.getPlayerMoney().setText("Money $" + p.getMoney());
             					}
             					else {
             						JOptionPane.showMessageDialog(p, "You have no more money to bet.");
@@ -499,33 +489,30 @@ public class Provider {
 		return BankFrame.bank.getScore().getScore();
 	}
 	
-	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) // Provides new card for player or bank
-	   {
+	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) { // Provides new card for player or bank
 		   	Point imgPoint;
 			int panelWidth = controlPanel.getWidth(), panelHeight = controlPanel.getHeight(), cardWidth, cardHeight, x, y, totalCards;
 			Map<Image, Point> cards_images = new HashMap<Image, Point>();
 
-			Card card = RemoveCardFromDeck();														// Remove a card from deck
-			hand.add(card);																			// Add card to player's hand
-			totalCards = hand.size();																// Get total cards number
+			Card card = RemoveCardFromDeck();							// Remove a card from deck
+			hand.add(card);												// Add card to player's hand
+			totalCards = hand.size();									// Get total cards number
 			cardWidth = card.getImage().getWidth();
 			cardHeight = card.getImage().getHeight();
-			x = panelWidth/(2 * totalCards) - cardWidth/2;											// Set first card x point on the left
-			y = panelHeight/2 - cardHeight/2;														// Set all cards y point on the middle of the panel
-			controlPanel.removeAll(); 																// Clear control panel
-			for(Card hand_card: hand)
-			{
+			x = panelWidth/(2 * totalCards) - cardWidth/2;				// Set first card x point on the left
+			y = panelHeight/2 - cardHeight/2;							// Set all cards y point on the middle of the panel
+			controlPanel.removeAll(); 									// Clear control panel
+			for(Card hand_card: hand) {
 				imgPoint = new Point(x, y);
-				cards_images.put(hand_card.getImage(), imgPoint);									// Add card and defined point to images map
-				x += panelWidth/totalCards;															// Add next card horizontal padding
+				cards_images.put(hand_card.getImage(), imgPoint);		// Add card and defined point to images map
+				x += panelWidth/totalCards;								// Add next card horizontal padding
 			}
-			controlPanel.add(new GameImagePanel(cards_images, null));								// Add images map of cards to control panel
-			frame.revalidate();																		// Update frame
+			controlPanel.add(new GameImagePanel(cards_images, null));	// Add images map of cards to control panel
+			frame.revalidate();											// Update frame
 	   }
 
 	static public Map<Integer, Rectangle> UpdateBankHand(ArrayList<Card> hand, Chip[] chips, JPanel controlPanel,
-			JFrame frame, Image background) // Update bank frame redrawing all components
-	{
+			JFrame frame, Image background) { // Update bank frame redrawing all components
 		Point imgPoint;
 		int panelWidth = controlPanel.getWidth(), panelHeight = controlPanel.getHeight(), cardWidth, cardHeight,
 				chipWidth, chipHeight, x = 0, y = 0, totalCards = hand.size(), totalChips = chips.length;
@@ -535,8 +522,7 @@ public class Provider {
 
 		controlPanel.removeAll(); // Clear control panel
 		for (Card hand_card : hand) {
-			if (firstTime) // For first card define:
-			{
+			if (firstTime) { // For first card define:
 				cardWidth = hand_card.getImage().getWidth();
 				cardHeight = hand_card.getImage().getHeight();
 				x = panelWidth / (2 * totalCards) - cardWidth / 2; // Set first card x point on the left
@@ -549,8 +535,7 @@ public class Provider {
 		}
 		firstTime = true;
 		for (Chip chip : chips) {
-			if (firstTime) // For first chip define:
-			{
+			if (firstTime) { // For first chip define:
 				chipWidth = chip.getImage().getWidth();
 				chipHeight = chip.getImage().getHeight();
 				x = panelWidth / (2 * totalChips) - chipWidth / 2; // Set first chip x point on the left
@@ -558,13 +543,14 @@ public class Provider {
 				firstTime = false;
 			}
 			imgPoint = new Point(x, y);
-			chips_bounds.put(chip.getValue(),
-					new Rectangle(imgPoint, new Dimension(chip.getImage().getWidth(), chip.getImage().getHeight()))); // Add chip value and defined position to the chip bounds map
+			chips_bounds.put(chip.getValue(), 
+							 new Rectangle(imgPoint,
+										   new Dimension(chip.getImage().getWidth(),
+														 chip.getImage().getHeight()))); // Add chip value and defined position to the chip bounds map
 			cardsNchips_images.put(chip.getImage(), imgPoint); // Add chip and defined point to images map
 			x += panelWidth / totalChips; // Add next chip horizontal padding
 		}
-		controlPanel.add(new GameImagePanel(cardsNchips_images, background)); // Add cards and chips images to control
-																				// panel
+		controlPanel.add(new GameImagePanel(cardsNchips_images, background)); // Add cards and chips images to control panel
 		frame.revalidate(); // Update frame
 		controlPanel.setOpaque(false); // Set opaque to see background
 

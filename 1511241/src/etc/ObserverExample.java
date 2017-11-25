@@ -9,7 +9,8 @@ public class ObserverExample implements Observer {
 	@Override
     public void update(Observable observable, Object arg) {
 			beth = (ObservableDemo) observable;
-			System.out.println("BET CHANGED "+ beth.getBET());
+			System.out.println("BET CHANGED "+ beth.getBet());
+			System.out.println("MONEY CHANGED " + beth.getMoney());
     }
 }
 
