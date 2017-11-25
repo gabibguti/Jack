@@ -184,7 +184,7 @@ public class Provider {
 	};
 	
 	public static void notifyWinnersAndLosers() {
-		if(BankFrame.bank.getScore().getScore() > 21) {
+		if(BankFrame.bank.getScore() > 21) {
 			JOptionPane.showMessageDialog(null, "Bank busted. Every remaining player wins!"); // Warn bank busted
 			for(JFrame frame : Provider.framesList) {
 				if(frame.getClass() == PlayerFrame.class && frame.isVisible() == true) {
@@ -246,7 +246,7 @@ public class Provider {
 				BankFrame.bank.getCards().remove(0);
 			}
 			
-			BankFrame.bank.getScore().UpdateScore(BankFrame.bank.getCards());
+			BankFrame.bank.setScore(BankFrame.bank.getCards());
 			
 			// Add first card and flipped card
 			BankFrame.bank.getCards().add(Provider.RemoveCardFromDeck());
@@ -263,11 +263,11 @@ public class Provider {
 			BankFrame.bank.getCards().remove(1);
 			
 			// Update score
-			BankFrame.bank.getScore().UpdateScore(BankFrame.bank.getCards());
+			BankFrame.bank.setScore(BankFrame.bank.getCards());
 			
-			while(BankFrame.bank.getScore().getScore() < 17) {						// Draw cards until score >= 17
+			while(BankFrame.bank.getScore() < 17) {						// Draw cards until score >= 17
 				BankFrame.bank.getCards().add(Provider.RemoveCardFromDeck());
-				BankFrame.bank.getScore().UpdateScore(BankFrame.bank.getCards());
+				BankFrame.bank.setScore(BankFrame.bank.getCards());
 			}
 			
 			
@@ -373,7 +373,7 @@ public class Provider {
 	}
 	
 	public static int getBankScore() {
-		return BankFrame.bank.getScore().getScore();
+		return BankFrame.bank.getScore();
 	}
 	
 	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) { // Provides new card for player or bank
