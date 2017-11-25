@@ -179,50 +179,33 @@ public class Provider {
 			// Disable all player actions
 			JButton b = (JButton) actionEvent.getSource();
 			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
-			p.getHitButton().setEnabled(false);
-			p.getStandButton().setEnabled(false);
-			p.getDoubleButton().setEnabled(false);
-			p.getSurrenderButton().setEnabled(false);
 			
-			// Double bet
-			p.setMoney(p.getMoney() - p.getBet());
-			p.getPlayerMoney().setText("Money $" + p.getMoney());
-			p.setBet(p.getBet()*2);
-			p.getPlayerBet().setText("Bet $ " + p.getBet());
-			
-			Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hits 1 time
-
-			// Update score
-			p.getTotalScore().UpdateScore(p.getCards()); 
-			if(p.getTotalScore().getScore() < 10)
-				p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
-			else
-				p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
-			
-			if(p.getTotalScore().getScore() > 21) { // Treat when player gets busted
-				JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
-				p.setVisible(false); // "Close" player frame	
-			}
-			
-			// Update player turn
-			Turn.nextPlayerTurn();
-			
-			PlayerFrame.activePlayers--;
-			if(PlayerFrame.activePlayers == 0) { // Last player stands
-				Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
-				
-				// Update bank frame
-				Provider.UpdateBankHand (BankFrame.bank.getCards(),
-										 BankFrame.bank.getChips(),
-										 BankFrame.bank.getpComponents(),
-										 BankFrame.bank,
-										 Main.bankBackground);
-				
-				// Notify winners and losers
-				Provider.notifyWinnersAndLosers();
+			if(p.getMoney() < p.getBet()) {
+				JOptionPane.showMessageDialog(p, "You don't have enough money to double your bet");
 			}
 			else {
-				Turn.updatePlayerFrameTurn();
+				p.getDoubleButton().setEnabled(false);
+				p.getSurrenderButton().setEnabled(false);
+				
+				// Double bet
+				p.setMoney(p.getMoney() - p.getBet());
+				p.getPlayerMoney().setText("Money $" + p.getMoney());
+				p.setBet(p.getBet()*2);
+				p.getPlayerBet().setText("Bet $ " + p.getBet());
+				
+				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hits 1 time
+	
+				// Update score
+				p.getTotalScore().UpdateScore(p.getCards()); 
+				if(p.getTotalScore().getScore() < 10)
+					p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
+				else
+					p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
+				
+				if(p.getTotalScore().getScore() > 21) { // Treat when player gets busted
+					JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
+					p.setVisible(false); // "Close" player frame	
+				}
 			}
 		}
 	};
