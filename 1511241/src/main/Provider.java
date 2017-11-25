@@ -410,22 +410,17 @@ public class Provider {
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
 	    	Point me = e.getPoint();
-	    	for(java.util.Map.Entry<Integer, Rectangle> entry : BankFrame.bank.getChips_position().entrySet())
-	    	{
+	    	for(java.util.Map.Entry<Integer, Rectangle> entry : BankFrame.bank.getChips_position().entrySet()) {
 	    		Integer chip = entry.getKey();
 	        	Rectangle bounds = entry.getValue();
-            	if(bounds.contains(me))
-            	{
-            		System.out.println("Uh! Mo-Morty! Ah wa what are you doin' here?");
-            		System.out.println("I-I wanted the chip " + chip + " Rick");
+            	if(bounds.contains(me)) {
             		// Update player bet with clicked chip value
             		int playerBetting = Turn.currentPlayerTurn();
             		for(Frame frame: Provider.framesList) {
             			if(frame.getClass() == PlayerFrame.class) {
             				PlayerFrame p = (PlayerFrame) frame;
             				if(p.getPlayerNumber() == playerBetting) {
-            					if(p.getMoney() - chip >= 0) // Check if player still has money to bet
-            					{
+            					if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
 	            					p.setBet(p.getBet() + chip);
 	            					p.getPlayerBet().setText("Bet $ " + p.getBet());
 	            					p.setMoney(p.getMoney() - chip); // Update money left for player
