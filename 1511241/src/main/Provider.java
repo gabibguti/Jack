@@ -92,22 +92,7 @@ public class Provider {
 			
 			Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
 
-			// Update score
-			p.getTotalScore().UpdateScore(p.getCards()); 
-			if(p.getTotalScore().getScore() < 10)
-				p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
-			else
-				p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
-			
-			if(p.getTotalScore().getScore() > 21) { // Treat when player gets busted
-				JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
-				p.setVisible(false); // "Close" player frame	
-				
-				// Update player turn
-				Turn.nextPlayerTurn();
-				
-				Provider.updateActivePlayers();
-			}
+			Provider.updateScore(p);
 		}
 	};
 	
@@ -149,21 +134,7 @@ public class Provider {
 				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hits 1 time
 	
 				// Update score
-				p.getTotalScore().UpdateScore(p.getCards()); 
-				if(p.getTotalScore().getScore() < 10)
-					p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
-				else
-					p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
-				
-				if(p.getTotalScore().getScore() > 21) { // Treat when player gets busted
-					JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
-					p.setVisible(false); // "Close" player frame
-					
-					// Update player turn
-					Turn.nextPlayerTurn();
-					
-					Provider.updateActivePlayers();
-				}
+				Provider.updateScore(p);
 			}
 		}
 	};
@@ -330,11 +301,7 @@ public class Provider {
 					Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);	
 					
 					// Update score
-					p.getTotalScore().UpdateScore(p.getCards());
-					if(p.getTotalScore().getScore() < 10)
-						p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
-					else
-						p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
+					Provider.updateScore(p);
 					
 					Turn.updatePlayerFrameTurn();
 					
@@ -505,6 +472,24 @@ public class Provider {
 		}
 		else {
 			Turn.updatePlayerFrameTurn();
+		}
+	}
+	
+	static public void updateScore(PlayerFrame p) {
+		p.getTotalScore().UpdateScore(p.getCards()); 
+		if(p.getTotalScore().getScore() < 10)
+			p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
+		else
+			p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
+		
+		if(p.getTotalScore().getScore() > 21) { // Treat when player gets busted
+			JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
+			p.setVisible(false); // "Close" player frame	
+			
+			// Update player turn
+			Turn.nextPlayerTurn();
+			
+			Provider.updateActivePlayers();
 		}
 	}
 }
