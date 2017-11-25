@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -72,6 +73,7 @@ public class Provider {
 		Turn.removePlayer(p.getPlayerNumber());
 		PlayerFrame.activePlayers--;
 		PlayerFrame.numPlayers--;
+		System.out.println(PlayerFrame.activePlayers);
 		if (PlayerFrame.activePlayers == 0) {
 			Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
 			
@@ -296,11 +298,6 @@ public class Provider {
 								 p.setMoney(p.getMoney() + p.getBet()); // Return money
 								 p.getPlayerMoney().setText("Money $" + p.getMoney());
 							}
-							else if(p.getMoney() == 0) { // Broken player
-								JOptionPane.showMessageDialog(p, "Looks like you're out of money... Bye!"); // Warn broken player
-								Provider.closePlayer(p);
-								// TODO: Remove player
-							}
 							else {
 								JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
 							}
@@ -350,6 +347,21 @@ public class Provider {
 				BankFrame.bank.getScore().UpdateScore(BankFrame.bank.getCards());
 			}
 			
+			
+			// Removing broken players
+			Iterator<JFrame> i = Provider.framesList.iterator();
+			while(i.hasNext()) {
+				JFrame frame = i.next(); 
+				if(frame.getClass() == PlayerFrame.class) {
+    				PlayerFrame p = (PlayerFrame) frame;
+					if(p.getMoney() == 0) { // Broken player
+						JOptionPane.showMessageDialog(p, "Looks like you're out of money... Bye!"); // Warn broken player
+						i.remove();
+						Provider.closePlayer(p);
+					}
+				}
+			}
+			
 			for(Frame frame : Provider.framesList) {
 				if(frame.getClass() == PlayerFrame.class) {
     				PlayerFrame p = (PlayerFrame) frame;
@@ -375,8 +387,6 @@ public class Provider {
 					
 					Turn.updatePlayerFrameTurn();
 				}
-				
-				frame.setVisible(true);
 			}
 		}
 	};
