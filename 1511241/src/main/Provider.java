@@ -5,7 +5,6 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -280,7 +279,7 @@ public class Provider {
 					if(p.getTotalScore().getScore() <= 21) {
 						if(p.getTotalScore().getScore() == 21) {
 							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
-							p.setMoney(p.getMoney() + p.getBet()*(5/2)); // Return money reward
+							p.setMoney(p.getMoney() + p.getBet()*5/2); // Return money reward
 							p.getPlayerMoney().setText("Money $" + p.getMoney());
 						}
 						else {
@@ -300,7 +299,7 @@ public class Provider {
 					if(p.getTotalScore().getScore() <= 21) {
 						if(p.getTotalScore().getScore() == 21) {
 							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
-							p.setMoney(p.getMoney() + p.getBet()*(5/2)); // Return money reward
+							p.setMoney(p.getMoney() + p.getBet()*5/2); // Return money reward
 							p.getPlayerMoney().setText("Money $" + p.getMoney());
 						}
 						else if(p.getTotalScore().getScore() > Provider.getBankScore()) {
@@ -315,8 +314,9 @@ public class Provider {
 								 p.getPlayerMoney().setText("Money $" + p.getMoney());
 							}
 							else if(p.getMoney() == 0) { // Broken player
-								Provider.closePlayer(p);
 								JOptionPane.showMessageDialog(p, "Looks like you're out of money... Bye!"); // Warn broken player
+								Provider.closePlayer(p);
+								// TODO: Remove player
 							}
 							else {
 								JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
@@ -422,6 +422,9 @@ public class Provider {
 	            					p.getPlayerBet().setText("Bet $ " + p.getBet());
 	            					p.setMoney(p.getMoney() - chip); // Update money left for player
 	            					p.getPlayerMoney().setText("Money $" + p.getMoney());
+            					}
+            					else {
+            						JOptionPane.showMessageDialog(p, "You have no more money to bet.");
             					}
             				}
             			}
