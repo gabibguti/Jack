@@ -22,7 +22,7 @@ public class PlayerFrame extends JFrame {
 	int centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
 	int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
 	int gap = 4;
-	private int bet = 0;
+//	private int bet = 0;
 	private int money;
 	private int initialAmount = 500;
 	private int playerNumber;
@@ -31,7 +31,7 @@ public class PlayerFrame extends JFrame {
 	private JPanel cardsPanel;
 	private JPanel infoPanel;
 	private JLabel playerScore;
-	private JLabel playerBet;
+//	private JLabel playerBet;
 	private JLabel playerMoney;
 	private JButton hitButton;
 	private JButton standButton;
@@ -75,10 +75,10 @@ public class PlayerFrame extends JFrame {
 		
 		// Create player labels
 		setPlayerScore(new JLabel(""));
-		setPlayerBet(new JLabel(""));
-		observable.setBET(0, getPlayerBet());
+//		setPlayerBet(new JLabel(""));
+		observable.setBET(0);
 		getPlayerScore().setSize(40, 15);
-		getPlayerBet().setSize(40, 15);
+		observable.getPlayerBet().setSize(40, 15);
 		setPlayerMoney(new JLabel(""));
 		getPlayerMoney().setText("Money $" + getMoney());
 				
@@ -124,7 +124,7 @@ public class PlayerFrame extends JFrame {
 		
 		// Add player score label to info panel
 		getInfoPanel().add(getPlayerScore());
-		getInfoPanel().add(getPlayerBet());
+		getInfoPanel().add(observable.getPlayerBet());
 		getInfoPanel().add(getPlayerMoney());
 
 		// Add components to frame
@@ -158,14 +158,14 @@ public class PlayerFrame extends JFrame {
 	 * @return the bet
 	 */
 	public int getBet() {
-		return bet;
+		return observable.getBET();
 	}
 
 	/**
 	 * @param bet the bet to set
 	 */
 	public void setBet(int bet) {
-		this.bet = bet;
+		observable.setBET(bet);
 	}
 
 	/**
@@ -280,19 +280,19 @@ public class PlayerFrame extends JFrame {
 		return totalScore;
 	}
 
-	/**
-	 * @return the playerBet
-	 */
-	public JLabel getPlayerBet() {
-		return playerBet;
-	}
-
-	/**
-	 * @param playerBet the playerBet to set
-	 */
-	public void setPlayerBet(JLabel playerBet) {
-		this.playerBet = playerBet;
-	}
+//	/**
+//	 * @return the playerBet
+//	 */
+//	public JLabel getPlayerBet() {
+//		return playerBet;
+//	}
+//
+//	/**
+//	 * @param playerBet the playerBet to set
+//	 */
+//	public void setPlayerBet(JLabel playerBet) {
+//		this.playerBet = playerBet;
+//	}
 
 	/**
 	 * @return the playerMoney

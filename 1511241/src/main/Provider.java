@@ -193,7 +193,6 @@ public class Provider {
 				p.setMoney(p.getMoney() - p.getBet());
 				p.getPlayerMoney().setText("Money $" + p.getMoney());
 				p.setBet(p.getBet()*2);
-				p.getPlayerBet().setText("Bet $ " + p.getBet());
 				
 				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hits 1 time
 	
@@ -247,7 +246,6 @@ public class Provider {
 			p.setMoney(p.getMoney() + p.getBet()/2);
 			p.getPlayerMoney().setText("Money $" + p.getMoney());
 			p.setBet(p.getBet()/2);
-			p.getPlayerBet().setText("Bet $ " + p.getBet());
 						
 			p.setVisible(false); // "Close" player frame
 			
@@ -409,7 +407,7 @@ public class Provider {
 					p.getCardsPanel().removeAll();
 					
 					// Reset bet
-					p.observable.setBET(0, p.getPlayerBet());
+					p.setBet(0);
 					
 					// Get new cards
 					p.getCards().clear();
@@ -425,7 +423,6 @@ public class Provider {
             		
 					// Reset bet
 					p.setBet(0);
-					p.getPlayerBet().setText("Bet $ " + p.getBet());					
 					
 					Turn.updatePlayerFrameTurn();
 					
@@ -457,8 +454,6 @@ public class Provider {
             				if(p.getPlayerNumber() == playerBetting) {
             					if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
 	            					p.setBet(p.getBet() + chip);
-//	            					p.getPlayerBet().setText("Bet $ " + p.getBet());
-	            					p.observable.setBET(p.observable.getBET() + chip, p.getPlayerBet());
 	            					p.setMoney(p.getMoney() - chip); // Update money left for player
 	            					p.getPlayerMoney().setText("Money $" + p.getMoney());
             					}
