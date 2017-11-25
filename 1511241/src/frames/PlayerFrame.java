@@ -40,9 +40,7 @@ public class PlayerFrame extends JFrame {
 	private JButton betButton;
 	private Score totalScore = new Score();
 	public ObservableDemo observable;
-	
-//	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-	
+		
 	public static int activePlayers = 0;
 	public static int numPlayers = 0;
 
@@ -53,7 +51,7 @@ public class PlayerFrame extends JFrame {
 		this.addWindowListener(Provider.playerFrameClosing);
 		
 		// Add observer
-		observable = new ObservableDemo(0, getPlayerBet());
+		observable = new ObservableDemo(0);
 	    ObserverExample observer = new ObserverExample();
 	    observable.addObserver(observer);
 		

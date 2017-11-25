@@ -206,7 +206,28 @@ public class Provider {
 				
 				if(p.getTotalScore().getScore() > 21) { // Treat when player gets busted
 					JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
-					p.setVisible(false); // "Close" player frame	
+					p.setVisible(false); // "Close" player frame
+					
+					// Update player turn
+					Turn.nextPlayerTurn();
+					
+					PlayerFrame.activePlayers--;
+					if(PlayerFrame.activePlayers == 0) { // Last player stands
+						Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
+						
+						// Update bank frame
+						Provider.UpdateBankHand (BankFrame.bank.getCards(),
+												 BankFrame.bank.getChips(),
+												 BankFrame.bank.getpComponents(),
+												 BankFrame.bank,
+												 Main.bankBackground);
+						
+						// Notify winners and losers
+						Provider.notifyWinnersAndLosers();
+					}
+					else {
+						Turn.updatePlayerFrameTurn();
+					}
 				}
 			}
 		}
@@ -266,6 +287,9 @@ public class Provider {
 				p.getBetButton().setEnabled(false); // Disable bet
 				
 				BankFrame.bank.disableChipsClickListener(); // Disable chips bet
+			}
+			else {
+				JOptionPane.showMessageDialog(p, "You have to bet some money!"); // Warn bet = 0
 			}
 		}
 	};
@@ -384,6 +408,9 @@ public class Provider {
 					// Reset players frame
 					p.getCardsPanel().removeAll();
 					
+					// Reset bet
+					p.observable.setBET(0, p.getPlayerBet());
+					
 					// Get new cards
 					p.getCards().clear();
 					Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);
@@ -401,8 +428,16 @@ public class Provider {
 					p.getPlayerBet().setText("Bet $ " + p.getBet());					
 					
 					Turn.updatePlayerFrameTurn();
+					
+					if(p.isVisible() == false) {
+						p.setVisible(true);
+					}
 				}
 			}
+			
+			// Gambiarra
+			BankFrame.bank.disableChipsClickListener();
+			BankFrame.bank.enableChipsClickListener();
 		}
 	};
 	
