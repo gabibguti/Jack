@@ -324,7 +324,7 @@ public class Provider {
 	        	Rectangle bounds = entry.getValue();
             	if(bounds.contains(me)) {
             		if(element == 0) { // Buy credit option
-            			BuyFrame b = new BuyFrame ();
+            			new BuyFrame ();
             		}
             		else if(element < (BankFrame.bank.getelements_position().size() - 1)) { // Chip element
                 		// Update player bet with clicked chip value
