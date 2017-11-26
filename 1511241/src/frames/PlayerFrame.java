@@ -48,7 +48,7 @@ public class PlayerFrame extends JFrame {
 		
 		// Add observer
 		observable = new ObservableDemo(0, initialAmount); // Initial bet = 0. Initial money = 500
-	    ObserverExample observer = new ObserverExample();
+	    ObserverExample observer = new ObserverExample(initialAmount);
 	    observable.addObserver(observer);
 		
 		activePlayers++; // Add active player
@@ -69,8 +69,7 @@ public class PlayerFrame extends JFrame {
 		// Create player labels
 		setPlayerScore(new JLabel(""));
 		observable.setBet(0);
-		getPlayerScore().setSize(40, 15);
-		observable.getPlayerBet().setSize(40, 15);
+		getPlayerScore().setSize(40, 15);		
 				
 		// Create button
 		setHitButton(new JButton("Hit"));
@@ -101,21 +100,10 @@ public class PlayerFrame extends JFrame {
 		getButtonsPanel().add(getSurrenderButton());
 		getButtonsPanel().add(getBetButton());
 		
-//		// Initial cards
-//		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);
-//		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);		
-//		
-//		// Initial score
-//		getTotalScore().UpdateScore(getCards());
-//		if(getTotalScore().getScore() < 10)
-//			getPlayerScore().setText("Score: " + getTotalScore().getScore() + " (TINY RICK!!!)");
-//		else
-//			getPlayerScore().setText("Score: " + getTotalScore().getScore());
-		
 		// Add player score label to info panel
 		getInfoPanel().add(getPlayerScore());
-		getInfoPanel().add(observable.getPlayerBet());
-		getInfoPanel().add(observable.getPlayerMoney());
+		getInfoPanel().add(observer.getPlayerBet());
+		getInfoPanel().add(observer.getPlayerMoney());
 
 		// Add components to frame
 		this.add(getButtonsPanel(), BorderLayout.PAGE_START);
