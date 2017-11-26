@@ -93,10 +93,10 @@ public class BankFrame extends JFrame {
 		getCards().remove(1);
 		
 		// Initial cards
-		getScore().UpdateScore(getCards());
-		while(getScore().getScore() < 17) {						// Draw cards until score >= 17
+		setScore(getCards());
+		while(getScore() < 17) {						// Draw cards until score >= 17
 			getCards().add(Provider.RemoveCardFromDeck());
-			getScore().UpdateScore(getCards());
+			setScore(getCards());
 		}
 		
 //		enableChipsClickListener();
@@ -227,8 +227,15 @@ public class BankFrame extends JFrame {
 	/**
 	 * @return the score
 	 */
-	public Score getScore() {
-		return score;
+	public int getScore() {
+		return score.getScore();
+	}
+
+	/**
+	 * @param score the score to set
+	 */
+	public void setScore(ArrayList<Card> cards) {
+		score.UpdateScore(cards);
 	}
 
 }

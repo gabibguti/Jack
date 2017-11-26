@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import cards.Card;
+import etc.ObservableDemo;
+import etc.ObserverExample;
 import main.Provider;
 
 @SuppressWarnings("serial")
@@ -20,8 +22,6 @@ public class PlayerFrame extends JFrame {
 	int centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
 	int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
 	int gap = 4;
-	private int bet = 0;
-	private int money;
 	private int initialAmount = 500;
 	private int playerNumber;
 	private ArrayList<Card> cards = new ArrayList<>();
@@ -29,15 +29,14 @@ public class PlayerFrame extends JFrame {
 	private JPanel cardsPanel;
 	private JPanel infoPanel;
 	private JLabel playerScore;
-	private JLabel playerBet;
-	private JLabel playerMoney;
 	private JButton hitButton;
 	private JButton standButton;
 	private JButton doubleButton;
 	private JButton surrenderButton;
 	private JButton betButton;
 	private Score totalScore = new Score();
-	
+	public ObservableDemo observable;
+		
 	public static int activePlayers = 0;
 	public static int numPlayers = 0;
 
@@ -47,12 +46,14 @@ public class PlayerFrame extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(Provider.playerFrameClosing);
 		
+		// Add observer
+		observable = new ObservableDemo(0, initialAmount); // Initial bet = 0. Initial money = 500
+	    ObserverExample observer = new ObserverExample();
+	    observable.addObserver(observer);
+		
 		activePlayers++; // Add active player
 		setSize(500, 350);
 		setLayout(new BorderLayout());
-
-		// Set initial amount of money
-		setMoney(initialAmount);
 		
 		// Create Panel
 		setButtonsPanel(new JPanel());
@@ -67,11 +68,9 @@ public class PlayerFrame extends JFrame {
 		
 		// Create player labels
 		setPlayerScore(new JLabel(""));
-		setPlayerBet(new JLabel("Bet $" + getBet()));
+		observable.setBet(0);
 		getPlayerScore().setSize(40, 15);
-		getPlayerBet().setSize(40, 15);
-		setPlayerMoney(new JLabel(""));
-		getPlayerMoney().setText("Money $" + getMoney());
+		observable.getPlayerBet().setSize(40, 15);
 				
 		// Create button
 		setHitButton(new JButton("Hit"));
@@ -102,21 +101,21 @@ public class PlayerFrame extends JFrame {
 		getButtonsPanel().add(getSurrenderButton());
 		getButtonsPanel().add(getBetButton());
 		
-		// Initial cards
-		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);
-		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);		
-		
-		// Initial score
-		getTotalScore().UpdateScore(getCards());
-		if(getTotalScore().getScore() < 10)
-			getPlayerScore().setText("Score: " + getTotalScore().getScore() + " (TINY RICK!!!)");
-		else
-			getPlayerScore().setText("Score: " + getTotalScore().getScore());
+//		// Initial cards
+//		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);
+//		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);		
+//		
+//		// Initial score
+//		getTotalScore().UpdateScore(getCards());
+//		if(getTotalScore().getScore() < 10)
+//			getPlayerScore().setText("Score: " + getTotalScore().getScore() + " (TINY RICK!!!)");
+//		else
+//			getPlayerScore().setText("Score: " + getTotalScore().getScore());
 		
 		// Add player score label to info panel
 		getInfoPanel().add(getPlayerScore());
-		getInfoPanel().add(getPlayerBet());
-		getInfoPanel().add(getPlayerMoney());
+		getInfoPanel().add(observable.getPlayerBet());
+		getInfoPanel().add(observable.getPlayerMoney());
 
 		// Add components to frame
 		this.add(getButtonsPanel(), BorderLayout.PAGE_START);
@@ -149,14 +148,14 @@ public class PlayerFrame extends JFrame {
 	 * @return the bet
 	 */
 	public int getBet() {
-		return bet;
+		return observable.getBet();
 	}
 
 	/**
 	 * @param bet the bet to set
 	 */
 	public void setBet(int bet) {
-		this.bet = bet;
+		observable.setBet(bet);
 	}
 
 	/**
@@ -272,45 +271,17 @@ public class PlayerFrame extends JFrame {
 	}
 
 	/**
-	 * @return the playerBet
-	 */
-	public JLabel getPlayerBet() {
-		return playerBet;
-	}
-
-	/**
-	 * @param playerBet the playerBet to set
-	 */
-	public void setPlayerBet(JLabel playerBet) {
-		this.playerBet = playerBet;
-	}
-
-	/**
-	 * @return the playerMoney
-	 */
-	public JLabel getPlayerMoney() {
-		return playerMoney;
-	}
-
-	/**
-	 * @param playerMoney the playerMoney to set
-	 */
-	public void setPlayerMoney(JLabel playerMoney) {
-		this.playerMoney = playerMoney;
-	}
-
-	/**
 	 * @return the money
 	 */
 	public int getMoney() {
-		return money;
+		return observable.getMoney();
 	}
 
 	/**
 	 * @param money the money to set
 	 */
 	public void setMoney(int money) {
-		this.money = money;
+		observable.setMoney(money);
 	}
 
 	/**
