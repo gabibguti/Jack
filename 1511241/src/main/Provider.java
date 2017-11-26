@@ -83,72 +83,76 @@ public class Provider {
 		}
 	};
 	
+	/*****************************************************************************************/
+	public static PlayerFrame currentPlayerFrame () { // Gets current player frame
+		int currentPlayer = Turn.currentPlayerTurn();
+		PlayerFrame frame = (PlayerFrame) Provider.framesList.get(currentPlayer);
+		return frame;
+	}
+	
+	public static void stand(PlayerFrame p) { // Disable player actions and pass turn to next player
+		configurePlayerActions(p, false, false, false, false, false);
+		
+		Turn.nextPlayerTurn();
+		
+		Provider.updateActivePlayers();
+	}
+	
+	public static void configurePlayerActions(PlayerFrame p, boolean hit, boolean stand, boolean doubleDown, boolean surrender, boolean bet) {
+		p.getHitButton().setEnabled(hit);
+		p.getStandButton().setEnabled(stand);
+		p.getDoubleButton().setEnabled(doubleDown);
+		p.getSurrenderButton().setEnabled(surrender);
+		p.getBetButton().setEnabled(bet);
+	}
+	
 	public static ActionListener hitButtonListener = new ActionListener() { // Player draws card
 		public void actionPerformed(ActionEvent actionEvent) {
-			JButton b = (JButton) actionEvent.getSource();
-			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
-			p.getDoubleButton().setEnabled(false); // Can't double anymore
-			p.getSurrenderButton().setEnabled(false); // Can't surrender anymore
+			PlayerFrame p = currentPlayerFrame();
 			
-			Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
+			// Can't double or surrender anymore
+			configurePlayerActions(p, true, true, false, false, false);
+			
+			RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
 
-			Provider.updateScore(p);
+			updateScore(p);
 		}
 	};
 	
 	public static ActionListener standButtonListener = new ActionListener() { // Player stands
 		public void actionPerformed(ActionEvent actionEvent) {
-			JButton b = (JButton) actionEvent.getSource();
-			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor(); 
+			PlayerFrame p = currentPlayerFrame();
 			
-			// Disable all player actions
-			p.getHitButton().setEnabled(false);
-			p.getStandButton().setEnabled(false);
-			p.getDoubleButton().setEnabled(false);
-			p.getSurrenderButton().setEnabled(false);
-			
-			// Update player turn
-			Turn.nextPlayerTurn();
-			
-			Provider.updateActivePlayers();
+			stand(p); // Stand
 		}
 	};
 	
 	public static ActionListener doubleButtonListener = new ActionListener() { // Player doubles down
 		public void actionPerformed(ActionEvent actionEvent) {
-			// Disable all player actions
-			JButton b = (JButton) actionEvent.getSource();
-			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
+			PlayerFrame p = currentPlayerFrame();
 			
 			if(p.getMoney() < p.getBet()) {
 				JOptionPane.showMessageDialog(p, "You don't have enough money to double your bet");
 			}
 			else {
-				p.getDoubleButton().setEnabled(false);
-				p.getSurrenderButton().setEnabled(false);
-				
 				// Double bet
 				p.setMoney(p.getMoney() - p.getBet());
 				p.setBet(p.getBet()*2);
 				
-				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hits 1 time
+				RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
 	
-				// Update score
-				Provider.updateScore(p);
+				updateScore(p);
+				
+				stand(p); // Stand
 			}
 		}
 	};
 
 	public static ActionListener surrenderButtonListener = new ActionListener() { // Player surrenders
 		public void actionPerformed(ActionEvent actionEvent) {
+			PlayerFrame p = currentPlayerFrame();
 			
-			// Disable all player actions
-			JButton b = (JButton) actionEvent.getSource();
-			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
-			p.getHitButton().setEnabled(false);
-			p.getStandButton().setEnabled(false);
-			p.getDoubleButton().setEnabled(false);
-			p.getSurrenderButton().setEnabled(false);
+			configurePlayerActions(p, false, false, false, false, false);
 			
 			// Receives half bet back
 			p.setMoney(p.getMoney() + p.getBet()/2);
@@ -156,24 +160,19 @@ public class Provider {
 						
 			p.setVisible(false); // "Close" player frame
 			
-			// Update player turn
 			Turn.nextPlayerTurn();
 			
-			Provider.updateActivePlayers();
+			updateActivePlayers();
 		}
 	};
 
 	public static ActionListener betButtonListener = new ActionListener() { // Player bets
 		public void actionPerformed(ActionEvent actionEvent) {
+			PlayerFrame p = currentPlayerFrame();
+			
 			// Enable player actions after player bets
-			JButton b = (JButton) actionEvent.getSource();
-			PlayerFrame p = (PlayerFrame) b.getTopLevelAncestor();
 			if(p.getBet() != 0) {
-				p.getHitButton().setEnabled(true);
-				p.getStandButton().setEnabled(true);
-				p.getDoubleButton().setEnabled(true);
-				p.getSurrenderButton().setEnabled(true);
-				p.getBetButton().setEnabled(false); // Disable bet
+				configurePlayerActions(p, true, true, true, true, false); // Disable bet
 				
 				BankFrame.bank.disableChipsClickListener(); // Disable chips bet
 				
@@ -192,50 +191,36 @@ public class Provider {
 	};
 	
 	public static void notifyWinnersAndLosers() {
-		if(BankFrame.bank.getScore() > 21) {
-			JOptionPane.showMessageDialog(null, "Bank busted. Every remaining player wins!"); // Warn bank busted
-			for(JFrame frame : Provider.framesList) {
-				if(frame.getClass() == PlayerFrame.class && frame.isVisible() == true) {
-					PlayerFrame p = (PlayerFrame) frame;
-					if(p.getTotalScore().getScore() <= 21) {
-						if(p.getTotalScore().getScore() == 21) {
-							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
-							p.setMoney(p.getMoney() + p.getBet()*5/2); // Return money reward
-						}
-						else {
-							JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!"); // Warn winner
-							 p.setMoney(p.getMoney() + p.getBet()*2); // Return money reward
-						}
-					}
-				}
-			}
-
+		int bankScore = getBankScore();
+		int reward = 0;
+		
+		if(bankScore > 21) { // Bank busts
+			JOptionPane.showMessageDialog(null, "Bank busted. Every remaining player wins!");
+			bankScore = 0;
 		}
-		else {
-			for(JFrame frame : Provider.framesList) {
-				if(frame.getClass() == PlayerFrame.class  && frame.isVisible() == true) {
-					PlayerFrame p = (PlayerFrame) frame;
-					if(p.getTotalScore().getScore() <= 21) {
-						if(p.getTotalScore().getScore() == 21) {
-							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
-							p.setMoney(p.getMoney() + p.getBet()*5/2); // Return money reward
-						}
-						else if(p.getTotalScore().getScore() > Provider.getBankScore()) {
-							JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!"); // Warn winner
-							 p.setMoney(p.getMoney() + p.getBet()*2); // Return money reward
-						}
-						else {
-							if(p.getTotalScore().getScore() == Provider.getBankScore()) {
-								JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!"); // Warn tie
-								 p.setMoney(p.getMoney() + p.getBet()); // Return money
-							}
-							else {
-								JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
-							}
-						}
-						// TODO: #SHAKEITOFF JOptionPane.showMessageDialog(null, "Don't think about it.");
+		
+		for(JFrame frame : Provider.framesList) {
+			if(frame.getClass() == PlayerFrame.class && frame.isVisible() == true) {
+				PlayerFrame p = (PlayerFrame) frame;
+				int playerScore = p.getTotalScore().getScore();
+				if(playerScore == 21) { // Player wins with Blackjack
+					JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty.");
+					reward = p.getBet()*5/2;
+				}
+				else {
+					if(playerScore > bankScore) { // Player wins
+						JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!");
+						reward = p.getBet()*2;
+					}
+					else if(playerScore == bankScore) { // Player and Bank ties
+						JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!");
+						reward = p.getBet();
+					}
+					else { // Player loses
+						JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
 					}
 				}
+				p.setMoney(p.getMoney() + reward); // Return money reward
 			}
 		}
 	}
@@ -280,46 +265,52 @@ public class Provider {
 			
 			
 			// Removing broken players
-			Iterator<JFrame> i = Provider.framesList.iterator();
-			while(i.hasNext()) {
-				JFrame frame = i.next(); 
-				if(frame.getClass() == PlayerFrame.class) {
-    				PlayerFrame p = (PlayerFrame) frame;
-					if(p.getMoney() == 0) { // Broken player
-						JOptionPane.showMessageDialog(p, "Looks like you're out of money... Bye!"); // Warn broken player
-						i.remove();
-						Provider.closePlayer(p);
-					}
-				}
-			}
+			removeBrokenPlayers();
 			
-			for(Frame frame : Provider.framesList) {
-				if(frame.getClass() == PlayerFrame.class) {
-    				PlayerFrame p = (PlayerFrame) frame;
-    				
-					// Reset players frame
-					p.getCardsPanel().removeAll();
-					p.getCards().removeAll(p.getCards());
-					Provider.updateScore(p);
-					
-					// Reset bet
-					p.setBet(0);
-					
-					// Update frame
-					p.repaint();
-					
-					Turn.updatePlayerFrameTurn();
-					
-					if(p.isVisible() == false) {
-						p.setVisible(true);
-					}
-				}
-			}
+			startNextRound();
 			
 			BankFrame.bank.disableChipsClickListener();
 			BankFrame.bank.enableChipsClickListener();
 		}
 	};
+	
+	public static void removeBrokenPlayers() {
+		Iterator<JFrame> i = Provider.framesList.iterator();
+		while(i.hasNext()) {
+			JFrame frame = i.next(); 
+			if(frame.getClass() == PlayerFrame.class) {
+				PlayerFrame p = (PlayerFrame) frame;
+				if(p.getMoney() == 0) { // Broken player
+					JOptionPane.showMessageDialog(p, "Looks like you're out of money... Bye!"); // Warn broken player
+					i.remove();
+					Provider.closePlayer(p);
+				}
+			}
+		}
+	}
+	
+	public static void startNextRound() {
+		for(Frame frame : Provider.framesList) {
+			if(frame.getClass() == PlayerFrame.class) {
+				PlayerFrame p = (PlayerFrame) frame;
+				
+				// Reset players frame
+				p.getCardsPanel().removeAll();
+				p.getCards().removeAll(p.getCards());
+				Provider.updateScore(p);
+				p.setBet(0);
+				
+				// Update frame
+				p.repaint();
+				
+				Turn.updatePlayerFrameTurn();
+				
+				if(p.isVisible() == false) {
+					p.setVisible(true);
+				}
+			}
+		}
+	}
 	
 	public static MouseAdapter chipsClicked = new MouseAdapter() { // Handle chips click
 	    @Override
@@ -331,20 +322,14 @@ public class Provider {
             	if(bounds.contains(me)) {
             		// Update player bet with clicked chip value
             		int playerBetting = Turn.currentPlayerTurn();
-            		for(Frame frame: Provider.framesList) {
-            			if(frame.getClass() == PlayerFrame.class) {
-            				PlayerFrame p = (PlayerFrame) frame;
-            				if(p.getPlayerNumber() == playerBetting) {
-            					if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
-	            					p.setBet(p.getBet() + chip);
-	            					p.setMoney(p.getMoney() - chip); // Update money left for player
-            					}
-            					else {
-            						JOptionPane.showMessageDialog(p, "You have no more money to bet.");
-            					}
-            				}
-            			}
-            		}
+            		PlayerFrame p = (PlayerFrame) Provider.framesList.get(playerBetting);
+					if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
+    					p.setBet(p.getBet() + chip);
+    					p.setMoney(p.getMoney() - chip); // Update money left for player
+					}
+					else {
+						JOptionPane.showMessageDialog(p, "You have no more money to bet.");
+					}
             	}
 	    	}
         }
