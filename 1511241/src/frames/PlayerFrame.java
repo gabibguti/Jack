@@ -64,7 +64,7 @@ public class PlayerFrame extends JFrame {
 		setButtonsPanel(new JPanel());
 		setInfoPanel(new JPanel());
 		getButtonsPanel().setLayout(new FlowLayout());
-		getInfoPanel().setLayout(new FlowLayout(FlowLayout.TRAILING));
+		getInfoPanel().setLayout(new FlowLayout(FlowLayout.CENTER));
 		getButtonsPanel().setSize(500, 20);
 		getInfoPanel().setSize(500, 20);
 				
