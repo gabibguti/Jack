@@ -176,6 +176,14 @@ public class Provider {
 				p.getBetButton().setEnabled(false); // Disable bet
 				
 				BankFrame.bank.disableChipsClickListener(); // Disable chips bet
+				
+				// Get new cards
+				p.getCards().clear();
+				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);
+				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);	
+				
+				// Update score
+				Provider.updateScore(p);
 			}
 			else {
 				JOptionPane.showMessageDialog(p, "You have to bet some money!"); // Warn bet = 0
@@ -291,17 +299,14 @@ public class Provider {
     				
 					// Reset players frame
 					p.getCardsPanel().removeAll();
+					p.getCards().removeAll(p.getCards());
+					Provider.updateScore(p);
 					
 					// Reset bet
 					p.setBet(0);
 					
-					// Get new cards
-					p.getCards().clear();
-					Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);
-					Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);	
-					
-					// Update score
-					Provider.updateScore(p);
+					// Update frame
+					p.repaint();
 					
 					Turn.updatePlayerFrameTurn();
 					

@@ -101,16 +101,16 @@ public class PlayerFrame extends JFrame {
 		getButtonsPanel().add(getSurrenderButton());
 		getButtonsPanel().add(getBetButton());
 		
-		// Initial cards
-		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);
-		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);		
-		
-		// Initial score
-		getTotalScore().UpdateScore(getCards());
-		if(getTotalScore().getScore() < 10)
-			getPlayerScore().setText("Score: " + getTotalScore().getScore() + " (TINY RICK!!!)");
-		else
-			getPlayerScore().setText("Score: " + getTotalScore().getScore());
+//		// Initial cards
+//		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);
+//		Provider.RequestNewCard(getCards(), getCardsPanel(), PlayerFrame.this);		
+//		
+//		// Initial score
+//		getTotalScore().UpdateScore(getCards());
+//		if(getTotalScore().getScore() < 10)
+//			getPlayerScore().setText("Score: " + getTotalScore().getScore() + " (TINY RICK!!!)");
+//		else
+//			getPlayerScore().setText("Score: " + getTotalScore().getScore());
 		
 		// Add player score label to info panel
 		getInfoPanel().add(getPlayerScore());

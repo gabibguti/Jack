@@ -20,6 +20,7 @@ public class Turn {
 		totalPlayers = numberOfPlayers;
 		for(player = 1; player < numberOfPlayers + 1; player++)
 			playerTurn.put(player, player);
+		disablePlayer(1);
 		updatePlayerFrameTurn();
 	}
 
@@ -80,7 +81,9 @@ public class Turn {
 		int currentPlayer = currentPlayerTurn();
 		for(java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) { // Disable all players
 	     	Integer player = e.getKey();
-	    	disablePlayer(player);
+	     	if(player != currentPlayer) {
+	     		disablePlayer(player);
+	     	}
 		}
 		enablePlayer(currentPlayer); // Enable current player
 	}
