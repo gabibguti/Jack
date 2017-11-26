@@ -83,7 +83,6 @@ public class Provider {
 		}
 	};
 	
-	/*****************************************************************************************/
 	public static PlayerFrame currentPlayerFrame () { // Gets current player frame
 		int currentPlayer = Turn.currentPlayerTurn();
 		PlayerFrame frame = (PlayerFrame) Provider.framesList.get(currentPlayer);
@@ -113,9 +112,11 @@ public class Provider {
 			// Can't double or surrender anymore
 			configurePlayerActions(p, true, true, false, false, false);
 			
-			RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
+			//Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
+			p.addCard();
+			
+//			updateScore(p);
 
-			updateScore(p);
 		}
 	};
 	
@@ -139,9 +140,10 @@ public class Provider {
 				p.setMoney(p.getMoney() - p.getBet());
 				p.setBet(p.getBet()*2);
 				
-				RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
+				//Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
+				p.addCard();
 	
-				updateScore(p);
+//				updateScore(p);
 				
 				stand(p); // Stand
 			}
@@ -178,11 +180,8 @@ public class Provider {
 				
 				// Get new cards
 				p.getCards().clear();
-				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);
-				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);	
-				
-				// Update score
-				Provider.updateScore(p);
+				p.addCard();
+				p.addCard();
 			}
 			else {
 				JOptionPane.showMessageDialog(p, "You have to bet some money!"); // Warn bet = 0
@@ -202,7 +201,7 @@ public class Provider {
 		for(JFrame frame : Provider.framesList) {
 			if(frame.getClass() == PlayerFrame.class && frame.isVisible() == true) {
 				PlayerFrame p = (PlayerFrame) frame;
-				int playerScore = p.getTotalScore().getScore();
+				int playerScore = p.getScore();
 				if(playerScore == 21) { // Player wins with Blackjack
 					JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty.");
 					reward = p.getBet()*5/2;
@@ -295,9 +294,9 @@ public class Provider {
 				PlayerFrame p = (PlayerFrame) frame;
 				
 				// Reset players frame
-				p.getCardsPanel().removeAll();
-				p.getCards().removeAll(p.getCards());
-				Provider.updateScore(p);
+				p.clearCards();
+				
+				// Reset bet
 				p.setBet(0);
 				
 				// Update frame
@@ -366,28 +365,6 @@ public class Provider {
 		return BankFrame.bank.getScore();
 	}
 	
-	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) { // Provides new card for player or bank
-		   	Point imgPoint;
-			int panelWidth = controlPanel.getWidth(), panelHeight = controlPanel.getHeight(), cardWidth, cardHeight, x, y, totalCards;
-			Map<Image, Point> cards_images = new HashMap<Image, Point>();
-
-			Card card = RemoveCardFromDeck();							// Remove a card from deck
-			hand.add(card);												// Add card to player's hand
-			totalCards = hand.size();									// Get total cards number
-			cardWidth = card.getImage().getWidth();
-			cardHeight = card.getImage().getHeight();
-			x = panelWidth/(2 * totalCards) - cardWidth/2;				// Set first card x point on the left
-			y = panelHeight/2 - cardHeight/2;							// Set all cards y point on the middle of the panel
-			controlPanel.removeAll(); 									// Clear control panel
-			for(Card hand_card: hand) {
-				imgPoint = new Point(x, y);
-				cards_images.put(hand_card.getImage(), imgPoint);		// Add card and defined point to images map
-				x += panelWidth/totalCards;								// Add next card horizontal padding
-			}
-			controlPanel.add(new GameImagePanel(cards_images, null));	// Add images map of cards to control panel
-			frame.revalidate();											// Update frame
-	   }
-
 	static public Map<Integer, Rectangle> UpdateBankHand(ArrayList<Card> hand, Chip[] chips, JPanel controlPanel,
 			JFrame frame, Image background) { // Update bank frame redrawing all components
 		Point imgPoint;
@@ -462,24 +439,6 @@ public class Provider {
 		}
 		else {
 			Turn.updatePlayerFrameTurn();
-		}
-	}
-	
-	static public void updateScore(PlayerFrame p) {
-		p.getTotalScore().UpdateScore(p.getCards()); 
-		if(p.getTotalScore().getScore() < 10)
-			p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
-		else
-			p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
-		
-		if(p.getTotalScore().getScore() > 21) { // Treat when player gets busted
-			JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
-			p.setVisible(false); // "Close" player frame	
-			
-			// Update player turn
-			Turn.nextPlayerTurn();
-			
-			Provider.updateActivePlayers();
 		}
 	}
 }
