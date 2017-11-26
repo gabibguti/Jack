@@ -27,12 +27,15 @@ import javax.swing.JPanel;
 
 import cards.Card;
 import components.GameImagePanel;
+import etc.Buy;
+import etc.BuyFrame;
 import etc.Chip;
 import etc.Turn;
 import frames.BankFrame;
 import frames.PlayerFrame;
 
 public class Provider {
+	public static int initialAmount = 500;
 	public static ArrayList<JFrame> framesList = new ArrayList<JFrame>();
 	
 	public static void createBank(String name, BufferedImage bankBackground) {
@@ -245,8 +248,9 @@ public class Provider {
 			BankFrame.bank.getCards().add(Card.flippedCard);
 			
 			// Draw BankFrame
-			BankFrame.bank.setChips_position(Provider.UpdateBankHand (BankFrame.bank.getCards(),
+			BankFrame.bank.setelements_position(Provider.UpdateBankHand (BankFrame.bank.getCards(),
 																	 BankFrame.bank.getChips(),
+																	 BankFrame.bank.getBuyCredit(),
 																	 BankFrame.bank.getpComponents(),
 																	 BankFrame.bank,
 																	 Main.bankBackground));
@@ -311,24 +315,30 @@ public class Provider {
 		}
 	}
 	
-	public static MouseAdapter chipsClicked = new MouseAdapter() { // Handle chips click
+	public static MouseAdapter bankClickHandler = new MouseAdapter() { // Handle chips click
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
 	    	Point me = e.getPoint();
-	    	for(java.util.Map.Entry<Integer, Rectangle> entry : BankFrame.bank.getChips_position().entrySet()) {
-	    		Integer chip = entry.getKey();
+	    	for(java.util.Map.Entry<Integer, Rectangle> entry : BankFrame.bank.getelements_position().entrySet()) {
+	    		Integer element = entry.getKey();
 	        	Rectangle bounds = entry.getValue();
             	if(bounds.contains(me)) {
-            		// Update player bet with clicked chip value
-            		int playerBetting = Turn.currentPlayerTurn();
-            		PlayerFrame p = (PlayerFrame) Provider.framesList.get(playerBetting);
-					if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
-    					p.setBet(p.getBet() + chip);
-    					p.setMoney(p.getMoney() - chip); // Update money left for player
-					}
-					else {
-						JOptionPane.showMessageDialog(p, "You have no more money to bet.");
-					}
+            		if(element == 0) { // Buy credit option
+            			BuyFrame b = new BuyFrame ();
+            		}
+            		else if(element < (BankFrame.bank.getelements_position().size() - 1)) { // Chip element
+                		// Update player bet with clicked chip value
+    	        		int chip = element;
+                		int playerBetting = Turn.currentPlayerTurn();
+                		PlayerFrame p = (PlayerFrame) Provider.framesList.get(playerBetting);
+    					if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
+        					p.setBet(p.getBet() + chip);
+        					p.setMoney(p.getMoney() - chip); // Update money left for player
+    					}
+    					else {
+    						JOptionPane.showMessageDialog(p, "You have no more money to bet.");
+    					}
+    	        	}
             	}
 	    	}
         }
@@ -365,16 +375,19 @@ public class Provider {
 		return BankFrame.bank.getScore();
 	}
 	
-	static public Map<Integer, Rectangle> UpdateBankHand(ArrayList<Card> hand, Chip[] chips, JPanel controlPanel,
+	static public Map<Integer, Rectangle> UpdateBankHand(ArrayList<Card> hand, Chip[] chips, Buy buyCredit, JPanel controlPanel,
 			JFrame frame, Image background) { // Update bank frame redrawing all components
 		Point imgPoint;
 		int panelWidth = controlPanel.getWidth(), panelHeight = controlPanel.getHeight(), cardWidth, cardHeight,
-				chipWidth, chipHeight, x = 0, y = 0, totalCards = hand.size(), totalChips = chips.length;
+				chipWidth = 0, chipHeight = 0, buyWidth = buyCredit.getImage().getWidth(), buyHeight = buyCredit.getImage().getHeight(),
+				x = 0, y = 0, totalCards = hand.size(), totalChips = chips.length;
 		boolean firstTime = true;
-		Map<Image, Point> cardsNchips_images = new HashMap<Image, Point>();
-		Map<Integer, Rectangle> chips_bounds = new HashMap<Integer, Rectangle>();
+		Map<Image, Point> images = new HashMap<Image, Point>();
+		Map<Integer, Rectangle> images_bounds = new HashMap<Integer, Rectangle>();
 
 		controlPanel.removeAll(); // Clear control panel
+		
+		// Add cards
 		for (Card hand_card : hand) {
 			if (firstTime) { // For first card define:
 				cardWidth = hand_card.getImage().getWidth();
@@ -384,31 +397,44 @@ public class Provider {
 				firstTime = false;
 			}
 			imgPoint = new Point(x, y);
-			cardsNchips_images.put(hand_card.getImage(), imgPoint); // Add card and defined point to images map
+			images.put(hand_card.getImage(), imgPoint); // Add card and defined point to images map
 			x += panelWidth / totalCards; // Add next card horizontal padding
 		}
+		
+		// Add chips
 		firstTime = true;
 		for (Chip chip : chips) {
 			if (firstTime) { // For first chip define:
 				chipWidth = chip.getImage().getWidth();
 				chipHeight = chip.getImage().getHeight();
-				x = panelWidth / (2 * totalChips) - chipWidth / 2; // Set first chip x point on the left
+				x = panelWidth / (2 * (totalChips + 1)) - chipWidth / 2; // Set first chip x point on the left
 				y = 5 * panelHeight / 6 - chipHeight / 2; // Set all chips y point on 5/6 of the panel
 				firstTime = false;
 			}
 			imgPoint = new Point(x, y);
-			chips_bounds.put(chip.getValue(), 
+			images_bounds.put(chip.getValue(), 
 							 new Rectangle(imgPoint,
-										   new Dimension(chip.getImage().getWidth(),
-														 chip.getImage().getHeight()))); // Add chip value and defined position to the chip bounds map
-			cardsNchips_images.put(chip.getImage(), imgPoint); // Add chip and defined point to images map
-			x += panelWidth / totalChips; // Add next chip horizontal padding
+										   new Dimension(chipWidth,
+														 chipHeight))); // Add chip value and defined position to the chip bounds map
+			images.put(chip.getImage(), imgPoint); // Add chip and defined point to images map
+			x += panelWidth / (totalChips + 1); // Add next chip horizontal padding
 		}
-		controlPanel.add(new GameImagePanel(cardsNchips_images, background)); // Add cards and chips images to control panel
+		
+		// Add buy credit option
+		y = 5 * panelHeight / 6 - buyHeight / 2; // Set all chips y point on 5/6 of the panel
+		imgPoint = new Point(x, y);
+		images_bounds.put(0, 
+				 new Rectangle(imgPoint,
+							   new Dimension(buyWidth,
+											 buyHeight))); // Add chip value and defined position to the chip bounds map
+		images.put(buyCredit.getImage(), imgPoint); // Add chip and defined point to images map
+		
+		// Update bank
+		controlPanel.add(new GameImagePanel(images, background)); // Add cards and chips images to control panel
 		frame.revalidate(); // Update frame
 		controlPanel.setOpaque(false); // Set opaque to see background
 
-		return chips_bounds;
+		return images_bounds;
 	}
 
 	static public Card RemoveCardFromDeck() {
@@ -431,6 +457,7 @@ public class Provider {
 			// Update bank frame
 			Provider.UpdateBankHand (BankFrame.bank.getCards(),
 									 BankFrame.bank.getChips(),
+									 BankFrame.bank.getBuyCredit(),
 									 BankFrame.bank.getpComponents(),
 									 BankFrame.bank,
 									 Main.bankBackground);

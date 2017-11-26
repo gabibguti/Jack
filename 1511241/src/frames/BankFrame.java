@@ -13,19 +13,21 @@ import javax.swing.JPanel;
 
 import cards.Card;
 import components.GameImage;
+import etc.Buy;
 import etc.Chip;
 import main.Provider;
 
 @SuppressWarnings("serial")
 public class BankFrame extends JFrame {
 	private Chip[] chips = new Chip[6];
+	private Buy buyCredit = new Buy();
 	private JButton bEndGame;
 	private JButton bNewRound;
 	private JButton bSave;
 	private JPanel pComponents;
 	private JPanel pButtons;
 	private ArrayList<Card> cards = new ArrayList<>();
-	private Map<Integer, Rectangle> chips_position = new HashMap<Integer, Rectangle>();
+	private Map<Integer, Rectangle> elements_position = new HashMap<Integer, Rectangle>();
 	private Score score = new Score();
 	
 	static public BankFrame bank;
@@ -83,8 +85,9 @@ public class BankFrame extends JFrame {
 		getCards().add(Card.flippedCard);
 		
 		// Draw BankFrame
-		setChips_position(Provider.UpdateBankHand (getCards(),
+		setelements_position(Provider.UpdateBankHand (getCards(),
 												  getChips(),
+												  getBuyCredit(),
 												  getpComponents(),
 												  BankFrame.this,
 												  bankBackground));
@@ -115,7 +118,7 @@ public class BankFrame extends JFrame {
 	}
 	
 	public void enableChipsClickListener () {
-		addMouseListener(Provider.chipsClicked);
+		addMouseListener(Provider.bankClickHandler);
 	}
 	
 	public void disableChipsClickListener () {
@@ -211,17 +214,17 @@ public class BankFrame extends JFrame {
 	}
 
 	/**
-	 * @return the chips_position
+	 * @return the elements_position
 	 */
-	public Map<Integer, Rectangle> getChips_position() {
-		return chips_position;
+	public Map<Integer, Rectangle> getelements_position() {
+		return elements_position;
 	}
 
 	/**
-	 * @param chips_position the chips_position to set
+	 * @param elements_position the elements_position to set
 	 */
-	public void setChips_position(Map<Integer, Rectangle> chips_position) {
-		this.chips_position = chips_position;
+	public void setelements_position(Map<Integer, Rectangle> elements_position) {
+		this.elements_position = elements_position;
 	}
 
 	/**
@@ -236,6 +239,20 @@ public class BankFrame extends JFrame {
 	 */
 	public void setScore(ArrayList<Card> cards) {
 		score.UpdateScore(cards);
+	}
+
+	/**
+	 * @return the buyCredit
+	 */
+	public Buy getBuyCredit() {
+		return buyCredit;
+	}
+
+	/**
+	 * @param buyCredit the buyCredit to set
+	 */
+	public void setBuyCredit(Buy buyCredit) {
+		this.buyCredit = buyCredit;
 	}
 
 }

@@ -23,7 +23,6 @@ public class PlayerFrame extends JFrame {
 	int centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
 	int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
 	int gap = 4;
-	private int initialAmount = 500;
 	private int playerNumber;
 	private JPanel buttonsPanel;
 	private JPanel infoPanel;
@@ -47,8 +46,8 @@ public class PlayerFrame extends JFrame {
 		this.addWindowListener(Provider.playerFrameClosing);
 		
 		// Add money and bet observer
-		observableMoneyBet = new ObservableMoneyBet(initialAmount); // Initial bet = 0. Initial money = 500
-	    observerMoneyBet = new ObserverMoneyBet(initialAmount);
+		observableMoneyBet = new ObservableMoneyBet(Provider.initialAmount); // Initial bet = 0. Initial money = 500
+	    observerMoneyBet = new ObserverMoneyBet(Provider.initialAmount);
 	    observableMoneyBet.addObserver(observerMoneyBet);
 	    
 	    // Add cards observer
