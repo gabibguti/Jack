@@ -324,6 +324,7 @@ public class Provider {
 	        	Rectangle bounds = entry.getValue();
             	if(bounds.contains(me)) {
             		if(element == 0) { // Buy credit option
+            			BankFrame.bank.disableChipsClickListener();
             			new BuyFrame ();
             		}
             		else { // Chip element
@@ -413,7 +414,7 @@ public class Provider {
 			}
 			imgPoint = new Point(x, y);
 			images_bounds.put(chip.getValue(), 
-							 new Rectangle(imgPoint,
+							 new Rectangle(new Point(x + 10, y + 29),
 										   new Dimension(chipWidth,
 														 chipHeight))); // Add chip value and defined position to the chip bounds map
 			images.put(chip.getImage(), imgPoint); // Add chip and defined point to images map
@@ -424,7 +425,7 @@ public class Provider {
 		y = 5 * panelHeight / 6 - buyHeight / 2; // Set all chips y point on 5/6 of the panel
 		imgPoint = new Point(x, y);
 		images_bounds.put(0, 
-				 new Rectangle(imgPoint,
+				 new Rectangle(new Point(x + 10, y + 29),
 							   new Dimension(buyWidth,
 											 buyHeight))); // Add chip value and defined position to the chip bounds map
 		images.put(buyCredit.getImage(), imgPoint); // Add chip and defined point to images map

@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+
+import frames.BankFrame;
 
 public class BuyFrame {
 	private JButton ok;
@@ -26,6 +30,14 @@ public class BuyFrame {
 		buyFrame.setSize(300, 200);
 		buyFrame.setLocationRelativeTo(null);
 		buyFrame.setLayout(new GridLayout(3, 1)); // Organize components
+		
+		WindowAdapter windowAdapter = new WindowAdapter() { // Exit on close window
+			public void windowClosing(WindowEvent windowEvent) {
+				BankFrame.bank.enableChipsClickListener();
+			}
+		};
+		
+		buyFrame.addWindowListener(windowAdapter);
 		
 		middlePanel = new JPanel();
 		middlePanel.setLayout(new FlowLayout());
@@ -52,7 +64,8 @@ public class BuyFrame {
 				}
 				else {
 	        		Buy.getCredit(value);
-					buyFrame.dispose();					
+					buyFrame.dispose();
+					BankFrame.bank.enableChipsClickListener();
 				}
 			}
 		});
