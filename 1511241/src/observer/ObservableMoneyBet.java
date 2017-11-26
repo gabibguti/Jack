@@ -1,12 +1,12 @@
-package etc;
+package observer;
 import java.util.Observable;
 
-public class ObservableDemo extends Observable {
+public class ObservableMoneyBet extends Observable {
 	private int bet;
 	private int money;
 
-	public ObservableDemo(int bet, int money) {
-			this.bet = bet;
+	public ObservableMoneyBet(int money) {
+			this.bet = 0;
 			this.money = money;
     }
 

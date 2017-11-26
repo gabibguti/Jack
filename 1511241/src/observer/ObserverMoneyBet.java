@@ -1,15 +1,15 @@
-package etc;
+package observer;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JLabel;
 
-public class ObserverExample implements Observer {
+public class ObserverMoneyBet implements Observer {
 
 	private JLabel lBet;
 	private JLabel lMoney;
 	
-	public ObserverExample(int initialAmount) {
+	public ObserverMoneyBet(int initialAmount) {
 		lBet = new JLabel("Bet $0");
 		lBet.setSize(40, 15);
 		lMoney = new JLabel("Money $" + initialAmount);
@@ -17,7 +17,7 @@ public class ObserverExample implements Observer {
 	
 	@Override
     public void update(Observable observable, Object arg) {
-			ObservableDemo bet = (ObservableDemo) observable;
+			ObservableMoneyBet bet = (ObservableMoneyBet) observable;
 			lBet.setText("Bet $"+ bet.getBet());
 			lMoney.setText("Money $" + bet.getMoney());
     }
