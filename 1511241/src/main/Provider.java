@@ -326,7 +326,7 @@ public class Provider {
             		if(element == 0) { // Buy credit option
             			new BuyFrame ();
             		}
-            		else if(element < (BankFrame.bank.getelements_position().size() - 1)) { // Chip element
+            		else { // Chip element
                 		// Update player bet with clicked chip value
     	        		int chip = element;
                 		int playerBetting = Turn.currentPlayerTurn();
