@@ -5,8 +5,8 @@ public class ObservableMoneyBet extends Observable {
 	private int bet;
 	private int money;
 
-	public ObservableMoneyBet(int bet, int money) {
-			this.bet = bet;
+	public ObservableMoneyBet(int money) {
+			this.bet = 0;
 			this.money = money;
     }
 

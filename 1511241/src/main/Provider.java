@@ -90,9 +90,8 @@ public class Provider {
 			p.getDoubleButton().setEnabled(false); // Can't double anymore
 			p.getSurrenderButton().setEnabled(false); // Can't surrender anymore
 			
-			Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
-
-			Provider.updateScore(p);
+//			Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
+			p.addCard();
 		}
 	};
 	
@@ -131,10 +130,8 @@ public class Provider {
 				p.setMoney(p.getMoney() - p.getBet());
 				p.setBet(p.getBet()*2);
 				
-				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hits 1 time
-	
-				// Update score
-				Provider.updateScore(p);
+//				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hits 1 time
+				p.addCard();
 			}
 		}
 	};
@@ -179,11 +176,8 @@ public class Provider {
 				
 				// Get new cards
 				p.getCards().clear();
-				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);
-				Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p);	
-				
-				// Update score
-				Provider.updateScore(p);
+				p.addCard();
+				p.addCard();
 			}
 			else {
 				JOptionPane.showMessageDialog(p, "You have to bet some money!"); // Warn bet = 0
@@ -197,8 +191,8 @@ public class Provider {
 			for(JFrame frame : Provider.framesList) {
 				if(frame.getClass() == PlayerFrame.class && frame.isVisible() == true) {
 					PlayerFrame p = (PlayerFrame) frame;
-					if(p.getTotalScore().getScore() <= 21) {
-						if(p.getTotalScore().getScore() == 21) {
+					if(p.getScore() <= 21) {
+						if(p.getScore() == 21) {
 							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
 							p.setMoney(p.getMoney() + p.getBet()*5/2); // Return money reward
 						}
@@ -215,17 +209,17 @@ public class Provider {
 			for(JFrame frame : Provider.framesList) {
 				if(frame.getClass() == PlayerFrame.class  && frame.isVisible() == true) {
 					PlayerFrame p = (PlayerFrame) frame;
-					if(p.getTotalScore().getScore() <= 21) {
-						if(p.getTotalScore().getScore() == 21) {
+					if(p.getScore() <= 21) {
+						if(p.getScore() == 21) {
 							JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty."); // Warn blackjack
 							p.setMoney(p.getMoney() + p.getBet()*5/2); // Return money reward
 						}
-						else if(p.getTotalScore().getScore() > Provider.getBankScore()) {
+						else if(p.getScore() > Provider.getBankScore()) {
 							JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!"); // Warn winner
 							 p.setMoney(p.getMoney() + p.getBet()*2); // Return money reward
 						}
 						else {
-							if(p.getTotalScore().getScore() == Provider.getBankScore()) {
+							if(p.getScore() == Provider.getBankScore()) {
 								JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!"); // Warn tie
 								 p.setMoney(p.getMoney() + p.getBet()); // Return money
 							}
@@ -298,9 +292,7 @@ public class Provider {
     				PlayerFrame p = (PlayerFrame) frame;
     				
 					// Reset players frame
-					p.getCardsPanel().removeAll();
-					p.getCards().removeAll(p.getCards());
-					Provider.updateScore(p);
+					p.clearCards();
 					
 					// Reset bet
 					p.setBet(0);
@@ -381,28 +373,6 @@ public class Provider {
 		return BankFrame.bank.getScore();
 	}
 	
-	static public void RequestNewCard (ArrayList<Card> hand, JPanel controlPanel, JFrame frame) { // Provides new card for player or bank
-		   	Point imgPoint;
-			int panelWidth = controlPanel.getWidth(), panelHeight = controlPanel.getHeight(), cardWidth, cardHeight, x, y, totalCards;
-			Map<Image, Point> cards_images = new HashMap<Image, Point>();
-
-			Card card = RemoveCardFromDeck();							// Remove a card from deck
-			hand.add(card);												// Add card to player's hand
-			totalCards = hand.size();									// Get total cards number
-			cardWidth = card.getImage().getWidth();
-			cardHeight = card.getImage().getHeight();
-			x = panelWidth/(2 * totalCards) - cardWidth/2;				// Set first card x point on the left
-			y = panelHeight/2 - cardHeight/2;							// Set all cards y point on the middle of the panel
-			controlPanel.removeAll(); 									// Clear control panel
-			for(Card hand_card: hand) {
-				imgPoint = new Point(x, y);
-				cards_images.put(hand_card.getImage(), imgPoint);		// Add card and defined point to images map
-				x += panelWidth/totalCards;								// Add next card horizontal padding
-			}
-			controlPanel.add(new GameImagePanel(cards_images, null));	// Add images map of cards to control panel
-			frame.revalidate();											// Update frame
-	   }
-
 	static public Map<Integer, Rectangle> UpdateBankHand(ArrayList<Card> hand, Chip[] chips, JPanel controlPanel,
 			JFrame frame, Image background) { // Update bank frame redrawing all components
 		Point imgPoint;
@@ -477,24 +447,6 @@ public class Provider {
 		}
 		else {
 			Turn.updatePlayerFrameTurn();
-		}
-	}
-	
-	static public void updateScore(PlayerFrame p) {
-		p.getTotalScore().UpdateScore(p.getCards()); 
-		if(p.getTotalScore().getScore() < 10)
-			p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore() + " (TINY RICK!!!)");
-		else
-			p.getPlayerScore().setText("Score: " + p.getTotalScore().getScore());
-		
-		if(p.getTotalScore().getScore() > 21) { // Treat when player gets busted
-			JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
-			p.setVisible(false); // "Close" player frame	
-			
-			// Update player turn
-			Turn.nextPlayerTurn();
-			
-			Provider.updateActivePlayers();
 		}
 	}
 }
