@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import frames.PlayerFrame;
 import main.Provider;
@@ -28,7 +29,13 @@ public class Buy {
 	public static void getCredit(int wantedCredit) {
 		int player = Turn.currentPlayerTurn();
 		PlayerFrame p = (PlayerFrame) Provider.framesList.get(player);
-		p.setMoney(p.getMoney() + wantedCredit);
+		if(p.getnBuys() < 2) {
+			p.setMoney(p.getMoney() + wantedCredit);
+			p.setnBuys(p.getnBuys() + 1);
+		}
+		else {
+			JOptionPane.showMessageDialog(p, "You have already bought twice. Can't buy anymore");
+		}
 	}
 
 	public BufferedImage getImage() {

@@ -24,6 +24,7 @@ public class PlayerFrame extends JFrame {
 	int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
 	int gap = 4;
 	private int playerNumber;
+	private int nBuys = 0;
 	private JPanel buttonsPanel;
 	private JPanel infoPanel;
 	private JButton hitButton;
@@ -295,5 +296,19 @@ public class PlayerFrame extends JFrame {
 	 */
 	public void setBetButton(JButton betButton) {
 		this.betButton = betButton;
+	}
+
+	/**
+	 * @return the nBuys
+	 */
+	public int getnBuys() {
+		return nBuys;
+	}
+
+	/**
+	 * @param nBuys the nBuys to set
+	 */
+	public void setnBuys(int nBuys) {
+		this.nBuys = nBuys;
 	}
 }
