@@ -38,6 +38,7 @@ public class PlayerFrame extends JFrame {
 	public ObserverCards observerCards;
 		
 	public static int activePlayers = 0;
+	public static int bets = 0;
 	public static int numPlayers = 0;
 
 	public PlayerFrame(String playerNumber, Container cont) {
@@ -126,6 +127,9 @@ public class PlayerFrame extends JFrame {
 			break;
 		default:
 			setLocationRelativeTo(null);
+			
+			Provider.configurePlayerActions(this, false, false, false, false, true);
+//			BankFrame.bank.enableChipsClickListener();
 		}
 	}
 

@@ -63,6 +63,7 @@ public class Provider {
 			Provider.framesList.add(new PlayerFrame(String.valueOf(player + 1), BankFrame.bank)); // Create Player Frame and add to framesList
 		
 		Turn.firstTurn(numberOfPlayers);
+		Provider.configurePlayerActions((PlayerFrame) Provider.framesList.get(Turn.currentPlayerTurn()), false, false, false, false, true);
 		
 		PlayerFrame.numPlayers = numberOfPlayers;
 
@@ -76,6 +77,9 @@ public class Provider {
 		Turn.removePlayer(p.getPlayerNumber());
 		PlayerFrame.numPlayers--;
 		Provider.updateActivePlayers();
+		if(PlayerFrame.bets == PlayerFrame.numPlayers) {
+			Provider.prepareBank();
+		}
 		p.dispose();
 	}
 	
@@ -175,16 +179,22 @@ public class Provider {
 		public void actionPerformed(ActionEvent actionEvent) {
 			PlayerFrame p = currentPlayerFrame();
 			
+			BankFrame.bank.disableChipsClickListener();
+			BankFrame.bank.enableChipsClickListener();
+			
 			// Enable player actions after player bets
 			if(p.getBet() != 0) {
-				configurePlayerActions(p, true, true, true, true, false); // Disable bet
+				configurePlayerActions(p, false, false, false, false, false); // Disable bet
 				
-				BankFrame.bank.disableChipsClickListener(); // Disable chips bet
+				PlayerFrame.bets++;
 				
-				// Get new cards
-				p.getCards().clear();
-				p.addCard();
-				p.addCard();
+//				Turn.updatePlayerFrameTurn();
+				Turn.nextPlayerTurn();
+				Turn.updatePlayerFrameTurn();
+				
+				if(PlayerFrame.bets == PlayerFrame.numPlayers) {
+					Provider.prepareBank();
+				}
 			}
 			else {
 				JOptionPane.showMessageDialog(p, "You have to bet some money!"); // Warn bet = 0
@@ -243,34 +253,12 @@ public class Provider {
 			
 			BankFrame.bank.setScore(BankFrame.bank.getCards());
 			
-			// Add first card and flipped card
-			BankFrame.bank.getCards().add(Provider.RemoveCardFromDeck());
-			BankFrame.bank.getCards().add(Card.flippedCard);
-			
-			// Draw BankFrame
-			BankFrame.bank.setelements_position(Provider.UpdateBankHand (BankFrame.bank.getCards(),
-																	 BankFrame.bank.getChips(),
-																	 BankFrame.bank.getBuyCredit(),
-																	 BankFrame.bank.getpComponents(),
-																	 BankFrame.bank,
-																	 Main.bankBackground));
-			
-			// Remove flipped card
-			BankFrame.bank.getCards().remove(1);
-			
-			// Update score
-			BankFrame.bank.setScore(BankFrame.bank.getCards());
-			
-			while(BankFrame.bank.getScore() < 17) {						// Draw cards until score >= 17
-				BankFrame.bank.getCards().add(Provider.RemoveCardFromDeck());
-				BankFrame.bank.setScore(BankFrame.bank.getCards());
-			}
-			
-			
 			// Removing broken players
 			removeBrokenPlayers();
 			
 			startNextRound();
+			
+			Turn.firstTurn(PlayerFrame.numPlayers);
 			
 			BankFrame.bank.disableChipsClickListener();
 			BankFrame.bank.enableChipsClickListener();
@@ -293,6 +281,7 @@ public class Provider {
 	}
 	
 	public static void startNextRound() {
+		PlayerFrame.bets = 0;
 		for(Frame frame : Provider.framesList) {
 			if(frame.getClass() == PlayerFrame.class) {
 				PlayerFrame p = (PlayerFrame) frame;
@@ -381,12 +370,19 @@ public class Provider {
 		Point imgPoint;
 		int panelWidth = controlPanel.getWidth(), panelHeight = controlPanel.getHeight(), cardWidth, cardHeight,
 				chipWidth = 0, chipHeight = 0, buyWidth = buyCredit.getImage().getWidth(), buyHeight = buyCredit.getImage().getHeight(),
-				x = 0, y = 0, totalCards = hand.size(), totalChips = chips.length;
+				x = 0, y = 0, totalChips = chips.length, totalCards;
 		boolean firstTime = true;
 		Map<Image, Point> images = new HashMap<Image, Point>();
 		Map<Integer, Rectangle> images_bounds = new HashMap<Integer, Rectangle>();
 
 		controlPanel.removeAll(); // Clear control panel
+
+		if(hand == null) {
+			totalCards = 0;
+		}
+		else {
+			totalCards = hand.size();
+		}
 		
 		// Add cards
 		for (Card hand_card : hand) {
@@ -468,5 +464,45 @@ public class Provider {
 		else {
 			Turn.updatePlayerFrameTurn();
 		}
+	}
+	
+	static public void prepareBank() {
+		// Add first card and flipped card
+		BankFrame.bank.getCards().add(Provider.RemoveCardFromDeck());
+		BankFrame.bank.getCards().add(Card.flippedCard);
+		
+		// Draw BankFrame
+		BankFrame.bank.setelements_position(Provider.UpdateBankHand(BankFrame.bank.getCards(),
+																	BankFrame.bank.getChips(),
+																	BankFrame.bank.getBuyCredit(),
+																	BankFrame.bank.getpComponents(),
+																	BankFrame.bank,
+																	Main.bankBackground));
+		
+		// Remove flipped card
+		BankFrame.bank.getCards().remove(1);
+		
+		// Initial cards
+		BankFrame.bank.setScore(BankFrame.bank.getCards());
+		while(BankFrame.bank.getScore() < 17) {						// Draw cards until score >= 17
+			BankFrame.bank.getCards().add(Provider.RemoveCardFromDeck());
+			BankFrame.bank.setScore(BankFrame.bank.getCards());
+		}
+		
+		// Players cards
+		for(JFrame frame : Provider.framesList) {
+			if(frame.getClass() == PlayerFrame.class) {
+				PlayerFrame p = (PlayerFrame) frame;
+				
+				p.addCard();
+				p.addCard();
+			}
+		}
+		
+		Turn.firstTurn(PlayerFrame.numPlayers);
+		
+		PlayerFrame p = (PlayerFrame) Provider.framesList.get(Turn.currentPlayerTurn());
+		configurePlayerActions(p, true, true, true, true, false);
+		BankFrame.bank.disableChipsClickListener();
 	}
 }

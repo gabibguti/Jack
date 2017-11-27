@@ -72,8 +72,9 @@ public class Turn {
 	    for (java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) {
 	     	Integer player = e.getKey();
 	    	Integer turn = e.getValue();
-	    	if(turn > removedTurn)
+	    	if(turn > removedTurn) {
 	    		playerTurn.replace(player, turn - 1);
+	    	}
 	    }
 	}
 	
@@ -105,7 +106,7 @@ public class Turn {
 	}
 
 	static public void enablePlayer(int playerNumber) { // Enable player actions
-		BankFrame.bank.enableChipsClickListener();
+//		BankFrame.bank.enableChipsClickListener();
 		for(Frame frame: Provider.framesList) {
 			if(frame.getClass() == PlayerFrame.class) {
 				PlayerFrame p = (PlayerFrame) frame;
@@ -115,7 +116,12 @@ public class Turn {
 //					    JButton b = (JButton) child;
 //					    b.setEnabled(true);
 //					}
-					p.getBetButton().setEnabled(true);
+					if(PlayerFrame.bets < PlayerFrame.numPlayers) {
+						p.getBetButton().setEnabled(true);
+					}
+					else {
+						Provider.configurePlayerActions(p, true, true, true, true, false);
+					}
 				}
 			}
 		}
