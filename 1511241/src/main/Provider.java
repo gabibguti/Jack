@@ -13,7 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -367,7 +366,6 @@ public class Provider {
 	
 	public static ActionListener saveListener = new ActionListener() { // Saves current game
 		public void actionPerformed(ActionEvent actionEvent) {
-			String s = "testezão do sucesso";
 			final JFileChooser fc = new JFileChooser();
 			fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 		    int retrival = fc.showSaveDialog(null);

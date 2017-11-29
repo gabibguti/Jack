@@ -35,8 +35,7 @@ public class InsuranceFrame {
 		
 		yes.addActionListener(new ActionListener() { // Add ok listener event
 			public void actionPerformed(ActionEvent actionEvent) {
-				fatherFrame.setMoney(fatherFrame.getMoney() + fatherFrame.getBet() - fatherFrame.getBet()*3/2);
-				fatherFrame.setBet(fatherFrame.getBet()*3/2);
+				fatherFrame.setMoney(fatherFrame.getMoney() - fatherFrame.getBet()/2);
 				fatherFrame.setInsured(true);
 				insuranceFrame.dispose();
 			}
