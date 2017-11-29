@@ -57,7 +57,12 @@ public class Card {
     }
 
     public String toString() {
-        return rank.toString() + suit.toString().toLowerCase().charAt(0);
+    	if(rank.getRankPoints() == 0) {
+    		return rank.toString();
+    	}
+    	else {
+    		return rank.toString() + suit.toString().toLowerCase().charAt(0);
+    	}
     }
 
     public static List<Card> Deck;

@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -91,10 +92,22 @@ public class Provider {
 		}
 	};
 	
+	
+	// TODO: TRY NOT TO LOSE IT
 	public static PlayerFrame currentPlayerFrame () { // Gets current player frame
 		int currentPlayer = Turn.currentPlayerTurn();
-		PlayerFrame frame = (PlayerFrame) Provider.framesList.get(currentPlayer);
-		return frame;
+//		PlayerFrame frame = (PlayerFrame) Provider.framesList.get(currentPlayer);
+		
+		for(JFrame frame : Provider.framesList) {
+			if(frame.getClass() == PlayerFrame.class) {
+				PlayerFrame p = (PlayerFrame) frame;
+				if(p.getPlayerNumber() == currentPlayer) {
+					return p;
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	public static void stand(PlayerFrame p) { // Disable player actions and pass turn to next player
@@ -268,7 +281,11 @@ public class Provider {
 			
 			startNextRound();
 			
-			Turn.firstTurn(PlayerFrame.numPlayers);
+			
+			// TODO: NEVER CALL TURN.FIRSTTURN EVER AGAIN HERE, THX
+//			Turn.firstTurn(PlayerFrame.numPlayers);
+			
+			Turn.updatePlayerFrameTurn();
 			
 			BankFrame.bank.disableChipsClickListener();
 			BankFrame.bank.enableChipsClickListener();
@@ -331,9 +348,11 @@ public class Provider {
             		else { // Chip element
                 		// Update player bet with clicked chip value
     	        		int chip = element;
-                		int playerBetting = Turn.currentPlayerTurn();
-                		PlayerFrame p = (PlayerFrame) Provider.framesList.get(playerBetting);
-    					if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
+//                		int playerBetting = Turn.currentPlayerTurn();
+//                		PlayerFrame p = (PlayerFrame) Provider.framesList.get(playerBetting);
+    					PlayerFrame p = Provider.currentPlayerFrame();
+    					System.out.println(p.getPlayerNumber());
+    	        		if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
         					p.setBet(p.getBet() + chip);
         					p.setMoney(p.getMoney() - chip); // Update money left for player
     					}
@@ -355,17 +374,44 @@ public class Provider {
 		    if (retrival == JFileChooser.APPROVE_OPTION) {
 		        try {
 		        	BufferedWriter fw = new BufferedWriter(new FileWriter(fc.getSelectedFile() + ".txt", true));
-//		            FileWriter fw = new FileWriter(fc.getSelectedFile() + ".txt");
-		            fw.write(s);	// TODO: Change s for file containing game info
-		            fw.newLine();
-		            fw.write("ola");
+		        	saveGame(fw);
 		            fw.close();
 		        } catch (Exception ex) {
+		        	// Error writing game file
 		            ex.printStackTrace();
 		        }
 		    }
 		}
 	};
+	
+	public static void saveGame(BufferedWriter fileWriter) throws Exception {
+		fileWriter.write(Integer.toString(PlayerFrame.numPlayers));
+		fileWriter.newLine();
+		fileWriter.write(Turn.mapTrack());
+		fileWriter.newLine();
+		for(JFrame frame : Provider.framesList) {
+			if(frame.getClass() == PlayerFrame.class) {
+				PlayerFrame p = (PlayerFrame) frame;
+				
+				fileWriter.write("P" + p.getPlayerNumber() + " ");
+				fileWriter.write(p.getMoney() + " ");
+				fileWriter.write(p.getBet() + " ");
+				fileWriter.write(Boolean.toString(p.isInsured()));
+				fileWriter.newLine();
+				for(Card c : p.getCards()) {
+					fileWriter.write(c.toString() + " ");
+				}
+				fileWriter.newLine();
+			}
+		}
+		fileWriter.write("BANK");
+		fileWriter.newLine();
+		fileWriter.write(Boolean.toString(BankFrame.bank.getbNewRound().isEnabled()));
+		fileWriter.newLine();
+		for(Card c : BankFrame.bank.getCards()) {
+			fileWriter.write(c.toString() + " ");
+		}
+	}
 
 	public static void newRoundSetEnabled(boolean bool) {
 		BankFrame.bank.getbNewRound().setEnabled(bool);

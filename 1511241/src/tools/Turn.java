@@ -14,6 +14,16 @@ public class Turn {
 	static int totalPlayers;
 	public static Map<Integer, Integer> playerTurn = new HashMap<Integer, Integer>();
 	
+	public static String mapTrack() {
+		String line;
+		
+		line = playerTurn.toString();
+		
+		System.out.println(playerTurn);
+		
+		return line;
+	}
+	
 	public static void firstTurn(int numberOfPlayers) { // Start first turn starting with player 1
 		int player;
 		totalPlayers = numberOfPlayers;
@@ -36,6 +46,7 @@ public class Turn {
         		nextPlayer = player;
         	playerTurn.replace(player, turn - 1);
        }
+	   System.out.println(playerTurn);
        return nextPlayer;
 	}
 
@@ -49,6 +60,7 @@ public class Turn {
 	        	if(turn == 1)
 	        		currentPlayer = player;
 	       }
+	       System.out.println(playerTurn);
 	       return currentPlayer;
 	}
 
@@ -75,6 +87,7 @@ public class Turn {
 	    		playerTurn.replace(player, turn - 1);
 	    	}
 	    }
+	    System.out.println(playerTurn);
 	}
 	
 	static public void updatePlayerFrameTurn() { // Enable actions for current player playing
