@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import frames.BankFrame;
 import frames.PlayerFrame;
 import main.Provider;
 
@@ -111,11 +110,6 @@ public class Turn {
 			if(frame.getClass() == PlayerFrame.class) {
 				PlayerFrame p = (PlayerFrame) frame;
 				if(p.getPlayerNumber() == playerNumber) {
-//					for(Object child: p.getButtonsPanel().getComponents())
-//					{
-//					    JButton b = (JButton) child;
-//					    b.setEnabled(true);
-//					}
 					if(PlayerFrame.bets < PlayerFrame.numPlayers) {
 						p.getBetButton().setEnabled(true);
 					}

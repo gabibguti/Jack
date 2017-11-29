@@ -3,45 +3,29 @@ package frames;
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import cards.Card;
 import components.GameImage;
 import main.Provider;
-import tools.Buy;
-import tools.Chip;
-import tools.Score;
+import observer.ObservableCards;
+import observer.ObserverBank;
 
 @SuppressWarnings("serial")
 public class BankFrame extends JFrame {
-	private Chip[] chips = new Chip[6];
-	private Buy buyCredit = new Buy();
 	private JButton bEndGame;
 	private JButton bNewRound;
 	private JButton bSave;
-	private JPanel pComponents;
 	private JPanel pButtons;
-	private ArrayList<Card> cards = new ArrayList<>();;
 	private Map<Integer, Rectangle> elements_position = new HashMap<Integer, Rectangle>();
-	private Score score = new Score();
+	public ObservableCards observableBank;
+	public ObserverBank observerBank;
 	
 	static public BankFrame bank;
-	
-	{
-		getChips()[0] = new Chip(1);
-		getChips()[1] = new Chip(5);
-		getChips()[2] = new Chip(10);
-		getChips()[3] = new Chip(20);
-		getChips()[4] = new Chip(50);
-		getChips()[5] = new Chip(100);
-	}
 	
 	public BankFrame(String name, BufferedImage bankBackground) {
 		super(name);
@@ -49,12 +33,13 @@ public class BankFrame extends JFrame {
 		setLayout(new BorderLayout()); // Organize components
 		setSize(bankBackground.getWidth(), bankBackground.getHeight());
 		setContentPane(new GameImage(bankBackground));
-
-		setpComponents(new JPanel());
-		getpComponents().setLayout(new BorderLayout());
-		getpComponents().setOpaque(false);										// Make transparent
-		getpComponents().setSize(this.getWidth(), this.getHeight() - 50);
 		
+		// Add bank observer
+		observableBank = new ObservableCards();
+		observerBank = new ObserverBank(this.getWidth(), this.getHeight());
+		observableBank.addObserver(observerBank);
+
+		// Add buttons
 		setbEndGame(new JButton("End Game"));
 		setbNewRound(new JButton("New Round"));
 		setbSave(new JButton("Save"));
@@ -82,9 +67,7 @@ public class BankFrame extends JFrame {
 		// Place buttons under image
 		setLayout(new BorderLayout());
 		
-		add(getpComponents());	// Add chips and cards to bank frame
-		
-		getpComponents().setOpaque(true);
+		add(observerBank.getComponents());	// Add chips and cards to bank frame
 		
 		add(getpButtons(), BorderLayout.PAGE_END);	// Add game buttons to bank frame
 		
@@ -93,19 +76,6 @@ public class BankFrame extends JFrame {
         
         // Makes the frame pop up centered
         setLocationRelativeTo(null);
-        
-        // Draw BankFrame
-        Map<Integer, Rectangle> map =Provider.UpdateBankHand(getCards(),
-															 getChips(),
-															 getBuyCredit(),
-															 getpComponents(),
-															 BankFrame.this,
-															 bankBackground); 
-     	setelements_position(map);
-
-        JOptionPane.showMessageDialog(null, "Make your bets.");
-		
-		enableChipsClickListener();
 	}
 	
 	public void enableChipsClickListener () {
@@ -118,13 +88,6 @@ public class BankFrame extends JFrame {
 		for(java.awt.event.MouseListener m: getMouseListeners()) {
 			removeMouseListener(m);
 		}
-	}
-
-	/**
-	 * @return the chips
-	 */
-	public Chip[] getChips() {
-		return chips;
 	}
 
 	/**
@@ -170,20 +133,6 @@ public class BankFrame extends JFrame {
 	}
 
 	/**
-	 * @return the pComponents
-	 */
-	public JPanel getpComponents() {
-		return pComponents;
-	}
-
-	/**
-	 * @param pComponents the pComponents to set
-	 */
-	public void setpComponents(JPanel pComponents) {
-		this.pComponents = pComponents;
-	}
-
-	/**
 	 * @return the pButtons
 	 */
 	public JPanel getpButtons() {
@@ -197,11 +146,21 @@ public class BankFrame extends JFrame {
 		this.pButtons = pButtons;
 	}
 
-	/**
-	 * @return the cards
-	 */
-	public ArrayList<Card> getCards() {
-		return cards;
+	public void addCard() {
+		observableBank.addCard();
+		observerBank.update(observableBank, null);
+	}
+	
+	public void addFlippedCard() {
+		observableBank.addFlippedCard();
+	}
+	
+	public void removeFlippedCard() {
+		observableBank.removeFlippedCard();
+	}
+	
+	public void clearCards() {
+		observableBank.clearCards();
 	}
 
 	/**
@@ -222,28 +181,6 @@ public class BankFrame extends JFrame {
 	 * @return the score
 	 */
 	public int getScore() {
-		return score.getScore();
+		return observerBank.getScore();
 	}
-
-	/**
-	 * @param score the score to set
-	 */
-	public void setScore(ArrayList<Card> cards) {
-		score.UpdateScore(cards);
-	}
-
-	/**
-	 * @return the buyCredit
-	 */
-	public Buy getBuyCredit() {
-		return buyCredit;
-	}
-
-	/**
-	 * @param buyCredit the buyCredit to set
-	 */
-	public void setBuyCredit(Buy buyCredit) {
-		this.buyCredit = buyCredit;
-	}
-
 }

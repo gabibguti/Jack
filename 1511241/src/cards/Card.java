@@ -20,25 +20,22 @@ public class Card {
     private Card(Rank rank, Suit suit) {
         this.rank = rank; // Set card value
         this.suit = suit; // Set card suit
-        try 
-        {
+        try {
             image = ImageIO.read(new File(img_path + this.toString() + ".gif"));
         } 
-        catch (IOException e) 
-        {
+        catch (IOException e) {
+        	System.out.println(this.toString());
             e.printStackTrace();
         }
     }
 
     private Card() { // Constructor to flipped card
-    	this.rank = null;
-    	this.suit = null;
-    	try 
-        {
+    	this.rank = Rank.FLIPPED;
+    	this.suit = Suit.DIAMONDS;
+    	try {
             image = ImageIO.read(new File(img_path + "deck1.gif"));
         } 
-        catch (IOException e) 
-        {
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -71,9 +68,13 @@ public class Card {
 
     public static void newDeck() {
         Deck = new ArrayList<Card>();
-        for (Suit suit : Suit.values())
-            for (Rank rank : Rank.values())
-                Deck.add(new Card(rank, suit));
+        for (Suit suit : Suit.values()) {
+            for (Rank rank : Rank.values()) {
+            	if(rank.getRankPoints() != 0) {
+            		Deck.add(new Card(rank, suit));
+            	}
+            }
+        }
         // Shuffles deck
         Collections.shuffle(Deck);
     }

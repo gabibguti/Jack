@@ -22,6 +22,18 @@ public class ObservableCards extends Observable {
 	    notifyObservers();
     }
 	
+	public void addFlippedCard() {
+		cards.add(Card.flippedCard);
+		setChanged();
+	    notifyObservers();
+	}
+	
+	public void removeFlippedCard() {
+		cards.remove(Card.flippedCard);
+		setChanged();
+	    notifyObservers();
+	}
+	
 	public void clearCards() {
 		cards.removeAll(cards);
 		setChanged();

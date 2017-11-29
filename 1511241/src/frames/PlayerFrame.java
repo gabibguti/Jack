@@ -130,7 +130,6 @@ public class PlayerFrame extends JFrame {
 			setLocationRelativeTo(null);
 			
 			Provider.configurePlayerActions(this, false, false, false, false, true);
-//			BankFrame.bank.enableChipsClickListener();
 		}
 	}
 

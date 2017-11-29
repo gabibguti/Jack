@@ -1,8 +1,6 @@
 package main;
 
-import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -15,24 +13,18 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import cards.Card;
-import components.GameImagePanel;
 import frames.BankFrame;
 import frames.BuyFrame;
 import frames.InsuranceFrame;
 import frames.PlayerFrame;
-import tools.Buy;
-import tools.Chip;
 import tools.Turn;
 
 public class Provider {
@@ -41,6 +33,12 @@ public class Provider {
 	
 	public static void createBank(String name, BufferedImage bankBackground) {
 		BankFrame.bank = new BankFrame(name, bankBackground);
+		
+		BankFrame.bank.observerBank.update(BankFrame.bank.observableBank, null);
+		
+		JOptionPane.showMessageDialog(null, "Make your bets.");
+		
+		BankFrame.bank.enableChipsClickListener();
 	}
 	
 	public static WindowAdapter windowAdapter = new WindowAdapter() { // Exit on close window
@@ -120,11 +118,7 @@ public class Provider {
 			// Can't double or surrender anymore
 			configurePlayerActions(p, true, true, false, false, false);
 			
-			//Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
 			p.addCard();
-			
-//			updateScore(p);
-
 		}
 	};
 	
@@ -147,12 +141,7 @@ public class Provider {
 				// Double bet
 				p.setMoney(p.getMoney() - p.getBet());
 				p.setBet(p.getBet()*2);
-				
-				//Provider.RequestNewCard(p.getCards(), p.getCardsPanel(), p); // Hit
 				p.addCard();
-	
-//				updateScore(p);
-				
 				stand(p); // Stand
 			}
 		}
@@ -189,7 +178,6 @@ public class Provider {
 				
 				PlayerFrame.bets++;
 				
-//				Turn.updatePlayerFrameTurn();
 				Turn.nextPlayerTurn();
 				Turn.updatePlayerFrameTurn();
 				
@@ -204,8 +192,17 @@ public class Provider {
 	};
 	
 	public static void notifyWinnersAndLosers() {
-		int bankScore = getBankScore();
+		int bankScore;
 		int reward = 0;
+		
+		// Remove flipped card
+		BankFrame.bank.removeFlippedCard();
+		
+		while(BankFrame.bank.getScore() < 17) {
+			BankFrame.bank.addCard();
+		}
+		
+		bankScore = BankFrame.bank.getScore();
 		
 		if(bankScore > 21) { // Bank busts
 			JOptionPane.showMessageDialog(null, "Bank busted. Every remaining player wins!");
@@ -218,15 +215,18 @@ public class Provider {
 				int playerScore = p.getScore();
 				if(playerScore == 21) { // Player wins with Blackjack
 					JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty.");
+//					JOptionPane.showMessageDialog(p, "BlackJack!");
 					reward = p.getBet()*5/2;
 				}
 				else {
 					if(playerScore > bankScore) { // Player wins
 						JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!");
+//						JOptionPane.showMessageDialog(p, "You win!");
 						reward = p.getBet()*2;
 					}
 					else if(playerScore == bankScore) { // Player and Bank ties
 						JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!");
+//						JOptionPane.showMessageDialog(p, "It's a tie!");
 						reward = p.getBet();
 					}
 					else if(bankScore == 21 && p.isInsured() == true){
@@ -234,7 +234,13 @@ public class Provider {
 						reward = p.getBet();
 					}
 					else { // Player loses
+						// FIXME
+						// FIXME
+						// FIXME
+						// FIXME
+						// FIXME
 						JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
+//						JOptionPane.showMessageDialog(p, "You lose!");
 					}
 				}
 				p.setMoney(p.getMoney() + reward); // Return money reward
@@ -252,20 +258,8 @@ public class Provider {
 		public void actionPerformed(ActionEvent actionEvent) {
 			Provider.newRoundSetEnabled(false);
 
-			while(BankFrame.bank.getCards().isEmpty() == false) {	// Remove all cards from the bank
-				BankFrame.bank.getCards().remove(0);
-			}
-			
-			// Draw BankFrame
-			BankFrame.bank.setelements_position(Provider.UpdateBankHand(BankFrame.bank.getCards(),
-																		BankFrame.bank.getChips(),
-																		BankFrame.bank.getBuyCredit(),
-																		BankFrame.bank.getpComponents(),
-																		BankFrame.bank,
-																		Main.bankBackground));
-			
-			BankFrame.bank.setScore(BankFrame.bank.getCards());
-			
+			BankFrame.bank.clearCards();
+
 			// Removing broken players
 			removeBrokenPlayers();
 			
@@ -380,75 +374,6 @@ public class Provider {
 		return BankFrame.bank.getScore();
 	}
 	
-	static public Map<Integer, Rectangle> UpdateBankHand(ArrayList<Card> hand, Chip[] chips, Buy buyCredit, JPanel controlPanel,
-			JFrame frame, Image background) { // Update bank frame redrawing all components
-		Point imgPoint;
-		int panelWidth = controlPanel.getWidth(), panelHeight = controlPanel.getHeight(), cardWidth, cardHeight,
-				chipWidth = 0, chipHeight = 0, buyWidth = buyCredit.getImage().getWidth(), buyHeight = buyCredit.getImage().getHeight(),
-				x = 0, y = 0, totalChips = chips.length, totalCards;
-		boolean firstTime = true;
-		Map<Image, Point> images = new HashMap<Image, Point>();
-		Map<Integer, Rectangle> images_bounds = new HashMap<Integer, Rectangle>();
-
-		controlPanel.removeAll(); // Clear control panel
-
-		if(hand == null) {
-			totalCards = 0;
-		}
-		else {
-			totalCards = hand.size();
-		}
-		
-		// Add cards
-		for (Card hand_card : hand) {
-			if (firstTime) { // For first card define:
-				cardWidth = hand_card.getImage().getWidth();
-				cardHeight = hand_card.getImage().getHeight();
-				x = panelWidth / (2 * totalCards) - cardWidth / 2; // Set first card x point on the left
-				y = panelHeight / 3 - cardHeight / 2; // Set all cards y point on 1/3 of the panel
-				firstTime = false;
-			}
-			imgPoint = new Point(x, y);
-			images.put(hand_card.getImage(), imgPoint); // Add card and defined point to images map
-			x += panelWidth / totalCards; // Add next card horizontal padding
-		}
-		
-		// Add chips
-		firstTime = true;
-		for (Chip chip : chips) {
-			if (firstTime) { // For first chip define:
-				chipWidth = chip.getImage().getWidth();
-				chipHeight = chip.getImage().getHeight();
-				x = panelWidth / (2 * (totalChips + 1)) - chipWidth / 2; // Set first chip x point on the left
-				y = 5 * panelHeight / 6 - chipHeight / 2; // Set all chips y point on 5/6 of the panel
-				firstTime = false;
-			}
-			imgPoint = new Point(x, y);
-			images_bounds.put(chip.getValue(), 
-							 new Rectangle(new Point(x + 10, y + 29),
-										   new Dimension(chipWidth,
-														 chipHeight))); // Add chip value and defined position to the chip bounds map
-			images.put(chip.getImage(), imgPoint); // Add chip and defined point to images map
-			x += panelWidth / (totalChips + 1); // Add next chip horizontal padding
-		}
-		
-		// Add buy credit option
-		y = 5 * panelHeight / 6 - buyHeight / 2; // Set all chips y point on 5/6 of the panel
-		imgPoint = new Point(x, y);
-		images_bounds.put(0, 
-				 new Rectangle(new Point(x + 10, y + 29),
-							   new Dimension(buyWidth,
-											 buyHeight))); // Add chip value and defined position to the chip bounds map
-		images.put(buyCredit.getImage(), imgPoint); // Add chip and defined point to images map
-		
-		// Update bank
-		controlPanel.add(new GameImagePanel(images, background)); // Add cards and chips images to control panel
-		frame.revalidate(); // Update frame
-		controlPanel.setOpaque(false); // Set opaque to see background
-
-		return images_bounds;
-	}
-
 	static public Card RemoveCardFromDeck() {
 		Card card;
 		try {
@@ -465,15 +390,6 @@ public class Provider {
 		PlayerFrame.activePlayers--;
 		if (PlayerFrame.activePlayers == 0) {
 			Provider.newRoundSetEnabled(true, PlayerFrame.numPlayers);
-			
-			// Update bank frame
-			Provider.UpdateBankHand (BankFrame.bank.getCards(),
-									 BankFrame.bank.getChips(),
-									 BankFrame.bank.getBuyCredit(),
-									 BankFrame.bank.getpComponents(),
-									 BankFrame.bank,
-									 Main.bankBackground);
-			
 			Provider.notifyWinnersAndLosers();
 		}
 		else {
@@ -483,20 +399,8 @@ public class Provider {
 	
 	static public void prepareBank() {
 		// Add first card and flipped card
-		BankFrame.bank.getCards().add(Provider.RemoveCardFromDeck());
-		BankFrame.bank.getCards().add(Card.flippedCard);
-		
-		// Draw BankFrame
-		BankFrame.bank.setelements_position(Provider.UpdateBankHand(BankFrame.bank.getCards(),
-																	BankFrame.bank.getChips(),
-																	BankFrame.bank.getBuyCredit(),
-																	BankFrame.bank.getpComponents(),
-																	BankFrame.bank,
-																	Main.bankBackground));
-		
-		// Remove flipped card
-		BankFrame.bank.getCards().remove(1);
-		BankFrame.bank.setScore(BankFrame.bank.getCards());
+		BankFrame.bank.addCard();
+		BankFrame.bank.addFlippedCard();
 		
 		if(BankFrame.bank.getScore() >= 10) {
 			for(JFrame frame : Provider.framesList) {
@@ -506,13 +410,6 @@ public class Provider {
 					new InsuranceFrame(p);
 				}
 			}
-		}
-		
-		// Initial cards
-		BankFrame.bank.setScore(BankFrame.bank.getCards());
-		while(BankFrame.bank.getScore() < 17) {						// Draw cards until score >= 17
-			BankFrame.bank.getCards().add(Provider.RemoveCardFromDeck());
-			BankFrame.bank.setScore(BankFrame.bank.getCards());
 		}
 		
 		// Players cards
@@ -525,7 +422,7 @@ public class Provider {
 			}
 		}
 		
-		Turn.firstTurn(PlayerFrame.numPlayers);
+		Turn.updatePlayerFrameTurn();
 		
 		PlayerFrame p = (PlayerFrame) Provider.framesList.get(Turn.currentPlayerTurn());
 		configurePlayerActions(p, true, true, true, true, false);
