@@ -3,6 +3,7 @@ package frames;
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import cards.Card;
 import components.GameImage;
 import main.Provider;
 import observer.ObservableCards;
@@ -146,9 +148,12 @@ public class BankFrame extends JFrame {
 		this.pButtons = pButtons;
 	}
 
+	public ArrayList<Card> getCards() {
+		return observableBank.getCards();
+	}
+	
 	public void addCard() {
 		observableBank.addCard();
-		observerBank.update(observableBank, null);
 	}
 	
 	public void addFlippedCard() {

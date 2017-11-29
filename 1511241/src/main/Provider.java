@@ -214,23 +214,23 @@ public class Provider {
 				PlayerFrame p = (PlayerFrame) frame;
 				int playerScore = p.getScore();
 				reward = 0;
-				if(playerScore == 21) { // Player wins with Blackjack
-					JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty.");
-//					JOptionPane.showMessageDialog(p, "BlackJack!");
-					reward = p.getBet()*5/2;
+				if(playerScore == bankScore) { // Player and Bank ties
+					JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!");
+//					JOptionPane.showMessageDialog(p, "It's a tie!");
+					reward = p.getBet();
 				}
 				else {
-					if(playerScore > bankScore) { // Player wins
+					if(playerScore == 21 && p.getCards().size() == 2) { // Player wins with Blackjack
+						JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty.");
+//						JOptionPane.showMessageDialog(p, "BlackJack!");
+						reward = p.getBet()*5/2;
+					}
+					else if(playerScore > bankScore) { // Player wins
 						JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!");
 //						JOptionPane.showMessageDialog(p, "You win!");
 						reward = p.getBet()*2;
 					}
-					else if(playerScore == bankScore) { // Player and Bank ties
-						JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!");
-//						JOptionPane.showMessageDialog(p, "It's a tie!");
-						reward = p.getBet();
-					}
-					else if(bankScore == 21 && p.isInsured() == true){
+					else if(bankScore == 21 && p.isInsured() == true && BankFrame.bank.getCards().size() == 2) { // Bank has Blackjack
 						JOptionPane.showMessageDialog(p, "I told you the insurance was worth it!");
 						reward = p.getBet();
 					}
@@ -403,7 +403,7 @@ public class Provider {
 		BankFrame.bank.addCard();
 		BankFrame.bank.addFlippedCard();
 		
-		if(BankFrame.bank.getScore() >= 10) {
+		if(BankFrame.bank.getScore() == 11) {
 			for(JFrame frame : Provider.framesList) {
 				if(frame.getClass() == PlayerFrame.class) {
 					PlayerFrame p = (PlayerFrame) frame;
