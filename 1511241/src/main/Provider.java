@@ -193,7 +193,7 @@ public class Provider {
 	
 	public static void notifyWinnersAndLosers() {
 		int bankScore;
-		int reward = 0;
+		int reward;
 		
 		// Remove flipped card
 		BankFrame.bank.removeFlippedCard();
@@ -213,6 +213,7 @@ public class Provider {
 			if(frame.getClass() == PlayerFrame.class && frame.isVisible() == true) {
 				PlayerFrame p = (PlayerFrame) frame;
 				int playerScore = p.getScore();
+				reward = 0;
 				if(playerScore == 21) { // Player wins with Blackjack
 					JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty.");
 //					JOptionPane.showMessageDialog(p, "BlackJack!");
