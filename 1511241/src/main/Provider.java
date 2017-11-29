@@ -33,6 +33,90 @@ public class Provider {
 	public static int initialAmount = 500;
 	public static ArrayList<JFrame> framesList = new ArrayList<JFrame>();
 	
+	// START GAME
+	public static void numPlayersButtonAction(ActionEvent e) { // Initialize Bank and Players
+			int player, numberOfPlayers = 0;
+			JButton b = (JButton) e.getSource();
+			JFrame mainFrame = (JFrame) b.getTopLevelAncestor();
+			String command = e.getActionCommand();
+
+			Provider.createBank("Bank", StartGame.bankBackground); // Create Bank
+			Provider.framesList.add(BankFrame.bank); // Add Bank to framesList
+			
+			numberOfPlayers = Integer.parseInt(command);
+			
+			for (player = 0; player < numberOfPlayers; player++)
+				Provider.framesList.add(new PlayerFrame(String.valueOf(player + 1), BankFrame.bank)); // Create Player Frame and add to framesList
+			
+			Turn.firstTurn(numberOfPlayers);
+			Provider.configurePlayerActions((PlayerFrame) Provider.framesList.get(Turn.currentPlayerTurn()), false, false, false, false, true);
+			
+			PlayerFrame.numPlayers = numberOfPlayers;
+
+			// Close Main Frame
+			mainFrame.setVisible(false);
+			mainFrame.dispose();
+		}
+	// REMOVE PLAYER
+	public static WindowAdapter playerFrameClosing = new WindowAdapter() { // Remove Player from game on closing window
+			@Override
+			public void windowClosing(WindowEvent windowEvent) {
+				Provider.closePlayer((PlayerFrame) windowEvent.getSource());
+			}
+		};
+
+	// END GAME
+	// END GAME
+	public static ActionListener endGameListener = new ActionListener() { // Exit on button endGame
+		public void actionPerformed(ActionEvent actionEvent) {
+			System.exit(0);				
+		}
+	};
+	// START NEW ROUND
+	public static ActionListener newRoundListener = new ActionListener() { // Starts new round
+		public void actionPerformed(ActionEvent actionEvent) {
+			Provider.newRoundSetEnabled(false);
+
+			BankFrame.bank.clearCards();
+
+			// Removing broken players
+			removeBrokenPlayers();
+			
+			startNextRound();
+			
+			Turn.updatePlayerFrameTurn();
+			
+			BankFrame.bank.disableChipsClickListener();
+			BankFrame.bank.enableChipsClickListener();
+		}
+	};
+	public static void startNextRound() {
+		PlayerFrame.bets = 0;
+		for(Frame frame : Provider.framesList) {
+			if(frame.getClass() == PlayerFrame.class) {
+				PlayerFrame p = (PlayerFrame) frame;
+				
+				// Reset players frame
+				p.clearCards();
+				
+				// Reset bet
+				p.setBet(0);
+				
+				// Update frame
+				p.repaint();
+				
+				p.setInsured(false);
+						
+				Turn.updatePlayerFrameTurn();
+				
+				if(p.isVisible() == false) {
+					p.setVisible(true);
+				}
+			}
+		}
+	}
+	// PLAYERFRAME
+	// BANKFRAME
 	public static void createBank(String name, BufferedImage bankBackground) {
 		BankFrame.bank = new BankFrame(name, bankBackground);
 		
@@ -41,61 +125,16 @@ public class Provider {
 		JOptionPane.showMessageDialog(null, "Make your bets.");
 		
 		BankFrame.bank.enableChipsClickListener();
-	}
+	}	
 	
+	// UTILITY
 	public static WindowAdapter windowAdapter = new WindowAdapter() { // Exit on close window
 		public void windowClosing(WindowEvent windowEvent) {
 			System.exit(0);
 		}
 	};
-	
-	public static void numPlayersButtonAction(ActionEvent e) { // Initialize Bank and Players
-		int player, numberOfPlayers = 0;
-		JButton b = (JButton) e.getSource();
-		JFrame mainFrame = (JFrame) b.getTopLevelAncestor();
-		String command = e.getActionCommand();
-
-		Provider.createBank("Bank", StartGame.bankBackground); // Create Bank
-		Provider.framesList.add(BankFrame.bank); // Add Bank to framesList
-		
-		numberOfPlayers = Integer.parseInt(command);
-		
-		for (player = 0; player < numberOfPlayers; player++)
-			Provider.framesList.add(new PlayerFrame(String.valueOf(player + 1), BankFrame.bank)); // Create Player Frame and add to framesList
-		
-		Turn.firstTurn(numberOfPlayers);
-		Provider.configurePlayerActions((PlayerFrame) Provider.framesList.get(Turn.currentPlayerTurn()), false, false, false, false, true);
-		
-		PlayerFrame.numPlayers = numberOfPlayers;
-
-		// Close Main Frame
-		mainFrame.setVisible(false);
-		mainFrame.dispose();
-	}
-	
-	public static void closePlayer(PlayerFrame p) {
-		Provider.framesList.remove(p); // Remove PlayerFrame from framesList
-		Turn.removePlayer(p.getPlayerNumber());
-		PlayerFrame.numPlayers--;
-		Provider.updateActivePlayers();
-		if(PlayerFrame.bets == PlayerFrame.numPlayers) {
-			Provider.prepareBank();
-		}
-		p.dispose();
-	}
-	
-	public static WindowAdapter playerFrameClosing = new WindowAdapter() { // Remove Player from game on closing window
-		@Override
-		public void windowClosing(WindowEvent windowEvent) {
-			Provider.closePlayer((PlayerFrame) windowEvent.getSource());
-		}
-	};
-	
-	
-	// TODO: TRY NOT TO LOSE IT
 	public static PlayerFrame currentPlayerFrame () { // Gets current player frame
 		int currentPlayer = Turn.currentPlayerTurn();
-//		PlayerFrame frame = (PlayerFrame) Provider.framesList.get(currentPlayer);
 		
 		for(JFrame frame : Provider.framesList) {
 			if(frame.getClass() == PlayerFrame.class) {
@@ -108,103 +147,6 @@ public class Provider {
 		
 		return null;
 	}
-	
-	public static void stand(PlayerFrame p) { // Disable player actions and pass turn to next player
-		configurePlayerActions(p, false, false, false, false, false);
-		
-		Turn.nextPlayerTurn();
-		
-		Provider.updateActivePlayers();
-	}
-	
-	public static void configurePlayerActions(PlayerFrame p, boolean hit, boolean stand, boolean doubleDown, boolean surrender, boolean bet) {
-		p.getHitButton().setEnabled(hit);
-		p.getStandButton().setEnabled(stand);
-		p.getDoubleButton().setEnabled(doubleDown);
-		p.getSurrenderButton().setEnabled(surrender);
-		p.getBetButton().setEnabled(bet);
-	}
-	
-	public static ActionListener hitButtonListener = new ActionListener() { // Player draws card
-		public void actionPerformed(ActionEvent actionEvent) {
-			PlayerFrame p = currentPlayerFrame();
-			
-			// Can't double or surrender anymore
-			configurePlayerActions(p, true, true, false, false, false);
-			
-			p.addCard();
-		}
-	};
-	
-	public static ActionListener standButtonListener = new ActionListener() { // Player stands
-		public void actionPerformed(ActionEvent actionEvent) {
-			PlayerFrame p = currentPlayerFrame();
-			
-			stand(p); // Stand
-		}
-	};
-	
-	public static ActionListener doubleButtonListener = new ActionListener() { // Player doubles down
-		public void actionPerformed(ActionEvent actionEvent) {
-			PlayerFrame p = currentPlayerFrame();
-			
-			if(p.getMoney() < p.getBet()) {
-				JOptionPane.showMessageDialog(p, "You don't have enough money to double your bet");
-			}
-			else {
-				// Double bet
-				p.setMoney(p.getMoney() - p.getBet());
-				p.setBet(p.getBet()*2);
-				p.addCard();
-				stand(p); // Stand
-			}
-		}
-	};
-
-	public static ActionListener surrenderButtonListener = new ActionListener() { // Player surrenders
-		public void actionPerformed(ActionEvent actionEvent) {
-			PlayerFrame p = currentPlayerFrame();
-			
-			configurePlayerActions(p, false, false, false, false, false);
-			
-			// Receives half bet back
-			p.setMoney(p.getMoney() + p.getBet()/2);
-			p.setBet(p.getBet()/2);
-						
-			p.setVisible(false); // "Close" player frame
-			
-			Turn.nextPlayerTurn();
-			
-			updateActivePlayers();
-		}
-	};
-
-	public static ActionListener betButtonListener = new ActionListener() { // Player bets
-		public void actionPerformed(ActionEvent actionEvent) {
-			PlayerFrame p = currentPlayerFrame();
-			
-			BankFrame.bank.disableChipsClickListener();
-			BankFrame.bank.enableChipsClickListener();
-			
-			// Enable player actions after player bets
-			if(p.getBet() != 0) {
-				configurePlayerActions(p, false, false, false, false, false); // Disable bet
-				
-				PlayerFrame.bets++;
-				
-				Turn.nextPlayerTurn();
-				Turn.updatePlayerFrameTurn();
-				
-				if(PlayerFrame.bets == PlayerFrame.numPlayers) {
-					Provider.prepareBank();
-				}
-			}
-			else {
-				JOptionPane.showMessageDialog(p, "You have to bet some money!"); // Warn bet = 0
-			}
-		}
-	};
-	
 	public static void notifyWinnersAndLosers() {
 		int bankScore;
 		int reward;
@@ -257,34 +199,107 @@ public class Provider {
 		}
 	}
 	
-	public static ActionListener endGameListener = new ActionListener() { // Exit on button endGame
+	// PLAYERFRAME
+	public static void stand(PlayerFrame p) { // Disable player actions and pass turn to next player
+		configurePlayerActions(p, false, false, false, false, false);
+		
+		Turn.nextPlayerTurn();
+		
+		Provider.updateActivePlayers();
+	}
+	public static void configurePlayerActions(PlayerFrame p, boolean hit, boolean stand, boolean doubleDown, boolean surrender, boolean bet) {
+		p.getHitButton().setEnabled(hit);
+		p.getStandButton().setEnabled(stand);
+		p.getDoubleButton().setEnabled(doubleDown);
+		p.getSurrenderButton().setEnabled(surrender);
+		p.getBetButton().setEnabled(bet);
+	}
+	public static ActionListener hitButtonListener = new ActionListener() { // Player draws card
 		public void actionPerformed(ActionEvent actionEvent) {
-			System.exit(0);				
+			PlayerFrame p = currentPlayerFrame();
+			
+			// Can't double or surrender anymore
+			configurePlayerActions(p, true, true, false, false, false);
+			
+			p.addCard();
 		}
 	};
-	
-	public static ActionListener newRoundListener = new ActionListener() { // Starts new round
+	public static ActionListener standButtonListener = new ActionListener() { // Player stands
 		public void actionPerformed(ActionEvent actionEvent) {
-			Provider.newRoundSetEnabled(false);
+			PlayerFrame p = currentPlayerFrame();
+			
+			stand(p); // Stand
+		}
+	};
+	public static ActionListener doubleButtonListener = new ActionListener() { // Player doubles down
+		public void actionPerformed(ActionEvent actionEvent) {
+			PlayerFrame p = currentPlayerFrame();
+			
+			if(p.getMoney() < p.getBet()) {
+				JOptionPane.showMessageDialog(p, "You don't have enough money to double your bet");
+			}
+			else {
+				// Double bet
+				p.setMoney(p.getMoney() - p.getBet());
+				p.setBet(p.getBet()*2);
+				p.addCard();
+				stand(p); // Stand
+			}
+		}
+	};
 
-			BankFrame.bank.clearCards();
-
-			// Removing broken players
-			removeBrokenPlayers();
+	public static ActionListener surrenderButtonListener = new ActionListener() { // Player surrenders
+		public void actionPerformed(ActionEvent actionEvent) {
+			PlayerFrame p = currentPlayerFrame();
 			
-			startNextRound();
+			configurePlayerActions(p, false, false, false, false, false);
 			
+			// Receives half bet back
+			p.setMoney(p.getMoney() + p.getBet()/2);
+			p.setBet(p.getBet()/2);
+						
+			p.setVisible(false); // "Close" player frame
 			
-			// TODO: NEVER CALL TURN.FIRSTTURN EVER AGAIN HERE, THX
-//			Turn.firstTurn(PlayerFrame.numPlayers);
+			Turn.nextPlayerTurn();
 			
-			Turn.updatePlayerFrameTurn();
+			updateActivePlayers();
+		}
+	};
+	public static ActionListener betButtonListener = new ActionListener() { // Player bets
+		public void actionPerformed(ActionEvent actionEvent) {
+			PlayerFrame p = currentPlayerFrame();
 			
 			BankFrame.bank.disableChipsClickListener();
 			BankFrame.bank.enableChipsClickListener();
+			
+			// Enable player actions after player bets
+			if(p.getBet() != 0) {
+				configurePlayerActions(p, false, false, false, false, false); // Disable bet
+				
+				PlayerFrame.bets++;
+				
+				Turn.nextPlayerTurn();
+				Turn.updatePlayerFrameTurn();
+				
+				if(PlayerFrame.bets == PlayerFrame.numPlayers) {
+					Provider.prepareBank();
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(p, "You have to bet some money!"); // Warn bet = 0
+			}
 		}
 	};
-	
+	public static void closePlayer(PlayerFrame p) {
+		Provider.framesList.remove(p); // Remove PlayerFrame from framesList
+		Turn.removePlayer(p.getPlayerNumber());
+		PlayerFrame.numPlayers--;
+		Provider.updateActivePlayers();
+		if(PlayerFrame.bets == PlayerFrame.numPlayers) {
+			Provider.prepareBank();
+		}
+		p.dispose();
+	}
 	public static void removeBrokenPlayers() {
 		Iterator<JFrame> i = Provider.framesList.iterator();
 		while(i.hasNext()) {
@@ -298,33 +313,12 @@ public class Provider {
 				}
 			}
 		}
-	}
+	}	
+
+	// UTILITY
 	
-	public static void startNextRound() {
-		PlayerFrame.bets = 0;
-		for(Frame frame : Provider.framesList) {
-			if(frame.getClass() == PlayerFrame.class) {
-				PlayerFrame p = (PlayerFrame) frame;
-				
-				// Reset players frame
-				p.clearCards();
-				
-				// Reset bet
-				p.setBet(0);
-				
-				// Update frame
-				p.repaint();
-				
-				p.setInsured(false);
-						
-				Turn.updatePlayerFrameTurn();
-				
-				if(p.isVisible() == false) {
-					p.setVisible(true);
-				}
-			}
-		}
-	}
+	
+
 	
 	public static MouseAdapter bankClickHandler = new MouseAdapter() { // Handle chips click
 	    @Override

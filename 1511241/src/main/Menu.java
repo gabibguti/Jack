@@ -20,17 +20,10 @@ public class Menu {
 	public static JFrame menuFrame;
 	private JLabel headerLabel;
 	private JLabel subheaderLabel;
-//	private JLabel statusLabel;
 	private JPanel mainCP;
 	private JButton newGame;
 	private JButton loadGame;
-//	private JButton[] options;
-//	private String[] actions;
-//	private int maxPlayers = 4;
-//	public static BufferedImage bankBackground = null;
-//
-//	static public String img_path = System.getProperty("user.dir") + "/src/images/"; // Images path
-//
+
 	public Menu() {
 		// Prepare Guided User Interface
 		prepareMenuFrame();
@@ -73,7 +66,7 @@ public class Menu {
 	 * 
 	 */
 	private void showEvent() {
-		// Set header label
+		// Set labels
 		headerLabel.setText("BlackJack");
 		subheaderLabel.setText("Select an option:");
 		
@@ -92,7 +85,6 @@ public class Menu {
 				int returnVal = fc.showOpenDialog(null); 
 	            if (returnVal == JFileChooser.APPROVE_OPTION) {
 	                File file = fc.getSelectedFile();
-	                //This is where a real application would open the file.
 	                System.out.println("Opening: " + file.getName() + ".");
 	                try {
 	                	BufferedReader br = new BufferedReader(new FileReader(file));
