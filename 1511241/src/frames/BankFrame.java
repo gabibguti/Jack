@@ -16,7 +16,6 @@ import cards.Card;
 import components.GameImage;
 import etc.Buy;
 import etc.Chip;
-import main.Main;
 import main.Provider;
 
 @SuppressWarnings("serial")

@@ -25,6 +25,7 @@ public class PlayerFrame extends JFrame {
 	int gap = 4;
 	private int playerNumber;
 	private int nBuys = 0;
+	private boolean insured = false;
 	private JPanel buttonsPanel;
 	private JPanel infoPanel;
 	private JButton hitButton;
@@ -314,5 +315,19 @@ public class PlayerFrame extends JFrame {
 	 */
 	public void setnBuys(int nBuys) {
 		this.nBuys = nBuys;
+	}
+
+	/**
+	 * @return the insured
+	 */
+	public boolean isInsured() {
+		return insured;
+	}
+
+	/**
+	 * @param insured the insured to set
+	 */
+	public void setInsured(boolean insured) {
+		this.insured = insured;
 	}
 }

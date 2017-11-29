@@ -1,4 +1,4 @@
-package etc;
+package frames;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
-import frames.BankFrame;
+import etc.Buy;
 
 public class BuyFrame {
 	private JButton ok;

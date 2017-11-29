@@ -28,10 +28,11 @@ import javax.swing.JPanel;
 import cards.Card;
 import components.GameImagePanel;
 import etc.Buy;
-import etc.BuyFrame;
 import etc.Chip;
 import etc.Turn;
 import frames.BankFrame;
+import frames.BuyFrame;
+import frames.InsuranceFrame;
 import frames.PlayerFrame;
 
 public class Provider {
@@ -228,6 +229,10 @@ public class Provider {
 						JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!");
 						reward = p.getBet();
 					}
+					else if(bankScore == 21 && p.isInsured() == true){
+						JOptionPane.showMessageDialog(p, "I told you the insurance was worth it!");
+						reward = p.getBet();
+					}
 					else { // Player loses
 						JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
 					}
@@ -250,6 +255,14 @@ public class Provider {
 			while(BankFrame.bank.getCards().isEmpty() == false) {	// Remove all cards from the bank
 				BankFrame.bank.getCards().remove(0);
 			}
+			
+			// Draw BankFrame
+			BankFrame.bank.setelements_position(Provider.UpdateBankHand(BankFrame.bank.getCards(),
+																		BankFrame.bank.getChips(),
+																		BankFrame.bank.getBuyCredit(),
+																		BankFrame.bank.getpComponents(),
+																		BankFrame.bank,
+																		Main.bankBackground));
 			
 			BankFrame.bank.setScore(BankFrame.bank.getCards());
 			
@@ -295,6 +308,8 @@ public class Provider {
 				// Update frame
 				p.repaint();
 				
+				p.setInsured(false);
+						
 				Turn.updatePlayerFrameTurn();
 				
 				if(p.isVisible() == false) {
@@ -481,6 +496,17 @@ public class Provider {
 		
 		// Remove flipped card
 		BankFrame.bank.getCards().remove(1);
+		BankFrame.bank.setScore(BankFrame.bank.getCards());
+		
+		if(BankFrame.bank.getScore() >= 10) {
+			for(JFrame frame : Provider.framesList) {
+				if(frame.getClass() == PlayerFrame.class) {
+					PlayerFrame p = (PlayerFrame) frame;
+					
+					new InsuranceFrame(p);
+				}
+			}
+		}
 		
 		// Initial cards
 		BankFrame.bank.setScore(BankFrame.bank.getCards());
