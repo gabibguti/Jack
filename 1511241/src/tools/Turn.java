@@ -1,4 +1,4 @@
-package etc;
+package tools;
 
 import java.awt.Frame;
 import java.util.HashMap;

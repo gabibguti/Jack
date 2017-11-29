@@ -14,9 +14,10 @@ import javax.swing.JPanel;
 
 import cards.Card;
 import components.GameImage;
-import etc.Buy;
-import etc.Chip;
 import main.Provider;
+import tools.Buy;
+import tools.Chip;
+import tools.Score;
 
 @SuppressWarnings("serial")
 public class BankFrame extends JFrame {

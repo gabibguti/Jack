@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
-import etc.Buy;
+import tools.Buy;
 
 public class BuyFrame {
 	private JButton ok;

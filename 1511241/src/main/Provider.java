@@ -27,13 +27,13 @@ import javax.swing.JPanel;
 
 import cards.Card;
 import components.GameImagePanel;
-import etc.Buy;
-import etc.Chip;
-import etc.Turn;
 import frames.BankFrame;
 import frames.BuyFrame;
 import frames.InsuranceFrame;
 import frames.PlayerFrame;
+import tools.Buy;
+import tools.Chip;
+import tools.Turn;
 
 public class Provider {
 	public static int initialAmount = 500;

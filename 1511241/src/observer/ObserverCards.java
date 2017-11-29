@@ -13,10 +13,10 @@ import javax.swing.JPanel;
 
 import cards.Card;
 import components.GameImagePanel;
-import etc.Turn;
 import frames.PlayerFrame;
-import frames.Score;
 import main.Provider;
+import tools.Score;
+import tools.Turn;
 
 public class ObserverCards implements Observer {
 
