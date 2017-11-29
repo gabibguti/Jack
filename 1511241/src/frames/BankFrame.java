@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import cards.Card;
@@ -26,7 +27,7 @@ public class BankFrame extends JFrame {
 	private JButton bSave;
 	private JPanel pComponents;
 	private JPanel pButtons;
-	private ArrayList<Card> cards = new ArrayList<>();
+	private ArrayList<Card> cards = new ArrayList<>();;
 	private Map<Integer, Rectangle> elements_position = new HashMap<Integer, Rectangle>();
 	private Score score = new Score();
 	
@@ -80,30 +81,6 @@ public class BankFrame extends JFrame {
 		// Place buttons under image
 		setLayout(new BorderLayout());
 		
-		// Add first card and flipped card
-		getCards().add(Provider.RemoveCardFromDeck());
-		getCards().add(Card.flippedCard);
-		
-		// Draw BankFrame
-		setelements_position(Provider.UpdateBankHand (getCards(),
-												  getChips(),
-												  getBuyCredit(),
-												  getpComponents(),
-												  BankFrame.this,
-												  bankBackground));
-		
-		// Remove flipped card
-		getCards().remove(1);
-		
-		// Initial cards
-		setScore(getCards());
-		while(getScore() < 17) {						// Draw cards until score >= 17
-			getCards().add(Provider.RemoveCardFromDeck());
-			setScore(getCards());
-		}
-		
-//		enableChipsClickListener();
-		
 		add(getpComponents());	// Add chips and cards to bank frame
 		
 		getpComponents().setOpaque(true);
@@ -115,6 +92,19 @@ public class BankFrame extends JFrame {
         
         // Makes the frame pop up centered
         setLocationRelativeTo(null);
+        
+        // Draw BankFrame
+        Map<Integer, Rectangle> map =Provider.UpdateBankHand(getCards(),
+															 getChips(),
+															 getBuyCredit(),
+															 getpComponents(),
+															 BankFrame.this,
+															 bankBackground); 
+     	setelements_position(map);
+
+        JOptionPane.showMessageDialog(null, "Make your bets.");
+		
+		enableChipsClickListener();
 	}
 	
 	public void enableChipsClickListener () {
