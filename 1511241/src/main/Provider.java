@@ -229,19 +229,19 @@ public class Provider {
 				int playerScore = p.getScore();
 				reward = 0;
 				if(playerScore == bankScore) { // Player and Bank ties
-					JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!");
-//					JOptionPane.showMessageDialog(p, "It's a tie!");
+//					JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!");
+					JOptionPane.showMessageDialog(p, "It's a tie!");
 					reward = p.getBet();
 				}
 				else {
 					if(playerScore == 21 && p.getCards().size() == 2) { // Player wins with Blackjack
-						JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty.");
-//						JOptionPane.showMessageDialog(p, "BlackJack!");
+//						JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty.");
+						JOptionPane.showMessageDialog(p, "BlackJack!");
 						reward = p.getBet()*5/2;
 					}
 					else if(playerScore > bankScore) { // Player wins
-						JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!");
-//						JOptionPane.showMessageDialog(p, "You win!");
+//						JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!");
+						JOptionPane.showMessageDialog(p, "You win!");
 						reward = p.getBet()*2;
 					}
 					else if(bankScore == 21 && p.isInsured() == true && BankFrame.bank.getCards().size() == 2) { // Bank has Blackjack
@@ -249,13 +249,7 @@ public class Provider {
 						reward = p.getBet();
 					}
 					else { // Player loses
-						// FIXME
-						// FIXME
-						// FIXME
-						// FIXME
-						// FIXME
-						JOptionPane.showMessageDialog(p, "You're young, you have your whole life ahead of you, and your anal cavity is still taut yet malleable."); // Warn loser
-//						JOptionPane.showMessageDialog(p, "You lose!");
+						JOptionPane.showMessageDialog(p, "You lose!");
 					}
 				}
 				p.setMoney(p.getMoney() + reward); // Return money reward
