@@ -371,7 +371,8 @@ public class Provider {
 		    int retrival = fc.showSaveDialog(null);
 		    if (retrival == JFileChooser.APPROVE_OPTION) {
 		        try {
-		        	BufferedWriter fw = new BufferedWriter(new FileWriter(fc.getSelectedFile() + ".txt", true));
+		        	FileWriter w = new FileWriter(fc.getSelectedFile() + ".txt", false);
+		        	BufferedWriter fw = new BufferedWriter(w);
 		        	saveGame(fw);
 		            fw.close();
 		        } catch (Exception ex) {
@@ -409,6 +410,7 @@ public class Provider {
 		for(Card c : BankFrame.bank.getCards()) {
 			fileWriter.write(c.toString() + " ");
 		}
+		fileWriter.newLine();
 	}
 
 	public static void newRoundSetEnabled(boolean bool) {
