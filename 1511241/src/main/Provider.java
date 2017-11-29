@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import frames.BankFrame;
 import frames.BuyFrame;
 import frames.InsuranceFrame;
 import frames.PlayerFrame;
+import frames.StartGame;
 import tools.Turn;
 
 public class Provider {
@@ -53,7 +55,7 @@ public class Provider {
 		JFrame mainFrame = (JFrame) b.getTopLevelAncestor();
 		String command = e.getActionCommand();
 
-		Provider.createBank("Bank", Main.bankBackground); // Create Bank
+		Provider.createBank("Bank", StartGame.bankBackground); // Create Bank
 		Provider.framesList.add(BankFrame.bank); // Add Bank to framesList
 		
 		numberOfPlayers = Integer.parseInt(command);
@@ -352,8 +354,11 @@ public class Provider {
 		    int retrival = fc.showSaveDialog(null);
 		    if (retrival == JFileChooser.APPROVE_OPTION) {
 		        try {
-		            FileWriter fw = new FileWriter(fc.getSelectedFile() + ".txt");
+		        	BufferedWriter fw = new BufferedWriter(new FileWriter(fc.getSelectedFile() + ".txt", true));
+//		            FileWriter fw = new FileWriter(fc.getSelectedFile() + ".txt");
 		            fw.write(s);	// TODO: Change s for file containing game info
+		            fw.newLine();
+		            fw.write("ola");
 		            fw.close();
 		        } catch (Exception ex) {
 		            ex.printStackTrace();

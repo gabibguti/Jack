@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import cards.Card;
 import components.GameImagePanel;
 import frames.BankFrame;
-import main.Main;
+import frames.StartGame;
 import tools.Buy;
 import tools.Chip;
 import tools.Score;
@@ -109,7 +109,7 @@ public class ObserverBank implements Observer {
 		images.put(buyCredit.getImage(), imgPoint); // Add chip and defined point to images map
 		
 		// Update bank
-		pComponents.add(new GameImagePanel(images, Main.bankBackground)); // Add cards and chips images to control panel
+		pComponents.add(new GameImagePanel(images, StartGame.bankBackground)); // Add cards and chips images to control panel
 		BankFrame.bank.revalidate(); // Update frame
 		pComponents.setOpaque(false); // Set opaque to see background
 

@@ -1,4 +1,4 @@
-package main;
+package frames;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -14,7 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class Main {
+import main.Provider;
+
+public class StartGame {
 	public static JFrame mainFrame;
 	private JLabel headerLabel;
 	private JLabel subheaderLabel;
@@ -27,7 +29,7 @@ public class Main {
 
 	static public String img_path = System.getProperty("user.dir") + "/src/images/"; // Images path
 
-	public Main() {
+	public StartGame() {
 		// Prepare Guided User Interface
 		prepareMainFrame();
 		// Get images
@@ -36,12 +38,6 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static void main(String[] args) {
-		// Main function
-		Main Main = new Main();
-		Main.showEvent();
 	}
 
 	private void prepareMainFrame() {
@@ -74,6 +70,8 @@ public class Main {
 
 		// Makes the frame pop up centered
 		mainFrame.setLocationRelativeTo(null);
+		
+		showEvent();
 	}
 
 	private void showEvent() {
