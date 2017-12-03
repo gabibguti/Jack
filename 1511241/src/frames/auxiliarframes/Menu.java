@@ -1,4 +1,4 @@
-package main;
+package frames.auxiliarframes;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -14,16 +14,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import frames.StartGame;
+import tools.Provider;
 
 public class Menu {
-	public static JFrame menuFrame;
 	private JLabel headerLabel;
 	private JLabel subheaderLabel;
 	private JPanel mainCP;
 	private JButton newGame;
 	private JButton loadGame;
 
+	public static JFrame menuFrame;
+	
 	public Menu() {
 		// Prepare Guided User Interface
 		prepareMenuFrame();
@@ -93,6 +94,7 @@ public class Menu {
 	                    	// process the line.
 	                    	System.out.println("Line: " + line);
 	                    }
+	                    br.close();
 	                }
 	                catch(Exception e) {
 	                	e.printStackTrace();

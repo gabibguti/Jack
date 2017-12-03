@@ -1,4 +1,4 @@
-package components;
+package graphics;
 
                                                                                                                
 import java.awt.Graphics;

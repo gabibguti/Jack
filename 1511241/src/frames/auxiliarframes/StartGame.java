@@ -1,23 +1,20 @@
-package frames;
+package frames.auxiliarframes;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import main.Provider;
+import facade.Facade;
+import frames.player.Player;
+import tools.Provider;
 
 public class StartGame {
-	public static JFrame mainFrame;
 	private JLabel headerLabel;
 	private JLabel subheaderLabel;
 	private JLabel statusLabel;
@@ -25,19 +22,12 @@ public class StartGame {
 	private JButton[] options;
 	private String[] actions;
 	private int maxPlayers = 4;
-	public static BufferedImage bankBackground = null;
-
-	static public String img_path = System.getProperty("user.dir") + "/src/images/"; // Images path
+	
+	public static JFrame mainFrame;
 
 	public StartGame() {
 		// Prepare Guided User Interface
 		prepareMainFrame();
-		// Get images
-		try {
-			bankBackground = ImageIO.read(new File(img_path + "blackjackBKG.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void prepareMainFrame() {
@@ -112,6 +102,31 @@ public class StartGame {
 		mainFrame.setVisible(true);
 	}
 
+	private class ButtonClickListener implements ActionListener {
+		// Listener function
+		public void actionPerformed(ActionEvent e) {
+//			Provider.numPlayersButtonAction(e);
+			selectNumberOfPlayers(e);
+		}
+	}
+	
+	private void selectNumberOfPlayers(ActionEvent e) { // Initialize Bank and Players
+		int numberOfPlayers = 0;
+		JButton b = (JButton) e.getSource();
+		JFrame mainFrame = (JFrame) b.getTopLevelAncestor();
+		String command = e.getActionCommand();
+
+		numberOfPlayers = Integer.parseInt(command);
+		
+		Player.numPlayers = numberOfPlayers;
+		
+		Facade.startNewGame(numberOfPlayers);
+		
+		// Close Main Frame
+		mainFrame.setVisible(false);
+		mainFrame.dispose();
+	}
+
 	/**
 	 * @return the actions
 	 */
@@ -124,12 +139,5 @@ public class StartGame {
 	 */
 	public void setActions(String[] actions) {
 		this.actions = actions;
-	}
-
-	private class ButtonClickListener implements ActionListener {
-		// Listener function
-		public void actionPerformed(ActionEvent e) {
-			Provider.numPlayersButtonAction(e);
-		}
 	}
 }

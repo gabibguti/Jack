@@ -13,9 +13,8 @@ import java.util.Observer;
 import javax.swing.JPanel;
 
 import cards.Card;
-import components.GameImagePanel;
-import frames.BankFrame;
-import frames.StartGame;
+import frames.bank.Bank;
+import graphics.GameImagePanel;
 import tools.Buy;
 import tools.Chip;
 import tools.Score;
@@ -109,11 +108,11 @@ public class ObserverBank implements Observer {
 		images.put(buyCredit.getImage(), imgPoint); // Add chip and defined point to images map
 		
 		// Update bank
-		pComponents.add(new GameImagePanel(images, StartGame.bankBackground)); // Add cards and chips images to control panel
-		BankFrame.bank.revalidate(); // Update frame
+		pComponents.add(new GameImagePanel(images, Bank.bankBackground)); // Add cards and chips images to control panel
+		Bank.bank.revalidate(); // Update frame
 		pComponents.setOpaque(false); // Set opaque to see background
 
-		BankFrame.bank.setelements_position(images_bounds);
+		Bank.bank.setelements_position(images_bounds);
 		
 		score.UpdateScore(hand);
 		

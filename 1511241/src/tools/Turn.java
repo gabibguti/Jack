@@ -7,8 +7,7 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import frames.PlayerFrame;
-import main.Provider;
+import frames.player.Player;
 
 public class Turn {
 	static int totalPlayers;
@@ -30,7 +29,7 @@ public class Turn {
 		for(player = 1; player < numberOfPlayers + 1; player++)
 			playerTurn.put(player, player);
 		disablePlayer(1);
-		updatePlayerFrameTurn();
+		updatePlayerTurn();
 	}
 
 	public static int nextPlayerTurn() { // Call next player to play
@@ -90,7 +89,7 @@ public class Turn {
 	    System.out.println(playerTurn);
 	}
 	
-	static public void updatePlayerFrameTurn() { // Enable actions for current player playing
+	static public void updatePlayerTurn() { // Enable actions for current player playing
 		int currentPlayer = currentPlayerTurn();
 		for(java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) { // Disable all players
 	     	Integer player = e.getKey();
@@ -103,8 +102,8 @@ public class Turn {
 	
 	static public void disablePlayer(int playerNumber) { // Disable player actions
 		for(Frame frame: Provider.framesList) {
-			if(frame.getClass() == PlayerFrame.class) {
-				PlayerFrame p = (PlayerFrame) frame;
+			if(frame.getClass() == Player.class) {
+				Player p = (Player) frame;
 				if(p.getPlayerNumber() == playerNumber)
 				{
 					for(Object child: p.getButtonsPanel().getComponents())
@@ -120,14 +119,16 @@ public class Turn {
 	static public void enablePlayer(int playerNumber) { // Enable player actions
 //		BankFrame.bank.enableChipsClickListener();
 		for(Frame frame: Provider.framesList) {
-			if(frame.getClass() == PlayerFrame.class) {
-				PlayerFrame p = (PlayerFrame) frame;
+			if(frame.getClass() == Player.class) {
+				Player p = (Player) frame;
 				if(p.getPlayerNumber() == playerNumber) {
-					if(PlayerFrame.bets < PlayerFrame.numPlayers) {
-						p.getBetButton().setEnabled(true);
+					System.out.println(Player.bets);
+					System.out.println(Player.numPlayers);
+					if(Player.bets < Player.numPlayers) {
+						p.configurePlayerActions(false, false, false, false, true);
 					}
 					else {
-						Provider.configurePlayerActions(p, true, true, true, true, false);
+						p.configurePlayerActions(true, true, true, true, false);
 					}
 				}
 			}

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import cards.Card;
-import main.Provider;
+import facade.Facade;
 
 public class ObservableCards extends Observable {
 	private ArrayList<Card> cards;
@@ -17,7 +17,7 @@ public class ObservableCards extends Observable {
     }
 	
 	public void addCard() {
-		cards.add(Provider.RemoveCardFromDeck());
+		cards.add(Facade.removeCardFromDeck());
 	    setChanged();
 	    notifyObservers();
     }

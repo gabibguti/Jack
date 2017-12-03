@@ -12,9 +12,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import cards.Card;
-import components.GameImagePanel;
-import frames.PlayerFrame;
-import main.Provider;
+import frames.player.Player;
+import graphics.GameImagePanel;
+import tools.Provider;
 import tools.Score;
 import tools.Turn;
 
@@ -40,7 +40,7 @@ public class ObserverCards implements Observer {
 		int panelWidth = cardsPanel.getWidth(), panelHeight = cardsPanel.getHeight(), cardWidth, cardHeight, x, y, totalCards;
 		Map<Image, Point> cards_images = new HashMap<Image, Point>();
 		ObservableCards cards = (ObservableCards) observable;
-		PlayerFrame p = (PlayerFrame) cardsPanel.getTopLevelAncestor();
+		Player p = (Player) cardsPanel.getTopLevelAncestor();
 		
 		totalCards = cards.getCards().size();						// Get total cards number
 		if(totalCards > 0) {
