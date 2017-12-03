@@ -1,21 +1,20 @@
-package main;
+package frames.auxiliarframes;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class Main {
-	public static JFrame mainFrame;
+import facade.Facade;
+import frames.player.Player;
+import tools.Provider;
+
+public class StartGame {
 	private JLabel headerLabel;
 	private JLabel subheaderLabel;
 	private JLabel statusLabel;
@@ -23,25 +22,12 @@ public class Main {
 	private JButton[] options;
 	private String[] actions;
 	private int maxPlayers = 4;
-	public static BufferedImage bankBackground = null;
+	
+	public static JFrame mainFrame;
 
-	static public String img_path = System.getProperty("user.dir") + "/src/images/"; // Images path
-
-	public Main() {
+	public StartGame() {
 		// Prepare Guided User Interface
 		prepareMainFrame();
-		// Get images
-		try {
-			bankBackground = ImageIO.read(new File(img_path + "blackjackBKG.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) {
-		// Main function
-		Main Main = new Main();
-		Main.showEvent();
 	}
 
 	private void prepareMainFrame() {
@@ -74,6 +60,8 @@ public class Main {
 
 		// Makes the frame pop up centered
 		mainFrame.setLocationRelativeTo(null);
+		
+		showEvent();
 	}
 
 	private void showEvent() {
@@ -114,6 +102,31 @@ public class Main {
 		mainFrame.setVisible(true);
 	}
 
+	private class ButtonClickListener implements ActionListener {
+		// Listener function
+		public void actionPerformed(ActionEvent e) {
+//			Provider.numPlayersButtonAction(e);
+			selectNumberOfPlayers(e);
+		}
+	}
+	
+	private void selectNumberOfPlayers(ActionEvent e) { // Initialize Bank and Players
+		int numberOfPlayers = 0;
+		JButton b = (JButton) e.getSource();
+		JFrame mainFrame = (JFrame) b.getTopLevelAncestor();
+		String command = e.getActionCommand();
+
+		numberOfPlayers = Integer.parseInt(command);
+		
+		Player.numPlayers = numberOfPlayers;
+		
+		Facade.startNewGame(numberOfPlayers);
+		
+		// Close Main Frame
+		mainFrame.setVisible(false);
+		mainFrame.dispose();
+	}
+
 	/**
 	 * @return the actions
 	 */
@@ -126,12 +139,5 @@ public class Main {
 	 */
 	public void setActions(String[] actions) {
 		this.actions = actions;
-	}
-
-	private class ButtonClickListener implements ActionListener {
-		// Listener function
-		public void actionPerformed(ActionEvent e) {
-			Provider.numPlayersButtonAction(e);
-		}
 	}
 }

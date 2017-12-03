@@ -1,4 +1,4 @@
-package frames;
+package frames.auxiliarframes;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
+import frames.bank.Bank;
 import tools.Buy;
 
 public class BuyFrame {
@@ -33,7 +34,7 @@ public class BuyFrame {
 		
 		WindowAdapter windowAdapter = new WindowAdapter() { // Exit on close window
 			public void windowClosing(WindowEvent windowEvent) {
-				BankFrame.bank.enableChipsClickListener();
+				Bank.bank.enableChipsClickListener();
 			}
 		};
 		
@@ -65,7 +66,7 @@ public class BuyFrame {
 				else {
 	        		Buy.getCredit(value);
 					buyFrame.dispose();
-					BankFrame.bank.enableChipsClickListener();
+					Bank.bank.enableChipsClickListener();
 				}
 			}
 		});

@@ -12,9 +12,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import cards.Card;
-import components.GameImagePanel;
-import frames.PlayerFrame;
-import main.Provider;
+import frames.player.Player;
+import graphics.GameImagePanel;
+import tools.Provider;
 import tools.Score;
 import tools.Turn;
 
@@ -40,7 +40,7 @@ public class ObserverCards implements Observer {
 		int panelWidth = cardsPanel.getWidth(), panelHeight = cardsPanel.getHeight(), cardWidth, cardHeight, x, y, totalCards;
 		Map<Image, Point> cards_images = new HashMap<Image, Point>();
 		ObservableCards cards = (ObservableCards) observable;
-		PlayerFrame p = (PlayerFrame) cardsPanel.getTopLevelAncestor();
+		Player p = (Player) cardsPanel.getTopLevelAncestor();
 		
 		totalCards = cards.getCards().size();						// Get total cards number
 		if(totalCards > 0) {
@@ -58,7 +58,8 @@ public class ObserverCards implements Observer {
 			
 			score.UpdateScore(cards.getCards());						// Set score
 			if(score.getScore() < 10) {
-				playerScore.setText("Score " + score.getScore() + " (TINY RICK!!!)");			// Set text in Score label
+//				playerScore.setText("Score " + score.getScore() + " (TINY RICK!!!)");			// Set text in Score label
+				playerScore.setText("Score " + score.getScore());			// Set text in Score label
 			}
 			else {
 				playerScore.setText("Score " + score.getScore());		// Set text in Score label
@@ -74,7 +75,8 @@ public class ObserverCards implements Observer {
 		p.revalidate();				// Revalidate PlayerFrame
 		
 		if(score.getScore() > 21) { // Treat when player gets busted
-			JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
+//			JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
+			JOptionPane.showMessageDialog(p, "Busted."); // Warn busted player
 			p.setVisible(false); // "Close" player frame	
 			
 			// Update player turn

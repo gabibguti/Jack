@@ -11,10 +11,15 @@ public enum Rank {
     }
     
     public String toString() {
-    	if(this.points < 10)
+    	if(this.points == 0) {
+    		return "flipped";
+    	}
+    	else if(this.points < 10) {
     		return String.valueOf(this.points);
-    	else if(this.points == 11)
+    	}
+    	else if(this.points == 11) {
     		return "a";
+    	}
     	else {
     		switch(this){
     		case TEN:

@@ -7,8 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-import frames.PlayerFrame;
-import main.Provider;
+import frames.player.Player;
 
 public class Buy {
 	private static int maxCredit = Provider.initialAmount / 2;
@@ -28,7 +27,7 @@ public class Buy {
 
 	public static void getCredit(int wantedCredit) {
 		int player = Turn.currentPlayerTurn();
-		PlayerFrame p = (PlayerFrame) Provider.framesList.get(player);
+		Player p = (Player) Provider.framesList.get(player);
 		if(p.getnBuys() < 2) {
 			p.setMoney(p.getMoney() + wantedCredit);
 			p.setnBuys(p.getnBuys() + 1);

@@ -1,28 +1,36 @@
-package frames;
+package frames.player;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import cards.Card;
-import main.Provider;
+import facade.Facade;
+import frames.bank.Bank;
 import observer.ObservableCards;
 import observer.ObservableMoneyBet;
 import observer.ObserverCards;
 import observer.ObserverMoneyBet;
+import tools.Provider;
+import tools.Turn;
 
 @SuppressWarnings("serial")
-public class PlayerFrame extends JFrame {
+public class Player extends JFrame {
 
-	int centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
-	int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
-	int gap = 4;
+	private int centerX = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().x;
+	private int centerY = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint().y;
+	private int gap = 4;
 	private int playerNumber;
 	private int nBuys = 0;
 	private boolean insured = false;
@@ -33,20 +41,21 @@ public class PlayerFrame extends JFrame {
 	private JButton doubleButton;
 	private JButton surrenderButton;
 	private JButton betButton;
-	public ObservableMoneyBet observableMoneyBet;
-	public ObserverMoneyBet observerMoneyBet;
-	public ObservableCards observableCards;
-	public ObserverCards observerCards;
-		
+	private ObservableMoneyBet observableMoneyBet;
+	private ObserverMoneyBet observerMoneyBet;
+	private ObservableCards observableCards;
+	private ObserverCards observerCards;
+	
 	public static int activePlayers = 0;
 	public static int bets = 0;
 	public static int numPlayers = 0;
 
-	public PlayerFrame(String playerNumber, Container cont) {
-		super("Player " + playerNumber);
-		this.setPlayerNumber(Integer.parseInt(playerNumber));
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.addWindowListener(Provider.playerFrameClosing);
+	public Player(String playerNumber, Container cont) {
+		super("Player " + playerNumber); // Frame Name
+		setSize(500, 350);
+		setLayout(new BorderLayout());
+		
+		this.initialConfigurations(playerNumber);
 		
 		// Add money and bet observer
 		observableMoneyBet = new ObservableMoneyBet(Provider.initialAmount); // Initial bet = 0. Initial money = 500
@@ -59,8 +68,6 @@ public class PlayerFrame extends JFrame {
 	    observableCards.addObserver(observerCards);
 		
 		activePlayers++; // Add active player
-		setSize(500, 350);
-		setLayout(new BorderLayout());
 		
 		// Create Panel
 		setButtonsPanel(new JPanel());
@@ -78,19 +85,19 @@ public class PlayerFrame extends JFrame {
 		setBetButton(new JButton("Bet"));
 		
 		// hitButton listener
-		getHitButton().addActionListener(Provider.hitButtonListener);
+		getHitButton().addActionListener(hitButtonListener);
 
 		// standButton listener
-		getStandButton().addActionListener(Provider.standButtonListener);
+		getStandButton().addActionListener(standButtonListener);
 		
 		// doubleButton listener
-		getDoubleButton().addActionListener(Provider.doubleButtonListener);
+		getDoubleButton().addActionListener(doubleButtonListener);
 		
 		// surrenderButton listener
-		getSurrenderButton().addActionListener(Provider.surrenderButtonListener);
+		getSurrenderButton().addActionListener(surrenderButtonListener);
 		
 		// betButton listener
-		getBetButton().addActionListener(Provider.betButtonListener);
+		getBetButton().addActionListener(betButtonListener);
 		
 		// Add button to buttons panel
 		getButtonsPanel().add(getHitButton());
@@ -129,10 +136,113 @@ public class PlayerFrame extends JFrame {
 		default:
 			setLocationRelativeTo(null);
 			
-			Provider.configurePlayerActions(this, false, false, false, false, true);
+			this.configurePlayerActions(false, false, false, false, true);
 		}
 	}
+	
+	private void initialConfigurations(String playerNumber) {
+		this.setPlayerNumber(Integer.parseInt(playerNumber));
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(playerFrameClosing);
+	}
 
+	public static WindowAdapter playerFrameClosing = new WindowAdapter() { // Remove Player from game on closing window
+		@Override
+		public void windowClosing(WindowEvent windowEvent) {
+			Facade.closePlayer((Player) windowEvent.getSource());
+		}
+	};
+	
+	public static ActionListener hitButtonListener = new ActionListener() { // Player draws card
+		public void actionPerformed(ActionEvent actionEvent) {
+			Player p = Provider.currentPlayer();
+			
+			// Can't double or surrender anymore
+			p.configurePlayerActions(true, true, false, false, false);
+			
+			p.addCard();
+		}
+	};
+	
+	public static ActionListener standButtonListener = new ActionListener() { // Player stands
+		public void actionPerformed(ActionEvent actionEvent) {
+			Player p = Provider.currentPlayer();
+			
+			Facade.stand(p); // Stand
+		}
+	};
+	
+	public static ActionListener doubleButtonListener = new ActionListener() { // Player doubles down
+		public void actionPerformed(ActionEvent actionEvent) {
+			Player p = Provider.currentPlayer();
+			
+			if(p.getMoney() < p.getBet()) {
+				JOptionPane.showMessageDialog(p, "You don't have enough money to double your bet");
+			}
+			else {
+				// Double bet
+				p.setMoney(p.getMoney() - p.getBet());
+				p.setBet(p.getBet()*2);
+				p.addCard();
+				Facade.stand(p); // Stand
+			}
+		}
+	};
+
+	public static ActionListener surrenderButtonListener = new ActionListener() { // Player surrenders
+		public void actionPerformed(ActionEvent actionEvent) {
+			Player p = Provider.currentPlayer();
+			
+			p.configurePlayerActions(false, false, false, false, false);
+			
+			// Receives half bet back
+			p.setMoney(p.getMoney() + p.getBet()/2);
+			p.setBet(p.getBet()/2);
+						
+			p.setVisible(false); // "Close" player frame
+			
+			Turn.nextPlayerTurn();
+			
+			Provider.updateActivePlayers();
+		}
+	};
+
+	public static ActionListener betButtonListener = new ActionListener() { // Player bets
+		public void actionPerformed(ActionEvent actionEvent) {
+			Player p = Provider.currentPlayer();
+			
+			Bank.bank.disableChipsClickListener();
+			Bank.bank.enableChipsClickListener();
+			
+			p.removeWindowListener(Player.playerFrameClosing);
+			
+			// Enable player actions after player bets
+			if(p.getBet() != 0) {
+				p.configurePlayerActions(false, false, false, false, false); // Disable bet
+				
+				Player.bets++;
+				
+				Turn.nextPlayerTurn();
+				Turn.updatePlayerTurn();
+				
+				if(Player.bets == Player.numPlayers) {
+					Facade.deliverCards();
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(p, "You have to bet some money!"); // Warn bet = 0
+			}
+		}
+	};
+
+	public void configurePlayerActions(boolean hit, boolean stand, boolean doubleDown, boolean surrender, boolean bet) {
+		getHitButton().setEnabled(hit);
+		getStandButton().setEnabled(stand);
+		getDoubleButton().setEnabled(doubleDown);
+		getSurrenderButton().setEnabled(surrender);
+		getBetButton().setEnabled(bet);
+	}
+	
 	/**
 	 * @return the bet
 	 */
