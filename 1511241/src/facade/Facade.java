@@ -51,7 +51,6 @@ public class Facade {
 
 	public static void bet(int chip) {
 		Player p = Provider.currentPlayer();
-		System.out.println(p.getPlayerNumber());
 		if(p.getMoney() - chip >= 0) { // Check if player still has money to bet
 			p.setBet(p.getBet() + chip);
 			p.setMoney(p.getMoney() - chip); // Update money left for player

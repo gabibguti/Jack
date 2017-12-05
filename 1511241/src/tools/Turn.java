@@ -45,7 +45,6 @@ public class Turn {
         		nextPlayer = player;
         	playerTurn.replace(player, turn - 1);
        }
-	   System.out.println(playerTurn);
        return nextPlayer;
 	}
 
@@ -59,7 +58,6 @@ public class Turn {
 	        	if(turn == 1)
 	        		currentPlayer = player;
 	       }
-	       System.out.println(playerTurn);
 	       return currentPlayer;
 	}
 
@@ -86,7 +84,6 @@ public class Turn {
 	    		playerTurn.replace(player, turn - 1);
 	    	}
 	    }
-	    System.out.println(playerTurn);
 	}
 	
 	static public void updatePlayerTurn() { // Enable actions for current player playing
@@ -122,8 +119,6 @@ public class Turn {
 			if(frame.getClass() == Player.class) {
 				Player p = (Player) frame;
 				if(p.getPlayerNumber() == playerNumber) {
-					System.out.println(Player.bets);
-					System.out.println(Player.numPlayers);
 					if(Player.bets < Player.numPlayers) {
 						p.configurePlayerActions(false, false, false, false, true);
 					}
