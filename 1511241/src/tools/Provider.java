@@ -123,6 +123,9 @@ public class Provider {
 						pay -= p.getBet();
 						betsWon += p.getBet();
 					}
+					else if(Bank.bank.getScore() > p.getScore()) {
+						pay -= p.getBet();
+					}
 				}
 			}
 		} while(pay > betsWon);
