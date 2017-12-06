@@ -197,7 +197,7 @@ public class Player extends JFrame {
 			
 			// Receives half bet back
 			p.setMoney(p.getMoney() + p.getBet()/2);
-			p.setBet(p.getBet()/2);
+			p.setBet(0);
 						
 			p.setVisible(false); // "Close" player frame
 			

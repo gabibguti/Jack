@@ -98,13 +98,34 @@ public class Provider {
 	public static void notifyWinnersAndLosers() { // Check winning/losing/tie conditions and notify players
 		int bankScore;
 		int reward;
+		int betsWon = 0;
+		int pay;
+		int totalBet = 0;
+		
+		for(JFrame frame : Provider.framesList) {
+			if(frame.getClass() == Player.class) {
+				Player p = (Player) frame;
+				totalBet += p.getBet();
+			}
+		}
 		
 		// Remove flipped card
 		Bank.bank.removeFlippedCard();
 		
-		while(Bank.bank.getScore() < 17) {
+		do {
+			betsWon = 0;
+			pay = totalBet;
 			Bank.bank.addCard();
-		}
+			for(JFrame frame : Provider.framesList) {
+				if(frame.getClass() == Player.class) {
+					Player p = (Player) frame;
+					if(Bank.bank.getScore() > p.getScore() || p.getScore() > 21) {
+						pay -= p.getBet();
+						betsWon += p.getBet();
+					}
+				}
+			}
+		} while(pay > betsWon);
 		
 		bankScore = Bank.bank.getScore();
 		
