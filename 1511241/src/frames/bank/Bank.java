@@ -193,6 +193,10 @@ public class Bank extends JFrame {
 		observableBank.addCard();
 	}
 	
+	public void addCard(String s) {
+		observableBank.addCard(s);
+	}
+	
 	public void addFlippedCard() {
 		observableBank.addFlippedCard();
 	}

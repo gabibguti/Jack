@@ -48,14 +48,12 @@ public class Provider {
 			}
 		}
 	}
-	// BANKFRAME
 	
 	public static WindowAdapter windowAdapter = new WindowAdapter() { // Exit on close window
 		public void windowClosing(WindowEvent windowEvent) {
 			System.exit(0);
 		}
 	};
-			// UTILITY
 
 	static public void checkInsurance() { // Check if insurance offer is available
 		if(Bank.bank.getScore() == 11) {
@@ -171,7 +169,6 @@ public class Provider {
 		}
 	}
 	
-	// PLAYERFRAME
 			
 	public static void removeBrokenPlayers() { // Removes players without money
 		Iterator<JFrame> i = Provider.framesList.iterator();
@@ -187,10 +184,6 @@ public class Provider {
 			}
 		}
 	}
-	
-	
-
-	
 
 	public static void saveGame(BufferedWriter fileWriter) throws Exception { // Writes a text file with game info
 		fileWriter.write(Integer.toString(Player.numPlayers));

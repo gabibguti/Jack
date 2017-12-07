@@ -282,6 +282,10 @@ public class Player extends JFrame {
 		observableCards.addCard();
 	}
 	
+	public void addCard(String s) {
+		observableCards.addCard(s);
+	}
+	
 	public void clearCards() {
 		observableCards.clearCards();
 	}

@@ -14,13 +14,17 @@ public class Turn {
 	public static Map<Integer, Integer> playerTurn = new HashMap<Integer, Integer>();
 	
 	public static String mapTrack() {
-		String line;
-		
-		line = playerTurn.toString();
-		
-		System.out.println(playerTurn);
-		
-		return line;
+		return playerTurn.toString();
+	}
+	
+	public static void setTurn(Map<Integer, Integer> turns) {
+//		playerTurn = turns;
+		for (java.util.Map.Entry<Integer, Integer> e : turns.entrySet()) {
+			Integer player = e.getKey();
+        	Integer turn = e.getValue();
+			playerTurn.put(player, turn);
+		}
+		updatePlayerTurn();
 	}
 	
 	public static void firstTurn(int numberOfPlayers) { // Start first turn starting with player 1
@@ -88,6 +92,7 @@ public class Turn {
 	
 	static public void updatePlayerTurn() { // Enable actions for current player playing
 		int currentPlayer = currentPlayerTurn();
+		System.out.println(currentPlayer);
 		for(java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) { // Disable all players
 	     	Integer player = e.getKey();
 	     	if(player != currentPlayer) {
@@ -114,7 +119,6 @@ public class Turn {
 	}
 
 	static public void enablePlayer(int playerNumber) { // Enable player actions
-//		BankFrame.bank.enableChipsClickListener();
 		for(Frame frame: Provider.framesList) {
 			if(frame.getClass() == Player.class) {
 				Player p = (Player) frame;

@@ -1,5 +1,7 @@
 package facade;
 
+import java.util.Map;
+
 import javax.swing.JOptionPane;
 
 import cards.Card;
@@ -11,6 +13,22 @@ import tools.Turn;
 public class Facade {
 
 	public static void startNewGame (int numberOfPlayers) {
+		createPlayersAndBank (numberOfPlayers);
+		
+		// Initialize Turns
+		Turn.firstTurn(numberOfPlayers);
+			
+	}
+	
+	public static void restartGame (int numberOfPlayers, Map<Integer, Integer> turns) {
+		createPlayersAndBank (numberOfPlayers);
+		
+		// Initialize Turns
+		Turn.setTurn(turns);
+			
+	}
+
+	public static void createPlayersAndBank (int numberOfPlayers) {
 		int player;
 		
 		// Set number of players
@@ -23,13 +41,9 @@ public class Facade {
 		// Create Players
 		for (player = 0; player < numberOfPlayers; player++) {
 			Provider.framesList.add(new Player(String.valueOf(player + 1), Bank.bank)); // Create Player Frame and add to framesList
-		}
-		
-		// Initialize Turns
-		Turn.firstTurn(numberOfPlayers);
-			
+		}	
 	}
-
+	
 	public static void closePlayer(Player p) {
 		Provider.framesList.remove(p); // Remove PlayerFrame from framesList
 		Turn.removePlayer(p.getPlayerNumber());
