@@ -3,9 +3,12 @@ package tools;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -217,7 +220,75 @@ public class Provider {
 		fileWriter.newLine();
 	}
 	
-	
+	public static void loadGame(BufferedReader fileReader) throws Exception {
+    	int numplayers = Integer.valueOf(fileReader.readLine());
+    	
+    	// Getting playerTurn
+    	String turnString = fileReader.readLine();
+    	turnString = turnString.substring(1, turnString.length()-1);           //remove curly brackets
+    	String[] strings = turnString.split(",");              //split the string to creat key-value pairs
+    	Map<Integer, Integer> map = new HashMap<>();   
+
+    	for(String pair : strings){                        //iterate over the pairs
+    	    String[] entry = pair.split("=");                   //split the pairs to get key and value 
+    	    map.put(Integer.valueOf(entry[0].trim()), Integer.valueOf(entry[1].trim()));          //add them to the hashmap and trim whitespaces
+    	}
+    	
+    	Facade.restartGame(numplayers, map);
+    	
+    	// Get number of active players
+    	String activePlayersString = fileReader.readLine();
+    	
+    	// Setting players info
+    	String line;
+    	for(JFrame frame : Provider.framesList){
+    		if(frame.getClass() == Player.class){
+    			Player p = (Player) frame;
+    			
+    			// Set bet, money and insurance
+    			line = fileReader.readLine();
+        		String[] playerStrings = line.split(" ");
+        		p.setMoney(Integer.valueOf(playerStrings[1]));
+        		p.setBet(Integer.valueOf(playerStrings[2]));
+        		if(Integer.valueOf(playerStrings[2]) != 0) {
+        			Player.bets++;
+        		}
+        		p.setInsured(Boolean.valueOf(playerStrings[3]));
+        		
+        		// Set cards
+        		line = fileReader.readLine();
+        		if (!line.isEmpty()) {
+            		playerStrings = line.split(" ");
+            		for(String s : playerStrings){
+            			p.addCard(s);
+            		}
+        		}
+    		}
+    	}
+    	
+    	// Reset turns, activePlayers and check end of round
+    	Player.activePlayers = Integer.valueOf(activePlayersString);
+    	Turn.setTurn(map);
+    	Provider.checkRound();
+    	
+    	// Setting bank info
+    	line = fileReader.readLine(); // BANK
+    	line = fileReader.readLine(); // New round enabled?
+    	Bank.bank.getbNewRound().setEnabled(Boolean.valueOf(line));
+    	
+    	line = fileReader.readLine(); // Cards
+    	if (!line.isEmpty()) {
+        	String[] bankCards = line.split(" ");
+    		for(String s : bankCards){
+    			if(s.equals("flipped")){
+    				Bank.bank.addFlippedCard();
+    			}
+    			else{
+    				Bank.bank.addCard(s);
+    			}
+    		}
+    	}
+	}
 	
 	static public void updateActivePlayers() { // Check remaining players on turn and handle case for new round
 		Player.activePlayers--;
