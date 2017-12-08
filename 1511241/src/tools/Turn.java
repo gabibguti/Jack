@@ -23,7 +23,7 @@ public class Turn {
         	Integer turn = e.getValue();
 			playerTurn.put(player, turn);
 		}
-		updatePlayerTurn();
+		Turn.updatePlayerTurn();
 	}
 	
 	public static void firstTurn(int numberOfPlayers) { // Start first turn starting with player 1
@@ -93,11 +93,11 @@ public class Turn {
 		int currentPlayer = currentPlayerTurn();
 		for(java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) { // Disable all players
 	     	Integer player = e.getKey();
-	     	if(player != currentPlayer) {
-	     		disablePlayer(player);
-	     	}
+	     	disablePlayer(player);
 		}
-		enablePlayer(currentPlayer); // Enable current player
+		if(Player.activePlayers != 0) {
+			enablePlayer(currentPlayer); // Enable current player	
+		}
 	}
 	
 	static public void disablePlayer(int playerNumber) { // Disable player actions

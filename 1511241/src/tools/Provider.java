@@ -202,7 +202,9 @@ public class Provider {
 				fileWriter.write("P" + p.getPlayerNumber() + " ");
 				fileWriter.write(p.getMoney() + " ");
 				fileWriter.write(p.getBet() + " ");
-				fileWriter.write(Boolean.toString(p.isInsured()));
+				fileWriter.write(Boolean.toString(p.isInsured()) + " ");
+				fileWriter.write(Integer.toString(p.getnBuys()));
+				
 				fileWriter.newLine();
 				for(Card c : p.getCards()) {
 					fileWriter.write(c.toString() + " ");
@@ -254,6 +256,7 @@ public class Provider {
         			Player.bets++;
         		}
         		p.setInsured(Boolean.valueOf(playerStrings[3]));
+        		p.setnBuys(Integer.valueOf(playerStrings[4]));
         		
         		// Set cards
         		line = fileReader.readLine();
@@ -265,11 +268,6 @@ public class Provider {
         		}
     		}
     	}
-    	
-    	// Reset turns, activePlayers and check end of round
-    	Player.activePlayers = Integer.valueOf(activePlayersString);
-    	Turn.setTurn(map);
-    	Provider.checkRound();
     	
     	// Setting bank info
     	line = fileReader.readLine(); // BANK
@@ -289,6 +287,12 @@ public class Provider {
     		}
     	}
     	
+    	// Reset turns, activePlayers and check end of round
+    	Player.activePlayers = Integer.valueOf(activePlayersString);
+    	System.out.println("active" + Player.activePlayers);
+    	Turn.setTurn(map);
+    	System.out.println("map turn" + map);
+    	
     	if(Player.bets != Player.numPlayers) {
     		JOptionPane.showMessageDialog(null, "Make your bets.");
     	}
@@ -296,21 +300,17 @@ public class Provider {
 	
 	static public void updateActivePlayers() { // Check remaining players on turn and handle case for new round
 		Player.activePlayers--;
-		if (Player.activePlayers == 0) { // No more players on this turn
-			Bank.bank.getbNewRound().setEnabled(true);
-			Player.activePlayers = Player.numPlayers;
-			Provider.notifyWinnersAndLosers();
-		}
-		else { // Still have players waiting to play
-			Turn.updatePlayerTurn();
-		}
+		checkRound();
 	}
 	
 	static public void checkRound () {
 		if (Player.activePlayers == 0) { // No more players on this turn
+	    	System.out.println("new turn");
 			Bank.bank.getbNewRound().setEnabled(true);
-			Player.activePlayers = Player.numPlayers;
 			Provider.notifyWinnersAndLosers();
+		}
+		else { // There are players waiting to play
+			Turn.updatePlayerTurn();
 		}
 	}
 	

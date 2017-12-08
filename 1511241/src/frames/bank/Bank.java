@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import cards.Card;
 import facade.Facade;
 import frames.auxiliarframes.BuyFrame;
+import frames.player.Player;
 import graphics.GameImage;
 import observer.ObservableCards;
 import observer.ObserverBank;
@@ -116,6 +117,8 @@ public class Bank extends JFrame {
 	
 	private static ActionListener newRoundListener = new ActionListener() { // Starts new round
 		public void actionPerformed(ActionEvent actionEvent) {
+			Player.activePlayers = Player.numPlayers;
+			
 			Bank.bank.getbNewRound().setEnabled(false);
 
 			Bank.bank.clearCards();
