@@ -17,8 +17,7 @@ public class Turn {
 		return playerTurn.toString();
 	}
 	
-	public static void setTurn(Map<Integer, Integer> turns) {
-//		playerTurn = turns;
+	public static void setTurn(Map<Integer, Integer> turns) { // Sets the turns
 		for (java.util.Map.Entry<Integer, Integer> e : turns.entrySet()) {
 			Integer player = e.getKey();
         	Integer turn = e.getValue();
@@ -92,7 +91,6 @@ public class Turn {
 	
 	static public void updatePlayerTurn() { // Enable actions for current player playing
 		int currentPlayer = currentPlayerTurn();
-		System.out.println(currentPlayer);
 		for(java.util.Map.Entry<Integer, Integer> e : playerTurn.entrySet()) { // Disable all players
 	     	Integer player = e.getKey();
 	     	if(player != currentPlayer) {

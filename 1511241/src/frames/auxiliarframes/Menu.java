@@ -96,8 +96,6 @@ public class Menu {
 	                try {
 	                	BufferedReader br = new BufferedReader(new FileReader(file));
 	                	int numplayers = Integer.valueOf(br.readLine());
-	                	boolean betting = false;
-	                	boolean busted = true;
 	                	
 	                	// Getting playerTurn
 	                	String turnString = br.readLine();
@@ -111,7 +109,10 @@ public class Menu {
 	                	}
 	                	
 	                	Facade.restartGame(numplayers, map);
-	                    
+	                	
+	                	// Get number of active players
+	                	String activePlayersString = br.readLine();
+	                	
 	                	// Setting players info
 	                	String line;
 	                	for(JFrame frame : Provider.framesList){
@@ -123,10 +124,7 @@ public class Menu {
 		                		String[] playerStrings = line.split(" ");
 		                		p.setMoney(Integer.valueOf(playerStrings[1]));
 		                		p.setBet(Integer.valueOf(playerStrings[2]));
-		                		if(Integer.valueOf(playerStrings[2]) == 0) {
-		                			betting = true;
-		                		}
-		                		else {
+		                		if(Integer.valueOf(playerStrings[2]) != 0) {
 		                			Player.bets++;
 		                		}
 		                		p.setInsured(Boolean.valueOf(playerStrings[3]));
@@ -142,8 +140,10 @@ public class Menu {
 	                		}
 	                	}
 	                	
-	                	System.out.println(map);
+	                	// Reset turns, activePlayers and check end of round
+	                	Player.activePlayers = Integer.valueOf(activePlayersString);
 	                	Turn.setTurn(map);
+	                	Provider.checkRound();
 	                	
 	                	// Setting bank info
 	                	line = br.readLine(); // BANK

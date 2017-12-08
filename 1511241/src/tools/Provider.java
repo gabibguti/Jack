@@ -190,6 +190,8 @@ public class Provider {
 		fileWriter.newLine();
 		fileWriter.write(Turn.mapTrack());
 		fileWriter.newLine();
+		fileWriter.write(Integer.toString(Player.activePlayers));
+		fileWriter.newLine();
 		for(JFrame frame : Provider.framesList) {
 			if(frame.getClass() == Player.class) {
 				Player p = (Player) frame;
@@ -229,5 +231,12 @@ public class Provider {
 		}
 	}
 	
+	static public void checkRound () {
+		if (Player.activePlayers == 0) { // No more players on this turn
+			Bank.bank.getbNewRound().setEnabled(true);
+			Player.activePlayers = Player.numPlayers;
+			Provider.notifyWinnersAndLosers();
+		}
+	}
 	
 }
