@@ -20,13 +20,11 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import cards.Card;
 import facade.Facade;
 import frames.auxiliarframes.BuyFrame;
-import frames.player.Player;
 import graphics.GameImage;
 import observer.ObservableCards;
 import observer.ObserverBank;

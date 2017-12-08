@@ -288,6 +288,10 @@ public class Provider {
     			}
     		}
     	}
+    	
+    	if(Player.bets != Player.numPlayers) {
+    		JOptionPane.showMessageDialog(null, "Make your bets.");
+    	}
 	}
 	
 	static public void updateActivePlayers() { // Check remaining players on turn and handle case for new round
