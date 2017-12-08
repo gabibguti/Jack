@@ -7,8 +7,6 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -17,11 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import facade.Facade;
-import frames.bank.Bank;
-import frames.player.Player;
 import tools.Provider;
-import tools.Turn;
 
 public class Menu {
 	private JLabel headerLabel;
@@ -96,79 +90,8 @@ public class Menu {
 	                System.out.println("Opening: " + file.getName() + ".");
 	                try {
 	                	BufferedReader br = new BufferedReader(new FileReader(file));
-	                	int numplayers = Integer.valueOf(br.readLine());
-	                	
-	                	// Getting playerTurn
-	                	String turnString = br.readLine();
-	                	turnString = turnString.substring(1, turnString.length()-1);           //remove curly brackets
-	                	String[] strings = turnString.split(",");              //split the string to creat key-value pairs
-	                	Map<Integer, Integer> map = new HashMap<>();   
-
-	                	for(String pair : strings){                        //iterate over the pairs
-	                	    String[] entry = pair.split("=");                   //split the pairs to get key and value 
-	                	    map.put(Integer.valueOf(entry[0].trim()), Integer.valueOf(entry[1].trim()));          //add them to the hashmap and trim whitespaces
-	                	}
-	                	
-	                	Facade.restartGame(numplayers, map);
-	                	
-	                	// Get number of active players
-	                	String activePlayersString = br.readLine();
-	                	
-	                	// Setting players info
-	                	String line;
-	                	for(JFrame frame : Provider.framesList){
-	                		if(frame.getClass() == Player.class){
-	                			Player p = (Player) frame;
-	                			
-	                			// Set bet, money and insurance
-	                			line = br.readLine();
-		                		String[] playerStrings = line.split(" ");
-		                		p.setMoney(Integer.valueOf(playerStrings[1]));
-		                		p.setBet(Integer.valueOf(playerStrings[2]));
-		                		if(Integer.valueOf(playerStrings[2]) != 0) {
-		                			Player.bets++;
-		                		}
-		                		p.setInsured(Boolean.valueOf(playerStrings[3]));
-		                		
-		                		// Set cards
-		                		line = br.readLine();
-		                		if (!line.isEmpty()) {
-			                		playerStrings = line.split(" ");
-			                		for(String s : playerStrings){
-			                			p.addCard(s);
-			                		}
-		                		}
-	                		}
-	                	}
-	                	
-	                	// Reset turns, activePlayers and check end of round
-	                	Player.activePlayers = Integer.valueOf(activePlayersString);
-	                	Turn.setTurn(map);
-	                	Provider.checkRound();
-	                	
-	                	// Setting bank info
-	                	line = br.readLine(); // BANK
-	                	line = br.readLine(); // New round enabled?
-	                	Bank.bank.getbNewRound().setEnabled(Boolean.valueOf(line));
-	                	
-	                	line = br.readLine(); // Cards
-	                	if (!line.isEmpty()) {
-		                	String[] bankCards = line.split(" ");
-	                		for(String s : bankCards){
-	                			if(s.equals("flipped")){
-	                				Bank.bank.addFlippedCard();
-	                			}
-	                			else{
-	                				Bank.bank.addCard(s);
-	                			}
-	                		}
-	                	}
-	                	
-	                	if(Player.bets != Player.numPlayers) {
-	                		JOptionPane.showMessageDialog(null, "Make your bets.");
-	                	}
-	                	
-	                    br.close();
+	                	Provider.loadGame(br);
+	                	br.close();
 	                }
 	                catch(Exception e) {
 	                	e.printStackTrace();
