@@ -17,6 +17,8 @@ public class Facade {
 		
 		// Initialize Turns
 		Turn.firstTurn(numberOfPlayers);
+		
+		JOptionPane.showMessageDialog(null, "Make your bets.");
 			
 	}
 	

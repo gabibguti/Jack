@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import facade.Facade;
@@ -161,6 +162,10 @@ public class Menu {
 	                				Bank.bank.addCard(s);
 	                			}
 	                		}
+	                	}
+	                	
+	                	if(Player.bets != Player.numPlayers) {
+	                		JOptionPane.showMessageDialog(null, "Make your bets.");
 	                	}
 	                	
 	                    br.close();

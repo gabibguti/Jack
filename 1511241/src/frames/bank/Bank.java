@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import cards.Card;
 import facade.Facade;
 import frames.auxiliarframes.BuyFrame;
+import frames.player.Player;
 import graphics.GameImage;
 import observer.ObservableCards;
 import observer.ObserverBank;
@@ -138,8 +139,6 @@ public class Bank extends JFrame {
 		Bank.bank = new Bank(name);
 		
 		Bank.bank.observerBank.update(Bank.bank.observableBank, null);
-		
-		JOptionPane.showMessageDialog(null, "Make your bets.");
 		
 		Bank.bank.enableChipsClickListener();
 	}
