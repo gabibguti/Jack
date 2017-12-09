@@ -149,9 +149,11 @@ public class Player extends JFrame {
 	public static WindowAdapter playerFrameClosing = new WindowAdapter() { // Remove Player from game on closing window
 		@Override
 		public void windowClosing(WindowEvent windowEvent) {
+			System.out.println("removing player");
 			Facade.closePlayer((Player) windowEvent.getSource());
 		}
 	};
+	
 	
 	public static ActionListener hitButtonListener = new ActionListener() { // Player draws card
 		public void actionPerformed(ActionEvent actionEvent) {
@@ -214,11 +216,15 @@ public class Player extends JFrame {
 			Bank.bank.disableChipsClickListener();
 			Bank.bank.enableChipsClickListener();
 			
-			p.removeWindowListener(Player.playerFrameClosing);
+			for(java.awt.event.WindowListener w: p.getWindowListeners()) {
+				p.removeWindowListener(w);
+			}
+			// p.removeWindowListener(Player.playerFrameClosing);
 			
 			// Enable player actions after player bets
 			if(p.getBet() != 0) {
 				p.configurePlayerActions(false, false, false, false, false); // Disable bet
+				Bank.bank.getbSave().setEnabled(true);
 				
 				Player.bets++;
 				

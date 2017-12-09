@@ -153,6 +153,7 @@ public class Bank extends JFrame {
 	    		Integer element = entry.getKey();
 	        	Rectangle bounds = entry.getValue();
             	if(bounds.contains(me)) {
+            		Bank.bank.getbSave().setEnabled(false);
             		if(element == 0) { // Buy credit option
             			Bank.bank.disableChipsClickListener();
             			new BuyFrame ();

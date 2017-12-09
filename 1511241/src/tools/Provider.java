@@ -41,6 +41,9 @@ public class Provider {
 				p.setInsured(false);
 						
 				// Restore leaving game option
+				for(java.awt.event.WindowListener w: p.getWindowListeners()) {
+					p.removeWindowListener(w);
+				}
 				p.addWindowListener(Player.playerFrameClosing);
 				
 				Turn.updatePlayerTurn();
@@ -290,6 +293,7 @@ public class Provider {
     	// Reset turns, activePlayers and check end of round
     	Player.activePlayers = Integer.valueOf(activePlayersString);
     	System.out.println("active" + Player.activePlayers);
+    	System.out.println("betting" + Player.bets);
     	Turn.setTurn(map);
     	System.out.println("map turn" + map);
     	
@@ -299,6 +303,7 @@ public class Provider {
 	}
 	
 	static public void updateActivePlayers() { // Check remaining players on turn and handle case for new round
+		System.out.println("less one active player");
 		Player.activePlayers--;
 		checkRound();
 	}
