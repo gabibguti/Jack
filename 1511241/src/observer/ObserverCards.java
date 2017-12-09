@@ -57,13 +57,8 @@ public class ObserverCards implements Observer {
 			cardsPanel.add(new GameImagePanel(cards_images, null));		// Add images map of cards to control panel
 			
 			score.UpdateScore(cards.getCards());						// Set score
-			if(score.getScore() < 10) {
-//				playerScore.setText("Score " + score.getScore() + " (TINY RICK!!!)");			// Set text in Score label
-				playerScore.setText("Score " + score.getScore());			// Set text in Score label
-			}
-			else {
-				playerScore.setText("Score " + score.getScore());		// Set text in Score label
-			}
+
+			playerScore.setText("Score " + score.getScore());		// Set text in Score label
 		}
 		else {
 			cardsPanel.removeAll();
@@ -75,7 +70,6 @@ public class ObserverCards implements Observer {
 		p.revalidate();				// Revalidate PlayerFrame
 		
 		if(score.getScore() > 21) { // Treat when player gets busted
-//			JOptionPane.showMessageDialog(p, "Geez Rick. I got busted."); // Warn busted player
 			JOptionPane.showMessageDialog(p, "Busted."); // Warn busted player
 			p.setVisible(false); // "Close" player frame	
 			

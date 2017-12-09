@@ -153,6 +153,7 @@ public class Player extends JFrame {
 		}
 	};
 	
+	
 	public static ActionListener hitButtonListener = new ActionListener() { // Player draws card
 		public void actionPerformed(ActionEvent actionEvent) {
 			Player p = Provider.currentPlayer();
@@ -184,7 +185,9 @@ public class Player extends JFrame {
 				p.setMoney(p.getMoney() - p.getBet());
 				p.setBet(p.getBet()*2);
 				p.addCard();
-				Facade.stand(p); // Stand
+				if(p.getScore() <= 21) {
+					Facade.stand(p); // Stand
+				}
 			}
 		}
 	};
@@ -214,11 +217,15 @@ public class Player extends JFrame {
 			Bank.bank.disableChipsClickListener();
 			Bank.bank.enableChipsClickListener();
 			
-			p.removeWindowListener(Player.playerFrameClosing);
+			for(java.awt.event.WindowListener w: p.getWindowListeners()) {
+				p.removeWindowListener(w);
+			}
+			// p.removeWindowListener(Player.playerFrameClosing);
 			
 			// Enable player actions after player bets
 			if(p.getBet() != 0) {
 				p.configurePlayerActions(false, false, false, false, false); // Disable bet
+				Bank.bank.getbSave().setEnabled(true);
 				
 				Player.bets++;
 				

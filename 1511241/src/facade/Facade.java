@@ -13,7 +13,11 @@ import tools.Turn;
 public class Facade {
 
 	public static void startNewGame (int numberOfPlayers) {
-		createPlayersAndBank (numberOfPlayers);
+		// Set number of players
+		Player.numPlayers = numberOfPlayers;
+		
+		createBank();
+		createPlayers(numberOfPlayers);
 		
 		// Initialize Turns
 		Turn.firstTurn(numberOfPlayers);
@@ -23,27 +27,33 @@ public class Facade {
 	}
 	
 	public static void restartGame (int numberOfPlayers, Map<Integer, Integer> turns) {
-		createPlayersAndBank (numberOfPlayers);
-		
-		// Initialize Turns
-		Turn.setTurn(turns);
-			
-	}
-
-	public static void createPlayersAndBank (int numberOfPlayers) {
-		int player;
-		
 		// Set number of players
 		Player.numPlayers = numberOfPlayers;
 		
+		createBank();
+
+		for (java.util.Map.Entry<Integer, Integer> e : turns.entrySet()) {
+			Integer player = e.getKey();
+			Provider.framesList.add(new Player(String.valueOf(player), Bank.bank)); // Create Player Frame and add to framesList
+		}
+		
+		// Initialize Turns
+		Turn.setTurn(turns);
+	}
+
+	public static void createBank () {
 		// Create Bank
 		Bank.createBank("Bank");
 		Provider.framesList.add(Bank.bank);
+	}
+	
+	public static void createPlayers (int numberOfPlayers) {
+		int player;
 		
 		// Create Players
 		for (player = 0; player < numberOfPlayers; player++) {
 			Provider.framesList.add(new Player(String.valueOf(player + 1), Bank.bank)); // Create Player Frame and add to framesList
-		}	
+		}
 	}
 	
 	public static void closePlayer(Player p) {

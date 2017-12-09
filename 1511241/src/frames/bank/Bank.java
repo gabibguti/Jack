@@ -108,8 +108,6 @@ public class Bank extends JFrame {
 	}
 	
 	public void disableChipsClickListener () {
-		// FIXME: Don't need to remove all mouse listeners, only chipsClicked
-//		removeMouseListener(Provider.chipsClicked);
 		for(java.awt.event.MouseListener m: getMouseListeners()) {
 			removeMouseListener(m);
 		}
@@ -153,6 +151,7 @@ public class Bank extends JFrame {
 	    		Integer element = entry.getKey();
 	        	Rectangle bounds = entry.getValue();
             	if(bounds.contains(me)) {
+            		Bank.bank.getbSave().setEnabled(false);
             		if(element == 0) { // Buy credit option
             			Bank.bank.disableChipsClickListener();
             			new BuyFrame ();
