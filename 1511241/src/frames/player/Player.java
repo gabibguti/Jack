@@ -70,51 +70,51 @@ public class Player extends JFrame {
 		activePlayers++; // Add active player
 		
 		// Create Panel
-		setButtonsPanel(new JPanel());
-		setInfoPanel(new JPanel());
-		getButtonsPanel().setLayout(new FlowLayout());
-		getInfoPanel().setLayout(new FlowLayout(FlowLayout.CENTER));
-		getButtonsPanel().setSize(500, 20);
-		getInfoPanel().setSize(500, 20);
+		buttonsPanel = new JPanel();
+		infoPanel = new JPanel();
+		buttonsPanel.setLayout(new FlowLayout());
+		infoPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		buttonsPanel.setSize(500, 20);
+		infoPanel.setSize(500, 20);
 				
 		// Create buttons
-		setHitButton(new JButton("Hit"));
-		setStandButton(new JButton("Stand"));
-		setDoubleButton(new JButton("Double"));
-		setSurrenderButton(new JButton("Surrender"));
-		setBetButton(new JButton("Bet"));
+		hitButton = new JButton("Hit");
+		standButton = new JButton("Stand");
+		doubleButton = new JButton("Double");
+		surrenderButton = new JButton("Surrender");
+		betButton = new JButton("Bet");
 		
 		// hitButton listener
-		getHitButton().addActionListener(hitButtonListener);
+		hitButton.addActionListener(hitButtonListener);
 
 		// standButton listener
-		getStandButton().addActionListener(standButtonListener);
+		standButton.addActionListener(standButtonListener);
 		
 		// doubleButton listener
-		getDoubleButton().addActionListener(doubleButtonListener);
+		doubleButton.addActionListener(doubleButtonListener);
 		
 		// surrenderButton listener
-		getSurrenderButton().addActionListener(surrenderButtonListener);
+		surrenderButton.addActionListener(surrenderButtonListener);
 		
 		// betButton listener
-		getBetButton().addActionListener(betButtonListener);
+		betButton.addActionListener(betButtonListener);
 		
 		// Add button to buttons panel
-		getButtonsPanel().add(getHitButton());
-		getButtonsPanel().add(getStandButton());
-		getButtonsPanel().add(getDoubleButton());
-		getButtonsPanel().add(getSurrenderButton());
-		getButtonsPanel().add(getBetButton());
+		buttonsPanel.add(hitButton);
+		buttonsPanel.add(standButton);
+		buttonsPanel.add(doubleButton);
+		buttonsPanel.add(surrenderButton);
+		buttonsPanel.add(betButton);
 		
 		// Add player score label to info panel
-		getInfoPanel().add(observerCards.getPlayerScore());
-		getInfoPanel().add(observerMoneyBet.getPlayerBet());
-		getInfoPanel().add(observerMoneyBet.getPlayerMoney());
+		infoPanel.add(observerCards.getPlayerScore());
+		infoPanel.add(observerMoneyBet.getPlayerBet());
+		infoPanel.add(observerMoneyBet.getPlayerMoney());
 
 		// Add components to frame
-		this.add(getButtonsPanel(), BorderLayout.PAGE_START);
+		this.add(buttonsPanel, BorderLayout.PAGE_START);
 		this.add(getCardsPanel(), BorderLayout.CENTER);
-		this.add(getInfoPanel(), BorderLayout.PAGE_END);
+		this.add(infoPanel, BorderLayout.PAGE_END);
 		
 		// Allow us to see the frame
 		setVisible(true);
@@ -141,7 +141,7 @@ public class Player extends JFrame {
 	}
 	
 	private void initialConfigurations(String playerNumber) {
-		this.setPlayerNumber(Integer.parseInt(playerNumber));
+		this.playerNumber = Integer.parseInt(playerNumber);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(playerFrameClosing);
 	}
@@ -236,11 +236,11 @@ public class Player extends JFrame {
 	};
 
 	public void configurePlayerActions(boolean hit, boolean stand, boolean doubleDown, boolean surrender, boolean bet) {
-		getHitButton().setEnabled(hit);
-		getStandButton().setEnabled(stand);
-		getDoubleButton().setEnabled(doubleDown);
-		getSurrenderButton().setEnabled(surrender);
-		getBetButton().setEnabled(bet);
+		hitButton.setEnabled(hit);
+		standButton.setEnabled(stand);
+		doubleButton.setEnabled(doubleDown);
+		surrenderButton.setEnabled(surrender);
+		betButton.setEnabled(bet);
 	}
 	
 	/**
@@ -265,13 +265,6 @@ public class Player extends JFrame {
 	}
 
 	/**
-	 * @param playerNumber the playerNumber to set
-	 */
-	public void setPlayerNumber(int playerNumber) {
-		this.playerNumber = playerNumber;
-	}
-
-	/**
 	 * @return the cards
 	 */
 	public ArrayList<Card> getCards() {
@@ -282,22 +275,12 @@ public class Player extends JFrame {
 		observableCards.addCard();
 	}
 	
+	public void addCard(String s) {
+		observableCards.addCard(s);
+	}
+	
 	public void clearCards() {
 		observableCards.clearCards();
-	}
-
-	/**
-	 * @return the buttonsPanel
-	 */
-	public JPanel getButtonsPanel() {
-		return buttonsPanel;
-	}
-
-	/**
-	 * @param buttonsPanel the buttonsPanel to set
-	 */
-	public void setButtonsPanel(JPanel buttonsPanel) {
-		this.buttonsPanel = buttonsPanel;
 	}
 
 	/**
@@ -306,47 +289,9 @@ public class Player extends JFrame {
 	public JPanel getCardsPanel() {
 		return observerCards.getCardsPanel();
 	}
-
-	/**
-	 * @return the infoPanel
-	 */
-	public JPanel getInfoPanel() {
-		return infoPanel;
-	}
-
-	/**
-	 * @param infoPanel the infoPanel to set
-	 */
-	public void setInfoPanel(JPanel infoPanel) {
-		this.infoPanel = infoPanel;
-	}
-
-	/**
-	 * @return the hitButton
-	 */
-	public JButton getHitButton() {
-		return hitButton;
-	}
-
-	/**
-	 * @param hitButton the hitButton to set
-	 */
-	public void setHitButton(JButton hitButton) {
-		this.hitButton = hitButton;
-	}
-
-	/**
-	 * @return the standButton
-	 */
-	public JButton getStandButton() {
-		return standButton;
-	}
-
-	/**
-	 * @param standButton the standButton to set
-	 */
-	public void setStandButton(JButton standButton) {
-		this.standButton = standButton;
+	
+	public JPanel getButtonsPanel() {
+		return buttonsPanel;
 	}
 
 	/**
@@ -368,48 +313,6 @@ public class Player extends JFrame {
 	 */
 	public void setMoney(int money) {
 		observableMoneyBet.setMoney(money);
-	}
-
-	/**
-	 * @return the doubleButton
-	 */
-	public JButton getDoubleButton() {
-		return doubleButton;
-	}
-
-	/**
-	 * @param doubleButton the doubleButton to set
-	 */
-	public void setDoubleButton(JButton doubleButton) {
-		this.doubleButton = doubleButton;
-	}
-
-	/**
-	 * @return the surrenderButton
-	 */
-	public JButton getSurrenderButton() {
-		return surrenderButton;
-	}
-
-	/**
-	 * @param surrenderButton the surrenderButton to set
-	 */
-	public void setSurrenderButton(JButton surrenderButton) {
-		this.surrenderButton = surrenderButton;
-	}
-
-	/**
-	 * @return the betButton
-	 */
-	public JButton getBetButton() {
-		return betButton;
-	}
-
-	/**
-	 * @param betButton the betButton to set
-	 */
-	public void setBetButton(JButton betButton) {
-		this.betButton = betButton;
 	}
 
 	/**

@@ -89,12 +89,8 @@ public class Menu {
 	                System.out.println("Opening: " + file.getName() + ".");
 	                try {
 	                	BufferedReader br = new BufferedReader(new FileReader(file));
-	                    String line;
-	                    while ((line = br.readLine()) != null) {
-	                    	// process the line.
-	                    	System.out.println("Line: " + line);
-	                    }
-	                    br.close();
+	                	Provider.loadGame(br);
+	                	br.close();
 	                }
 	                catch(Exception e) {
 	                	e.printStackTrace();

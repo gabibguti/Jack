@@ -3,9 +3,12 @@ package tools;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -48,14 +51,12 @@ public class Provider {
 			}
 		}
 	}
-	// BANKFRAME
 	
 	public static WindowAdapter windowAdapter = new WindowAdapter() { // Exit on close window
 		public void windowClosing(WindowEvent windowEvent) {
 			System.exit(0);
 		}
 	};
-			// UTILITY
 
 	static public void checkInsurance() { // Check if insurance offer is available
 		if(Bank.bank.getScore() == 11) {
@@ -171,7 +172,6 @@ public class Provider {
 		}
 	}
 	
-	// PLAYERFRAME
 			
 	public static void removeBrokenPlayers() { // Removes players without money
 		Iterator<JFrame> i = Provider.framesList.iterator();
@@ -187,15 +187,13 @@ public class Provider {
 			}
 		}
 	}
-	
-	
-
-	
 
 	public static void saveGame(BufferedWriter fileWriter) throws Exception { // Writes a text file with game info
 		fileWriter.write(Integer.toString(Player.numPlayers));
 		fileWriter.newLine();
 		fileWriter.write(Turn.mapTrack());
+		fileWriter.newLine();
+		fileWriter.write(Integer.toString(Player.activePlayers));
 		fileWriter.newLine();
 		for(JFrame frame : Provider.framesList) {
 			if(frame.getClass() == Player.class) {
@@ -204,7 +202,9 @@ public class Provider {
 				fileWriter.write("P" + p.getPlayerNumber() + " ");
 				fileWriter.write(p.getMoney() + " ");
 				fileWriter.write(p.getBet() + " ");
-				fileWriter.write(Boolean.toString(p.isInsured()));
+				fileWriter.write(Boolean.toString(p.isInsured()) + " ");
+				fileWriter.write(Integer.toString(p.getnBuys()));
+				
 				fileWriter.newLine();
 				for(Card c : p.getCards()) {
 					fileWriter.write(c.toString() + " ");
@@ -222,19 +222,96 @@ public class Provider {
 		fileWriter.newLine();
 	}
 	
-	
+	public static void loadGame(BufferedReader fileReader) throws Exception {
+    	int numplayers = Integer.valueOf(fileReader.readLine());
+    	
+    	// Getting playerTurn
+    	String turnString = fileReader.readLine();
+    	turnString = turnString.substring(1, turnString.length()-1);           //remove curly brackets
+    	String[] strings = turnString.split(",");              //split the string to creat key-value pairs
+    	Map<Integer, Integer> map = new HashMap<>();   
+
+    	for(String pair : strings){                        //iterate over the pairs
+    	    String[] entry = pair.split("=");                   //split the pairs to get key and value 
+    	    map.put(Integer.valueOf(entry[0].trim()), Integer.valueOf(entry[1].trim()));          //add them to the hashmap and trim whitespaces
+    	}
+    	
+    	Facade.restartGame(numplayers, map);
+    	
+    	// Get number of active players
+    	String activePlayersString = fileReader.readLine();
+    	
+    	// Setting players info
+    	String line;
+    	for(JFrame frame : Provider.framesList){
+    		if(frame.getClass() == Player.class){
+    			Player p = (Player) frame;
+    			
+    			// Set bet, money and insurance
+    			line = fileReader.readLine();
+        		String[] playerStrings = line.split(" ");
+        		p.setMoney(Integer.valueOf(playerStrings[1]));
+        		p.setBet(Integer.valueOf(playerStrings[2]));
+        		if(Integer.valueOf(playerStrings[2]) != 0) {
+        			Player.bets++;
+        		}
+        		p.setInsured(Boolean.valueOf(playerStrings[3]));
+        		p.setnBuys(Integer.valueOf(playerStrings[4]));
+        		
+        		// Set cards
+        		line = fileReader.readLine();
+        		if (!line.isEmpty()) {
+            		playerStrings = line.split(" ");
+            		for(String s : playerStrings){
+            			p.addCard(s);
+            		}
+        		}
+    		}
+    	}
+    	
+    	// Setting bank info
+    	line = fileReader.readLine(); // BANK
+    	line = fileReader.readLine(); // New round enabled?
+    	Bank.bank.getbNewRound().setEnabled(Boolean.valueOf(line));
+    	
+    	line = fileReader.readLine(); // Cards
+    	if (!line.isEmpty()) {
+        	String[] bankCards = line.split(" ");
+    		for(String s : bankCards){
+    			if(s.equals("flipped")){
+    				Bank.bank.addFlippedCard();
+    			}
+    			else{
+    				Bank.bank.addCard(s);
+    			}
+    		}
+    	}
+    	
+    	// Reset turns, activePlayers and check end of round
+    	Player.activePlayers = Integer.valueOf(activePlayersString);
+    	System.out.println("active" + Player.activePlayers);
+    	Turn.setTurn(map);
+    	System.out.println("map turn" + map);
+    	
+    	if(Player.bets != Player.numPlayers) {
+    		JOptionPane.showMessageDialog(null, "Make your bets.");
+    	}
+	}
 	
 	static public void updateActivePlayers() { // Check remaining players on turn and handle case for new round
 		Player.activePlayers--;
+		checkRound();
+	}
+	
+	static public void checkRound () {
 		if (Player.activePlayers == 0) { // No more players on this turn
+	    	System.out.println("new turn");
 			Bank.bank.getbNewRound().setEnabled(true);
-			Player.activePlayers = Player.numPlayers;
 			Provider.notifyWinnersAndLosers();
 		}
-		else { // Still have players waiting to play
+		else { // There are players waiting to play
 			Turn.updatePlayerTurn();
 		}
 	}
-	
 	
 }

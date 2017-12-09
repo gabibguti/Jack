@@ -20,12 +20,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import cards.Card;
 import facade.Facade;
 import frames.auxiliarframes.BuyFrame;
+import frames.player.Player;
 import graphics.GameImage;
 import observer.ObservableCards;
 import observer.ObserverBank;
@@ -65,36 +65,36 @@ public class Bank extends JFrame {
 		observableBank.addObserver(observerBank);
 
 		// Add buttons
-		setbEndGame(new JButton("End Game"));
-		setbNewRound(new JButton("New Round"));
-		setbSave(new JButton("Save"));
+		bEndGame = new JButton("End Game");
+		bNewRound = new JButton("New Round");
+		bSave = new JButton("Save");
 		
-		getbNewRound().setEnabled(false);
+		bNewRound.setEnabled(false);
 		
 		// EndGame button action listener
-		getbEndGame().addActionListener(endGameListener);
+		bEndGame.addActionListener(endGameListener);
 
 		// NewRound action listener
-		getbNewRound().addActionListener(newRoundListener);
+		bNewRound.addActionListener(newRoundListener);
 			
 		// Save button action listener
-		getbSave().addActionListener(saveListener);
+		bSave.addActionListener(saveListener);
 			
 		// Add Listener
         addWindowListener(Provider.windowAdapter);
         
-        setpButtons(new JPanel());
+        pButtons = new JPanel();
         // Add buttons
-		getpButtons().add(getbEndGame());
-		getpButtons().add(getbNewRound());
-		getpButtons().add(getbSave());
+		pButtons.add(bEndGame);
+		pButtons.add(bNewRound);
+		pButtons.add(bSave);
 		
 		// Place buttons under image
 		setLayout(new BorderLayout());
 		
 		add(observerBank.getComponents());	// Add chips and cards to bank frame
 		
-		add(getpButtons(), BorderLayout.PAGE_END);	// Add game buttons to bank frame
+		add(pButtons, BorderLayout.PAGE_END);	// Add game buttons to bank frame
 		
         // Allow us to see the frame
         setVisible(true);
@@ -117,7 +117,9 @@ public class Bank extends JFrame {
 	
 	private static ActionListener newRoundListener = new ActionListener() { // Starts new round
 		public void actionPerformed(ActionEvent actionEvent) {
-			Bank.bank.getbNewRound().setEnabled(false);
+			Player.activePlayers = Player.numPlayers;
+			
+			Bank.bank.bNewRound.setEnabled(false);
 
 			Bank.bank.clearCards();
 
@@ -139,8 +141,6 @@ public class Bank extends JFrame {
 		
 		Bank.bank.observerBank.update(Bank.bank.observableBank, null);
 		
-		JOptionPane.showMessageDialog(null, "Make your bets.");
-		
 		Bank.bank.enableChipsClickListener();
 	}
 	
@@ -149,7 +149,7 @@ public class Bank extends JFrame {
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
 	    	Point me = e.getPoint();
-	    	for(java.util.Map.Entry<Integer, Rectangle> entry : Bank.bank.getelements_position().entrySet()) {
+	    	for(java.util.Map.Entry<Integer, Rectangle> entry : Bank.bank.elements_position.entrySet()) {
 	    		Integer element = entry.getKey();
 	        	Rectangle bounds = entry.getValue();
             	if(bounds.contains(me)) {
@@ -193,6 +193,10 @@ public class Bank extends JFrame {
 		observableBank.addCard();
 	}
 	
+	public void addCard(String s) {
+		observableBank.addCard(s);
+	}
+	
 	public void addFlippedCard() {
 		observableBank.addFlippedCard();
 	}
@@ -206,20 +210,6 @@ public class Bank extends JFrame {
 	}
 	
 	/**
-	 * @return the bEndGame
-	 */
-	public JButton getbEndGame() {
-		return bEndGame;
-	}
-
-	/**
-	 * @param bEndGame the bEndGame to set
-	 */
-	public void setbEndGame(JButton bEndGame) {
-		this.bEndGame = bEndGame;
-	}
-
-	/**
 	 * @return the bNewRound
 	 */
 	public JButton getbNewRound() {
@@ -231,41 +221,6 @@ public class Bank extends JFrame {
 	 */
 	public void setbNewRound(JButton bNewRound) {
 		this.bNewRound = bNewRound;
-	}
-
-	/**
-	 * @return the bSave
-	 */
-	public JButton getbSave() {
-		return bSave;
-	}
-
-	/**
-	 * @param bSave the bSave to set
-	 */
-	public void setbSave(JButton bSave) {
-		this.bSave = bSave;
-	}
-
-	/**
-	 * @return the pButtons
-	 */
-	public JPanel getpButtons() {
-		return pButtons;
-	}
-
-	/**
-	 * @param pButtons the pButtons to set
-	 */
-	public void setpButtons(JPanel pButtons) {
-		this.pButtons = pButtons;
-	}
-
-	/**
-	 * @return the elements_position
-	 */
-	public Map<Integer, Rectangle> getelements_position() {
-		return elements_position;
 	}
 
 	/**

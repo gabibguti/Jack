@@ -2,6 +2,8 @@ package observer;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import javax.swing.JOptionPane;
+
 import cards.Card;
 import facade.Facade;
 
@@ -20,6 +22,20 @@ public class ObservableCards extends Observable {
 		cards.add(Facade.removeCardFromDeck());
 	    setChanged();
 	    notifyObservers();
+    }
+	
+	public void addCard(String s) {
+		for(Card c : Card.Deck){
+			if(c.toString().equals(s)){
+				cards.add(c);
+				Card.Deck.remove(c);
+				setChanged();
+			    notifyObservers();
+			    return;
+			}
+		}
+		JOptionPane.showMessageDialog(null, "Save is corrupted.");
+		System.exit(1);
     }
 	
 	public void addFlippedCard() {
