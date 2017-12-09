@@ -67,7 +67,7 @@ public class Bank extends JFrame {
 		// Add buttons
 		bEndGame = new JButton("End Game");
 		bNewRound = new JButton("New Round");
-		bSave = new JButton("Save");
+		setbSave(new JButton("Save"));
 		
 		bNewRound.setEnabled(false);
 		
@@ -78,7 +78,7 @@ public class Bank extends JFrame {
 		bNewRound.addActionListener(newRoundListener);
 			
 		// Save button action listener
-		bSave.addActionListener(saveListener);
+		getbSave().addActionListener(saveListener);
 			
 		// Add Listener
         addWindowListener(Provider.windowAdapter);
@@ -87,7 +87,7 @@ public class Bank extends JFrame {
         // Add buttons
 		pButtons.add(bEndGame);
 		pButtons.add(bNewRound);
-		pButtons.add(bSave);
+		pButtons.add(getbSave());
 		
 		// Place buttons under image
 		setLayout(new BorderLayout());
@@ -234,5 +234,19 @@ public class Bank extends JFrame {
 	 */
 	public int getScore() {
 		return observerBank.getScore();
+	}
+
+	/**
+	 * @return the bSave
+	 */
+	public JButton getbSave() {
+		return bSave;
+	}
+
+	/**
+	 * @param bSave the bSave to set
+	 */
+	public void setbSave(JButton bSave) {
+		this.bSave = bSave;
 	}
 }
