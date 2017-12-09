@@ -118,6 +118,7 @@ public class Bank extends JFrame {
 	private static ActionListener newRoundListener = new ActionListener() { // Starts new round
 		public void actionPerformed(ActionEvent actionEvent) {
 			Player.activePlayers = Player.numPlayers;
+			System.out.println("starting new round with " + Player.activePlayers + " active players");
 			
 			Bank.bank.getbNewRound().setEnabled(false);
 

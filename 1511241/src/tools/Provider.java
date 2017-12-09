@@ -303,8 +303,8 @@ public class Provider {
 	}
 	
 	static public void updateActivePlayers() { // Check remaining players on turn and handle case for new round
-		System.out.println("less one active player");
 		Player.activePlayers--;
+		System.out.println("Active Players:" + " " + Player.activePlayers);
 		checkRound();
 	}
 	
@@ -314,8 +314,11 @@ public class Provider {
 			Bank.bank.getbNewRound().setEnabled(true);
 			Provider.notifyWinnersAndLosers();
 		}
-		else { // There are players waiting to play
+		else if (Player.activePlayers > 0) { // There are players waiting to play
 			Turn.updatePlayerTurn();
+		}
+		else {
+			System.out.println("Active players is less than 0");
 		}
 	}
 	

@@ -226,6 +226,7 @@ public class Player extends JFrame {
 				p.configurePlayerActions(false, false, false, false, false); // Disable bet
 				Bank.bank.getbSave().setEnabled(true);
 				
+				System.out.println("betteed ");
 				Player.bets++;
 				
 				Turn.nextPlayerTurn();
