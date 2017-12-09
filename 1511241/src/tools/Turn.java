@@ -36,7 +36,6 @@ public class Turn {
 	}
 
 	public static int nextPlayerTurn() { // Call next player to play
-		System.out.println("next" + Player.bets + Player.activePlayers);
 	   int nextPlayer = 1;
 	   if(totalPlayers == 1)
 		   return nextPlayer;
@@ -72,8 +71,8 @@ public class Turn {
 			return;
 		}
 		if(playerTurn.get(playerNumber) == null) {
-			JOptionPane.showMessageDialog(null, "Player is not playing anymore."); // Invalid player
-			return; // Don't have this player
+			JOptionPane.showMessageDialog(null, "Player does not exist."); // Invalid player
+			return; // This player does not exist
 		}
 		if(playerTurn.size() == 1) {
 			JOptionPane.showMessageDialog(null, "Last player on game removed! Ending game..."); // Last Player

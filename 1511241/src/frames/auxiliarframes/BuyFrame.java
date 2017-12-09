@@ -61,7 +61,7 @@ public class BuyFrame {
 				}
 				int value = (Integer) credit.getValue();
 				if(value > Buy.getMaxCredit()) {
-					JOptionPane.showMessageDialog(null, "Maximum quantity of credit allowed per buy is " + Buy.getMaxCredit());
+					JOptionPane.showMessageDialog(null, "Maximum amount of credit allowed per buy is " + Buy.getMaxCredit());
 				}
 				else {
 	        		Buy.getCredit(value);

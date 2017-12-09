@@ -26,8 +26,7 @@ public class Buy {
     }
 
 	public static void getCredit(int wantedCredit) {
-		int player = Turn.currentPlayerTurn();
-		Player p = (Player) Provider.framesList.get(player);
+		Player p = Provider.currentPlayer();
 		if(p.getnBuys() < 2) {
 			p.setMoney(p.getMoney() + wantedCredit);
 			p.setnBuys(p.getnBuys() + 1);

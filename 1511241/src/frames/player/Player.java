@@ -149,7 +149,6 @@ public class Player extends JFrame {
 	public static WindowAdapter playerFrameClosing = new WindowAdapter() { // Remove Player from game on closing window
 		@Override
 		public void windowClosing(WindowEvent windowEvent) {
-			System.out.println("removing player");
 			Facade.closePlayer((Player) windowEvent.getSource());
 		}
 	};
@@ -186,7 +185,9 @@ public class Player extends JFrame {
 				p.setMoney(p.getMoney() - p.getBet());
 				p.setBet(p.getBet()*2);
 				p.addCard();
-				Facade.stand(p); // Stand
+				if(p.getScore() <= 21) {
+					Facade.stand(p); // Stand
+				}
 			}
 		}
 	};
@@ -226,7 +227,6 @@ public class Player extends JFrame {
 				p.configurePlayerActions(false, false, false, false, false); // Disable bet
 				Bank.bank.getbSave().setEnabled(true);
 				
-				System.out.println("betteed ");
 				Player.bets++;
 				
 				Turn.nextPlayerTurn();

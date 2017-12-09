@@ -45,7 +45,7 @@ public class Provider {
 					p.removeWindowListener(w);
 				}
 				p.addWindowListener(Player.playerFrameClosing);
-				
+
 				Turn.updatePlayerTurn();
 				
 				if(p.isVisible() == false) {
@@ -127,12 +127,12 @@ public class Provider {
 						pay -= p.getBet();
 						betsWon += p.getBet();
 					}
-					else if(Bank.bank.getScore() > p.getScore()) {
+					else if(Bank.bank.getScore() == p.getScore()) {
 						pay -= p.getBet();
 					}
 				}
 			}
-		} while(pay > betsWon);
+		} while(pay > betsWon && Bank.bank.getScore() < 21);
 		
 		bankScore = Bank.bank.getScore();
 		
@@ -147,18 +147,15 @@ public class Provider {
 				int playerScore = p.getScore();
 				reward = 0;
 				if(playerScore == bankScore) { // Player and Bank ties
-//					JOptionPane.showMessageDialog(p, "Next round SHOW ME WHAT YOU GOT!");
 					JOptionPane.showMessageDialog(p, "It's a tie!");
 					reward = p.getBet();
 				}
 				else {
 					if(playerScore == 21 && p.getCards().size() == 2) { // Player wins with Blackjack
-//						JOptionPane.showMessageDialog(p, "You don't have to try to impress me, Morty.");
 						JOptionPane.showMessageDialog(p, "BlackJack!");
 						reward = p.getBet()*5/2;
 					}
 					else if(playerScore > bankScore) { // Player wins
-//						JOptionPane.showMessageDialog(p, "Wubba lubba dub dub! I WON MORTY!");
 						JOptionPane.showMessageDialog(p, "You win!");
 						reward = p.getBet()*2;
 					}
@@ -174,7 +171,6 @@ public class Provider {
 			}
 		}
 	}
-	
 			
 	public static void removeBrokenPlayers() { // Removes players without money
 		Iterator<JFrame> i = Provider.framesList.iterator();
@@ -292,10 +288,7 @@ public class Provider {
     	
     	// Reset turns, activePlayers and check end of round
     	Player.activePlayers = Integer.valueOf(activePlayersString);
-    	System.out.println("active" + Player.activePlayers);
-    	System.out.println("betting" + Player.bets);
     	Turn.setTurn(map);
-    	System.out.println("map turn" + map);
     	
     	if(Player.bets != Player.numPlayers) {
     		JOptionPane.showMessageDialog(null, "Make your bets.");
@@ -304,13 +297,11 @@ public class Provider {
 	
 	static public void updateActivePlayers() { // Check remaining players on turn and handle case for new round
 		Player.activePlayers--;
-		System.out.println("Active Players:" + " " + Player.activePlayers);
 		checkRound();
 	}
 	
 	static public void checkRound () {
 		if (Player.activePlayers == 0) { // No more players on this turn
-	    	System.out.println("new turn");
 			Bank.bank.getbNewRound().setEnabled(true);
 			Provider.notifyWinnersAndLosers();
 		}
@@ -318,7 +309,7 @@ public class Provider {
 			Turn.updatePlayerTurn();
 		}
 		else {
-			System.out.println("Active players is less than 0");
+			System.out.println("Error on active players.");
 		}
 	}
 	

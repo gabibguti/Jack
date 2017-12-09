@@ -61,7 +61,6 @@ public class Facade {
 		Turn.removePlayer(p.getPlayerNumber());
 		Player.numPlayers--;
 		Provider.updateActivePlayers();
-		System.out.println("closing player" + Player.activePlayers + Player.bets + Player.numPlayers);
 		if(Player.bets == Player.numPlayers) {
 			Facade.deliverCards();
 		}
