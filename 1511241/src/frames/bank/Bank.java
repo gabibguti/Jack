@@ -59,7 +59,7 @@ public class Bank extends JFrame {
 		setSize(bankBackground.getWidth(), bankBackground.getHeight());
 		setContentPane(new GameImage(bankBackground));
 		
-		// Add bank observer
+		// Add bank observer/observables
 		observableBank = new ObservableCards();
 		observerBank = new ObserverBank(this.getWidth(), this.getHeight());
 		observableBank.addObserver(observerBank);
@@ -141,7 +141,6 @@ public class Bank extends JFrame {
 		
 		Bank.bank.enableChipsClickListener();
 	}
-	
 	
 	public static MouseAdapter bankClickHandler = new MouseAdapter() { // Handle clicks on Bank
 	    @Override

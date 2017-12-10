@@ -105,7 +105,6 @@ public class StartGame {
 	private class ButtonClickListener implements ActionListener {
 		// Listener function
 		public void actionPerformed(ActionEvent e) {
-//			Provider.numPlayersButtonAction(e);
 			selectNumberOfPlayers(e);
 		}
 	}

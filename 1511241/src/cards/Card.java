@@ -9,11 +9,10 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 public class Card {
-
     private final Rank rank;
     private final Suit suit;
     private BufferedImage image = null;
-    // TODO: Try to use Main.img_path
+
     public String img_path = System.getProperty("user.dir") + "/src/images/";	// Images path
     static public Card flippedCard = new Card();
 

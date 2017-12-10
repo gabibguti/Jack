@@ -57,12 +57,12 @@ public class Player extends JFrame {
 		
 		this.initialConfigurations(playerNumber);
 		
-		// Add money and bet observer
+		// Add money and bet observer/observable
 		observableMoneyBet = new ObservableMoneyBet(Provider.initialAmount); // Initial bet = 0. Initial money = 500
 	    observerMoneyBet = new ObserverMoneyBet(Provider.initialAmount);
 	    observableMoneyBet.addObserver(observerMoneyBet);
 	    
-	    // Add cards observer
+	    // Add cards observer/observable
 	    observableCards = new ObservableCards();
 	    observerCards = new ObserverCards();
 	    observableCards.addObserver(observerCards);
@@ -153,7 +153,6 @@ public class Player extends JFrame {
 		}
 	};
 	
-	
 	public static ActionListener hitButtonListener = new ActionListener() { // Player draws card
 		public void actionPerformed(ActionEvent actionEvent) {
 			Player p = Provider.currentPlayer();
@@ -220,7 +219,6 @@ public class Player extends JFrame {
 			for(java.awt.event.WindowListener w: p.getWindowListeners()) {
 				p.removeWindowListener(w);
 			}
-			// p.removeWindowListener(Player.playerFrameClosing);
 			
 			// Enable player actions after player bets
 			if(p.getBet() != 0) {
@@ -248,6 +246,18 @@ public class Player extends JFrame {
 		doubleButton.setEnabled(doubleDown);
 		surrenderButton.setEnabled(surrender);
 		betButton.setEnabled(bet);
+	}
+	
+	public void addCard() {
+		observableCards.addCard();
+	}
+	
+	public void addCard(String s) {
+		observableCards.addCard(s);
+	}
+	
+	public void clearCards() {
+		observableCards.clearCards();
 	}
 	
 	/**
@@ -278,18 +288,6 @@ public class Player extends JFrame {
 		return observableCards.getCards();
 	}
 	
-	public void addCard() {
-		observableCards.addCard();
-	}
-	
-	public void addCard(String s) {
-		observableCards.addCard(s);
-	}
-	
-	public void clearCards() {
-		observableCards.clearCards();
-	}
-
 	/**
 	 * @return the cardsPanel
 	 */
@@ -297,6 +295,9 @@ public class Player extends JFrame {
 		return observerCards.getCardsPanel();
 	}
 	
+	/**
+	 * @return the buttonsPanel
+	 */
 	public JPanel getButtonsPanel() {
 		return buttonsPanel;
 	}

@@ -63,9 +63,6 @@ public class Menu {
 		menuFrame.setLocationRelativeTo(null);
 	}
 
-	/**
-	 * 
-	 */
 	private void showEvent() {
 		// Set labels
 		headerLabel.setText("BlackJack");
